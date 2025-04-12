@@ -66,6 +66,25 @@ public struct SettingsView: View {
                     }
                 }
                 
+                Section(header: Text("Data Management")) {
+                    NavigationLink("Import Data from Flutter") {
+                        DataImportView()
+                    }
+                    
+                    // Firebase User ID Display
+                    VStack(alignment: .leading) {
+                        Text("Your Firebase User ID")
+                            .font(.headline)
+                        Text("You can find your Firebase User ID in:")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("1. Your Flutter app settings")
+                        Text("2. Firebase Console > Authentication > Users")
+                        Text("3. Your Flutter app's user profile")
+                    }
+                    .padding(.vertical, 8)
+                }
+                
                 Section {
                     Button(action: viewModel.saveSettings) {
                         Text("Save Settings")

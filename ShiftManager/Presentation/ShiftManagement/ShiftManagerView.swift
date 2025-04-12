@@ -92,14 +92,6 @@ struct ShiftManagerView: View {
                     .padding(.horizontal)
                     .font(.body)
                     .focused($isNotesFocused)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button("Done") {
-                                isNotesFocused = false
-                            }
-                        }
-                    }
             }
             .padding(.vertical, 4)
             
@@ -174,8 +166,40 @@ struct ShiftManagerView: View {
         } message: {
             Text("A shift already exists for this date and time period.")
         }
+        .alert("Long Shift Warning", isPresented: $viewModel.showingLongShiftAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Accept") {
+                // Create the shift despite the warning
+                let calendar = Calendar.current
+                let startComponents = calendar.dateComponents([.hour, .minute], from: viewModel.startTime)
+                let endComponents = calendar.dateComponents([.hour, .minute], from: viewModel.endTime)
+                
+                let shiftStart = calendar.date(bySettingHour: startComponents.hour ?? 0,
+                                            minute: startComponents.minute ?? 0,
+                                            second: 0,
+                                            of: viewModel.selectedDate) ?? viewModel.selectedDate
+                let shiftEnd = calendar.date(bySettingHour: endComponents.hour ?? 0,
+                                          minute: endComponents.minute ?? 0,
+                                          second: 0,
+                                          of: viewModel.selectedDate) ?? viewModel.selectedDate
+                
+                Task {
+                    await viewModel.createShift(startTime: shiftStart, endTime: shiftEnd, notes: viewModel.notes)
+                }
+            }
+        } message: {
+            Text("You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?")
+        }
         .task {
             await viewModel.loadShifts()
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    isNotesFocused = false
+                }
+            }
         }
     }
 }

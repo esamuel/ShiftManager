@@ -15,6 +15,7 @@ class ShiftManagerViewModel: ObservableObject {
     @Published var showStartTimePicker = false
     @Published var showEndTimePicker = false
     @Published var showingDuplicateAlert = false
+    @Published var showingLongShiftAlert = false
     @Published var error: Error?
     
     @Published var isEditing = false
@@ -113,6 +114,15 @@ class ShiftManagerViewModel: ObservableObject {
         // Check for existing shift
         if !canAddShift {
             showingDuplicateAlert = true
+            return
+        }
+        
+        // Check for shift duration
+        let duration = shiftEnd.timeIntervalSince(shiftStart)
+        let hours = duration / 3600
+        
+        if hours > 12 {
+            showingLongShiftAlert = true
             return
         }
         
@@ -240,6 +250,42 @@ class ShiftManagerViewModel: ObservableObject {
                 try context.save()
                 await loadShifts()
             }
+        } catch {
+            self.error = error
+        }
+    }
+    
+    func createShift(startTime: Date, endTime: Date, notes: String) async {
+        let entity = Shift(context: context)
+        entity.id = UUID()
+        entity.title = "Shift on \(selectedDate.formatted(date: .numeric, time: .omitted))"
+        entity.startTime = startTime
+        entity.endTime = endTime
+        entity.notes = notes
+        entity.createdAt = Date()
+        entity.isOvertime = false
+        entity.isSpecialDay = false
+        entity.category = ""
+        
+        if let calculation = try? await wageCalculationService.calculateWage(for: ShiftModel(
+            id: entity.id ?? UUID(),
+            title: entity.title ?? "",
+            startTime: entity.startTime ?? Date(),
+            endTime: entity.endTime ?? Date(),
+            notes: entity.notes ?? "",
+            isOvertime: entity.isOvertime,
+            isSpecialDay: entity.isSpecialDay,
+            category: entity.category ?? "",
+            createdAt: entity.createdAt ?? Date()
+        )) {
+            entity.grossWage = calculation.grossWage
+            entity.netWage = calculation.netWage
+        }
+        
+        do {
+            try context.save()
+            await loadShifts()
+            self.notes = ""
         } catch {
             self.error = error
         }

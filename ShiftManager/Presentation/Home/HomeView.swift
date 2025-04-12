@@ -20,7 +20,7 @@ public struct HomeView: View {
                         // Home Button (Main Screen)
                         Button(action: { showingUpcomingShifts = true }) {
                             MenuButton(
-                                title: "Home",
+                                title: "Upcoming Shifts",
                                 icon: "house.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -45,7 +45,7 @@ public struct HomeView: View {
                         }
                         
                         // Guide Button
-                        NavigationLink(destination: Text("Guide View - Coming Soon")) {
+                        NavigationLink(destination: GuideView()) {
                             MenuButton(
                                 title: "Guide",
                                 icon: "info.circle.fill",
@@ -54,10 +54,19 @@ public struct HomeView: View {
                         }
                         
                         // Overtime Rules Button
-                        NavigationLink(destination: SettingsView()) {
+                        NavigationLink(destination: OvertimeRulesView()) {
                             MenuButton(
                                 title: "Overtime Rules",
                                 icon: "clock.fill",
+                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                            )
+                        }
+                        
+                        // Settings Button
+                        NavigationLink(destination: SettingsView()) {
+                            MenuButton(
+                                title: "Settings",
+                                icon: "gearshape.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
                         }

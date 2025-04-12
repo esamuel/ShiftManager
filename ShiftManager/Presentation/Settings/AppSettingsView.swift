@@ -10,6 +10,13 @@ public struct AppSettingsView: View {
             Form {
                 Section(header: Text("Personal Information")) {
                     TextField("Username", text: $viewModel.username)
+                    Button(action: {
+                        UserDefaults.standard.set(viewModel.username, forKey: "username")
+                    }) {
+                        Text("Save Changes")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.purple)
+                    }
                 }
                 
                 Section(header: Text("Appearance")) {
