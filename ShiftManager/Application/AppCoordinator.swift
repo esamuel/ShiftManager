@@ -11,8 +11,7 @@ class AppCoordinator {
     }
     
     func start() {
-        let homeViewModel = HomeViewModel()
-        let homeView = HomeView(viewModel: homeViewModel)
+        let homeView = HomeView()
         let homeViewController = UIHostingController(rootView: homeView)
         
         navigationController.pushViewController(homeViewController, animated: false)

@@ -1,11 +1,11 @@
 import CoreData
 
-struct PersistenceController {
-    static let shared = PersistenceController()
+public struct PersistenceController {
+    public static let shared = PersistenceController()
     
-    let container: NSPersistentContainer
+    public let container: NSPersistentContainer
     
-    init(inMemory: Bool = false) {
+    public init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "ShiftManager")
         
         if inMemory {
@@ -22,7 +22,7 @@ struct PersistenceController {
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
-    static var preview: PersistenceController = {
+    public static var preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         
         // Create example data for preview
@@ -76,7 +76,7 @@ struct PersistenceController {
         return controller
     }()
     
-    func save() {
+    public func save() {
         let context = container.viewContext
         
         if context.hasChanges {

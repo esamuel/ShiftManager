@@ -1,10 +1,12 @@
 import SwiftUI
 
-struct SettingsView: View {
+public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         NavigationView {
             Form {
                 Section {
@@ -46,7 +48,6 @@ struct SettingsView: View {
                 
                 Section {
                     Toggle("Start work on Sunday", isOn: $viewModel.startWorkOnSunday)
-                    Toggle("Dark Mode", isOn: $viewModel.darkMode)
                 }
                 
                 Section {
@@ -73,7 +74,7 @@ struct SettingsView: View {
                     }
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle("Shift Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -89,35 +90,7 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Supporting Types
-enum Language: String, CaseIterable, Identifiable {
-    case english
-    case hebrew
-    
-    var id: String { rawValue }
-    
-    var displayName: String {
-        switch self {
-        case .english: return "English"
-        case .hebrew: return "Hebrew"
-        }
-    }
-}
-
-enum Country: String, CaseIterable, Identifiable {
-    case israel
-    case usa
-    
-    var id: String { rawValue }
-    
-    var displayName: String {
-        switch self {
-        case .israel: return "Israel (ILS)"
-        case .usa: return "USA (USD)"
-        }
-    }
-}
-
 #Preview {
     SettingsView()
 } 
+

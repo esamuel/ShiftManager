@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-protocol ShiftRepositoryProtocol {
+public protocol ShiftRepositoryProtocol {
     func fetchShifts() async throws -> [ShiftModel]
     func fetchShift(id: UUID) async throws -> ShiftModel?
     func createShift(_ shift: ShiftModel) async throws
@@ -12,14 +12,14 @@ protocol ShiftRepositoryProtocol {
     func deleteAllShifts() async throws
 }
 
-class ShiftRepository: ShiftRepositoryProtocol {
+public class ShiftRepository: ShiftRepositoryProtocol {
     private let context: NSManagedObjectContext
     
-    init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
+    public init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.context = context
     }
     
-    func fetchShifts() async throws -> [ShiftModel] {
+    public func fetchShifts() async throws -> [ShiftModel] {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: false)]
         
@@ -29,7 +29,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func fetchShift(id: UUID) async throws -> ShiftModel? {
+    public func fetchShift(id: UUID) async throws -> ShiftModel? {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
@@ -39,7 +39,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func createShift(_ shift: ShiftModel) async throws {
+    public func createShift(_ shift: ShiftModel) async throws {
         try await context.perform {
             let entity = Shift(context: self.context)
             self.mapToEntity(shift, entity: entity)
@@ -47,7 +47,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func updateShift(_ shift: ShiftModel) async throws {
+    public func updateShift(_ shift: ShiftModel) async throws {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
         
@@ -62,7 +62,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func deleteShift(id: UUID) async throws {
+    public func deleteShift(id: UUID) async throws {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
@@ -77,7 +77,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func fetchShiftsInDateRange(from startDate: Date, to endDate: Date) async throws -> [ShiftModel] {
+    public func fetchShiftsInDateRange(from startDate: Date, to endDate: Date) async throws -> [ShiftModel] {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.predicate = NSPredicate(format: "startTime >= %@ AND endTime <= %@", startDate as NSDate, endDate as NSDate)
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: false)]
@@ -88,7 +88,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func fetchAllShifts() async throws -> [ShiftModel] {
+    public func fetchAllShifts() async throws -> [ShiftModel] {
         let request = NSFetchRequest<Shift>(entityName: "Shift")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: false)]
         
@@ -98,7 +98,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
         }
     }
     
-    func deleteAllShifts() async throws {
+    public func deleteAllShifts() async throws {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Shift")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         
@@ -141,7 +141,7 @@ class ShiftRepository: ShiftRepositoryProtocol {
     }
 }
 
-enum RepositoryError: Error {
+public enum RepositoryError: Error {
     case notFound
     case saveFailed
     case deleteFailed

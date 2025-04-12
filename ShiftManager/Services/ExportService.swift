@@ -6,6 +6,7 @@ protocol ExportServiceProtocol {
     func generatePDFReport(shifts: [ShiftModel], startDate: Date, endDate: Date) async throws -> Data
     func exportDataToJSON() async throws -> Data
     func importDataFromJSON(_ data: Data) async throws
+    func generateSearchReport(shifts: [ShiftModel], username: String, periodString: String, summary: (totalDays: Int, totalHours: Double, grossWage: Double, netWage: Double)) async throws -> Data
 }
 
 class ExportService: ExportServiceProtocol {
@@ -146,5 +147,108 @@ class ExportService: ExportServiceProtocol {
         for shift in shifts {
             try await repository.createShift(shift)
         }
+    }
+    
+    func generateSearchReport(shifts: [ShiftModel], username: String, periodString: String, summary: (totalDays: Int, totalHours: Double, grossWage: Double, netWage: Double)) async throws -> Data {
+        let pdfMetaData = [
+            kCGPDFContextCreator: "ShiftManager",
+            kCGPDFContextAuthor: username,
+            kCGPDFContextTitle: "Work Report"
+        ]
+        let format = UIGraphicsPDFRendererFormat()
+        format.documentInfo = pdfMetaData as [String: Any]
+        
+        let pageRect = CGRect(x: 0, y: 0, width: 595.2, height: 841.8) // A4
+        let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
+        
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            
+            // Title attributes
+            let titleAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.boldSystemFont(ofSize: 24),
+                .foregroundColor: UIColor.black
+            ]
+            
+            // Header attributes
+            let headerAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.boldSystemFont(ofSize: 14),
+                .foregroundColor: UIColor.black
+            ]
+            
+            // Content attributes
+            let contentAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 12),
+                .foregroundColor: UIColor.black
+            ]
+            
+            // Draw title
+            let title = "\(username)'s Work Report"
+            let titleSize = title.size(withAttributes: titleAttributes)
+            title.draw(at: CGPoint(x: (pageRect.width - titleSize.width) / 2, y: 50), withAttributes: titleAttributes)
+            
+            // Draw period
+            let period = "Period: \(periodString)"
+            let periodSize = period.size(withAttributes: headerAttributes)
+            period.draw(at: CGPoint(x: (pageRect.width - periodSize.width) / 2, y: 90), withAttributes: headerAttributes)
+            
+            // Table headers
+            var yPosition: CGFloat = 130
+            let xPositions: [CGFloat] = [50, 150, 250, 350, 450]
+            let headers = ["Date", "Start Time", "End Time", "Hours", "Notes"]
+            
+            for (index, header) in headers.enumerated() {
+                header.draw(at: CGPoint(x: xPositions[index], y: yPosition), withAttributes: headerAttributes)
+            }
+            
+            yPosition += 30
+            
+            // Draw shifts
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            let timeFormatter = DateFormatter()
+            timeFormatter.timeStyle = .short
+            
+            for shift in shifts {
+                let date = dateFormatter.string(from: shift.startTime)
+                let startTime = timeFormatter.string(from: shift.startTime)
+                let endTime = timeFormatter.string(from: shift.endTime)
+                let hours = String(format: "%.2f", shift.duration / 3600)
+                
+                date.draw(at: CGPoint(x: xPositions[0], y: yPosition), withAttributes: contentAttributes)
+                startTime.draw(at: CGPoint(x: xPositions[1], y: yPosition), withAttributes: contentAttributes)
+                endTime.draw(at: CGPoint(x: xPositions[2], y: yPosition), withAttributes: contentAttributes)
+                hours.draw(at: CGPoint(x: xPositions[3], y: yPosition), withAttributes: contentAttributes)
+                shift.notes.draw(at: CGPoint(x: xPositions[4], y: yPosition), withAttributes: contentAttributes)
+                
+                yPosition += 25
+                
+                // Start new page if needed
+                if yPosition > pageRect.height - 100 {
+                    context.beginPage()
+                    yPosition = 50
+                }
+            }
+            
+            // Draw summary
+            yPosition += 30
+            let summaryTitle = "Summary"
+            summaryTitle.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: headerAttributes)
+            
+            yPosition += 25
+            let summaryItems = [
+                "Total Working Days: \(summary.totalDays)",
+                "Total Hours: \(String(format: "%.2f", summary.totalHours))",
+                "Gross Wage: ₪\(String(format: "%.2f", summary.grossWage))",
+                "Net Wage: ₪\(String(format: "%.2f", summary.netWage))"
+            ]
+            
+            for item in summaryItems {
+                item.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: contentAttributes)
+                yPosition += 20
+            }
+        }
+        
+        return data
     }
 } 

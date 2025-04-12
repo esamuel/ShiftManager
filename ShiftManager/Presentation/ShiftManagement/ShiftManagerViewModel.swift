@@ -84,7 +84,7 @@ class ShiftManagerViewModel: ObservableObject {
                     notes: entity.notes ?? "",
                     isOvertime: entity.isOvertime,
                     isSpecialDay: entity.isSpecialDay,
-                    category: entity.category,
+                    category: entity.category ?? "",
                     createdAt: entity.createdAt ?? Date(),
                     grossWage: entity.grossWage,
                     netWage: entity.netWage

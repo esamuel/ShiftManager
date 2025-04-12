@@ -220,11 +220,19 @@ struct ShiftCard: View {
             
             // Times
             Text("Start Time: \(shift.startTime, format: .dateTime.hour().minute()) - End Time: \(shift.endTime, format: .dateTime.hour().minute())")
-            Text("Total Hours: \(shift.duration / 3600, specifier: "%.2f")")
             
-            // Wages
-            Text("Gross Wage: ₪\(shift.grossWage, specifier: "%.2f")")
-            Text("Net Wage: ₪\(shift.netWage, specifier: "%.2f")")
+            // Duration and Wages
+            HStack {
+                Text("Total Hours: \(shift.duration / 3600, specifier: "%.2f")")
+                    .foregroundColor(.primary)
+            }
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Gross Wage: ₪\(shift.grossWage, specifier: "%.2f")")
+                    Text("Net Wage: ₪\(shift.netWage, specifier: "%.2f")")
+                }
+            }
             
             if !shift.notes.isEmpty {
                 Text(shift.notes)

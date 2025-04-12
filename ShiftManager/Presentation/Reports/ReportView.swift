@@ -1,100 +1,430 @@
 import SwiftUI
 import PDFKit
 import UniformTypeIdentifiers
+import UIKit
 
-struct ReportView: View {
+public struct ReportView: View {
     @StateObject private var viewModel = ReportViewModel()
     @State private var showingPDFPreview = false
     @State private var pdfData: Data?
     @State private var showingShareSheet = false
+    @State private var selectedView: ShiftManager.ReportViewType = .weekly
+    @State private var showingSearchSheet = false
+    @State private var showingPrintSheet = false
     
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Report Type")) {
-                    Picker("Report Type", selection: $viewModel.selectedReportType) {
-                        ForEach(ReportType.allCases) { type in
-                            Text(type.rawValue).tag(type)
+    public init() {}
+    
+    public var body: some View {
+        VStack(spacing: 0) {
+            // View Type Selector
+            HStack(spacing: 0) {
+                Button(action: { 
+                    selectedView = .weekly
+                    viewModel.selectedView = .weekly
+                    viewModel.switchView(to: .weekly)
+                }) {
+                    Text("Weekly View")
+                        .font(.headline)
+                        .foregroundColor(selectedView == .weekly ? .purple : .gray)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .background(
+                    VStack {
+                        Spacer()
+                        Rectangle()
+                            .fill(selectedView == .weekly ? Color.purple : Color.clear)
+                            .frame(height: 2)
+                    }
+                )
+                
+                Button(action: { 
+                    selectedView = .monthly
+                    viewModel.selectedView = .monthly
+                    viewModel.switchView(to: .monthly)
+                }) {
+                    Text("Monthly View")
+                        .font(.headline)
+                        .foregroundColor(selectedView == .monthly ? .purple : .gray)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .background(
+                    VStack {
+                        Spacer()
+                        Rectangle()
+                            .fill(selectedView == .monthly ? Color.purple : Color.clear)
+                            .frame(height: 2)
+                    }
+                )
+            }
+            .padding(.horizontal)
+            
+            // Date Navigation
+            HStack {
+                Button(action: { viewModel.previousPeriod() }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue)
+                }
+                
+                Spacer()
+                
+                Text(viewModel.periodTitle)
+                    .font(.title2)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Button(action: { viewModel.nextPeriod() }) {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding()
+            
+            Text(viewModel.periodRangeText)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .padding(.bottom)
+            
+            // Shifts List
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(viewModel.shifts) { shift in
+                        ShiftReportCard(shift: shift)
+                    }
+                }
+                .padding()
+            }
+            
+            // Summary Section
+            VStack(spacing: 8) {
+                Divider()
+                
+                Group {
+                    HStack {
+                        Text("Total Working Days:")
+                        Spacer()
+                        Text("\(viewModel.totalWorkingDays)")
+                    }
+                    
+                    HStack {
+                        Text("Total Hours:")
+                        Spacer()
+                        Text(String(format: "%.2f", viewModel.totalHours))
+                    }
+                    
+                    HStack {
+                        Text("Gross Wage:")
+                        Spacer()
+                        Text("₪\(String(format: "%.2f", viewModel.grossWage))")
+                    }
+                    
+                    HStack {
+                        Text("Net Wage:")
+                        Spacer()
+                        Text("₪\(String(format: "%.2f", viewModel.netWage))")
+                    }
+                }
+                .padding(.horizontal)
+                
+                Text("Wage Breakdown")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.top)
+                
+                Group {
+                    // Regular day rates
+                    if viewModel.regularHours > 0 {
+                        HStack {
+                            Text("Regular (100%):")
+                            Spacer()
+                            Text("\(viewModel.regularHours, specifier: "%.2f") hours")
+                        }
+                    }
+                    
+                    // Special day base rate
+                    if viewModel.overtimeHours150 > 0 {
+                        HStack {
+                            Text("Special Day (150%):")
+                            Spacer()
+                            Text("\(viewModel.overtimeHours150, specifier: "%.2f") hours")
+                        }
+                    }
+                    
+                    // First overtime (125% or 175%)
+                    if viewModel.overtimeHours125 > 0 {
+                        HStack {
+                            Text("Overtime (125%/175%):")
+                            Spacer()
+                            Text("\(viewModel.overtimeHours125, specifier: "%.2f") hours")
+                        }
+                    }
+                    
+                    // Second overtime (150% or 200%)
+                    if viewModel.overtimeHours150 > 0 {
+                        HStack {
+                            Text("Extended Overtime (150%/200%):")
+                            Spacer()
+                            Text("\(viewModel.overtimeHours150, specifier: "%.2f") hours")
                         }
                     }
                 }
+                .padding(.horizontal)
+            }
+            .padding(.vertical)
+        }
+        .navigationTitle("Reports")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { showingSearchSheet = true }) {
+                    Image(systemName: "magnifyingglass")
+                }
+            }
+        }
+        .sheet(isPresented: $showingSearchSheet) {
+            SearchShiftView()
+        }
+    }
+}
+
+public struct ShiftReportCard: View {
+    let shift: ShiftModel
+    
+    public init(shift: ShiftModel) {
+        self.shift = shift
+    }
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(shift.startTime, style: .date)
+                .font(.headline)
+            
+            Text("Start Time: \(shift.startTime, format: .dateTime.hour().minute()) - End Time: \(shift.endTime, format: .dateTime.hour().minute())")
+                .foregroundColor(.secondary)
+            
+            HStack {
+                Spacer()
+                Text("₪\(shift.grossWage, specifier: "%.2f")")
+                    .font(.headline)
+                    .foregroundColor(.purple)
+            }
+        }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(10)
+        .shadow(radius: 1)
+    }
+}
+
+public struct SearchShiftView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = ReportViewModel()
+    @State private var startDate = Date()
+    @State private var endDate = Date()
+    @State private var showResults = false
+    @State private var showingShareSheet = false
+    @State private var pdfData: Data?
+    
+    private let exportService = ExportService()
+    
+    public init() {}
+    
+    private func exportToPDF() {
+        Task {
+            do {
+                let username = UserDefaults.standard.string(forKey: "username") ?? "User"
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
                 
-                Section(header: Text("Date Range")) {
-                    DatePicker("Start Date", selection: $viewModel.startDate, displayedComponents: [.date])
-                    DatePicker("End Date", selection: $viewModel.endDate, displayedComponents: [.date])
+                let periodString = "\(dateFormatter.string(from: startDate)) - \(dateFormatter.string(from: endDate))"
+                pdfData = try await exportService.generateSearchReport(
+                    shifts: viewModel.shifts,
+                    username: username,
+                    periodString: periodString,
+                    summary: (
+                        totalDays: viewModel.totalWorkingDays,
+                        totalHours: viewModel.totalHours,
+                        grossWage: viewModel.grossWage,
+                        netWage: viewModel.netWage
+                    )
+                )
+                showingShareSheet = true
+            } catch {
+                print("Error generating PDF: \(error)")
+            }
+        }
+    }
+    
+    public var body: some View {
+        NavigationView {
+            VStack(spacing: 16) {
+                // Date Selection
+                Form {
+                    Section(header: Text("Search Period")) {
+                        DatePicker("Start Date",
+                                 selection: $startDate,
+                                 displayedComponents: [.date])
+                        
+                        DatePicker("End Date",
+                                 selection: $endDate,
+                                 displayedComponents: [.date])
+                    }
+                    
+                    Section {
+                        Button("Search") {
+                            Task {
+                                await viewModel.loadShiftsForDateRange(start: startDate, end: endDate)
+                                showResults = true
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.purple)
+                        .cornerRadius(10)
+                    }
+                }
+                
+                if showResults {
+                    if viewModel.shifts.isEmpty {
+                        Text("No shifts found for the selected period")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        VStack {
+                            // Export to PDF Button
+                            Button(action: exportToPDF) {
+                                HStack {
+                                    Image(systemName: "doc.text")
+                                    Text("Export to PDF")
+                                }
+                                .foregroundColor(.blue)
+                                .padding()
+                            }
+                            
+                            // Results Section
+                            ScrollView {
+                                VStack(spacing: 16) {
+                                    ForEach(viewModel.shifts) { shift in
+                                        ShiftReportCard(shift: shift)
+                                    }
+                                }
+                                .padding()
+                            }
+                            
+                            // Summary Section
+                            VStack(spacing: 8) {
+                                Divider()
+                                
+                                Group {
+                                    HStack {
+                                        Text("Total Working Days:")
+                                        Spacer()
+                                        Text("\(viewModel.totalWorkingDays)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Total Hours:")
+                                        Spacer()
+                                        Text(String(format: "%.2f", viewModel.totalHours))
+                                    }
+                                    
+                                    HStack {
+                                        Text("Gross Wage:")
+                                        Spacer()
+                                        Text("₪\(String(format: "%.2f", viewModel.grossWage))")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Net Wage:")
+                                        Spacer()
+                                        Text("₪\(String(format: "%.2f", viewModel.netWage))")
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            .padding(.vertical)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Search")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
+            .sheet(isPresented: $showingShareSheet, content: {
+                if let data = pdfData {
+                    ShareSheet(activityItems: [data])
+                }
+            })
+        }
+    }
+}
+
+public struct PrintOptionsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var pdfData: Data?
+    @Binding var showingShareSheet: Bool
+    
+    public init(pdfData: Binding<Data?>, showingShareSheet: Binding<Bool>) {
+        self._pdfData = pdfData
+        self._showingShareSheet = showingShareSheet
+    }
+    
+    public var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Report Options")) {
+                    // Add print options here
                 }
                 
                 Section {
                     Button("Generate Report") {
-                        Task {
-                            await viewModel.generateReport()
-                            if let pdf = viewModel.pdfData {
-                                pdfData = pdf
-                                showingPDFPreview = true
-                            }
-                        }
-                    }
-                    .disabled(!viewModel.isValid)
-                }
-                
-                Section(header: Text("Backup & Restore")) {
-                    Button("Export All Data") {
-                        Task {
-                            await viewModel.exportData()
-                        }
-                    }
-                    
-                    Button("Import Data") {
-                        viewModel.showingFilePicker = true
-                    }
-                }
-            }
-            .navigationTitle("Reports")
-            .sheet(isPresented: $showingPDFPreview) {
-                if let pdfData = pdfData {
-                    PDFPreviewView(data: pdfData, onShare: {
+                        // Generate PDF and set pdfData
                         showingShareSheet = true
-                    })
-                }
-            }
-            .sheet(isPresented: $viewModel.showingFilePicker) {
-                DocumentPicker(types: [.json]) { url in
-                    Task {
-                        await viewModel.importData(from: url)
+                        dismiss()
                     }
                 }
             }
-            .sheet(isPresented: $showingShareSheet) {
-                if let pdfData = pdfData {
-                    ShareSheet(items: [pdfData])
+            .navigationTitle("Print Report")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
                 }
-            }
-            .alert("Error", isPresented: .constant(viewModel.error != nil)) {
-                Button("OK") { viewModel.error = nil }
-            } message: {
-                Text(viewModel.error?.localizedDescription ?? "")
             }
         }
     }
 }
 
-struct PDFPreviewView: View {
+public struct PDFPreviewView: View {
     let data: Data
     let onShare: () -> Void
     @Environment(\.dismiss) private var dismiss
     
-    var body: some View {
+    public init(data: Data, onShare: @escaping () -> Void) {
+        self.data = data
+        self.onShare = onShare
+    }
+    
+    public var body: some View {
         NavigationView {
             PDFKitView(data: data)
-                .navigationTitle("Report Preview")
-                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .cancellationAction) {
                         Button("Done") {
                             dismiss()
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .primaryAction) {
                         Button("Share") {
                             onShare()
                         }
@@ -104,122 +434,72 @@ struct PDFPreviewView: View {
     }
 }
 
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
+#if os(iOS)
+public struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
     
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        return controller
+    public func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
     
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+    public func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
-struct DocumentPicker: UIViewControllerRepresentable {
+public struct DocumentPicker: UIViewControllerRepresentable {
     let types: [UTType]
     let onPick: (URL) -> Void
     
-    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+    public init(types: [UTType], onPick: @escaping (URL) -> Void) {
+        self.types = types
+        self.onPick = onPick
+    }
+    
+    public func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
         picker.delegate = context.coordinator
         return picker
     }
     
-    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+    public func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         Coordinator(onPick: onPick)
     }
     
-    class Coordinator: NSObject, UIDocumentPickerDelegate {
+    public class Coordinator: NSObject, UIDocumentPickerDelegate {
         let onPick: (URL) -> Void
         
-        init(onPick: @escaping (URL) -> Void) {
+        public init(onPick: @escaping (URL) -> Void) {
             self.onPick = onPick
         }
         
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
             onPick(url)
         }
     }
 }
+#endif
 
-struct PDFKitView: UIViewRepresentable {
+public struct PDFKitView: UIViewRepresentable {
     let data: Data
     
-    func makeUIView(context: Context) -> PDFView {
+    public init(data: Data) {
+        self.data = data
+    }
+    
+    public func makeUIView(context: Context) -> PDFView {
         let pdfView = PDFView()
         pdfView.document = PDFDocument(data: data)
         pdfView.autoScales = true
         return pdfView
     }
     
-    func updateUIView(_ uiView: PDFView, context: Context) {}
-}
-
-enum ReportType: String, CaseIterable, Identifiable {
-    case weekly = "Weekly Summary"
-    case monthly = "Monthly Summary"
-    case custom = "Custom Range"
-    
-    var id: String { rawValue }
-}
-
-class ReportViewModel: ObservableObject {
-    @Published var selectedReportType: ReportType = .weekly
-    @Published var startDate: Date = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
-    @Published var endDate: Date = Date()
-    @Published var pdfData: Data?
-    @Published var error: Error?
-    @Published var showingFilePicker = false
-    
-    private let repository: ShiftRepositoryProtocol
-    private let exportService: ExportServiceProtocol
-    
-    var isValid: Bool {
-        endDate >= startDate
-    }
-    
-    init(repository: ShiftRepositoryProtocol = ShiftRepository(),
-         exportService: ExportServiceProtocol = ExportService()) {
-        self.repository = repository
-        self.exportService = exportService
-    }
-    
-    @MainActor
-    func generateReport() async {
-        do {
-            let shifts = try await repository.fetchShiftsInDateRange(from: startDate, to: endDate)
-            pdfData = try await exportService.generatePDFReport(shifts: shifts, startDate: startDate, endDate: endDate)
-        } catch {
-            self.error = error
-        }
-    }
-    
-    @MainActor
-    func exportData() async {
-        do {
-            let data = try await exportService.exportDataToJSON()
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent("shifts_backup.json")
-            try data.write(to: url)
-            showingFilePicker = true
-        } catch {
-            self.error = error
-        }
-    }
-    
-    @MainActor
-    func importData(from url: URL) async {
-        do {
-            let data = try Data(contentsOf: url)
-            try await exportService.importDataFromJSON(data)
-        } catch {
-            self.error = error
-        }
-    }
+    public func updateUIView(_ uiView: PDFView, context: Context) {}
 }
 
 #Preview {
-    ReportView()
+    NavigationView {
+        ReportView()
+    }
 } 

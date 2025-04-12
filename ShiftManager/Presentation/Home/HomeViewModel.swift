@@ -1,20 +1,20 @@
 import Foundation
 import CoreData
 
-class HomeViewModel: ObservableObject {
-    @Published var todayShifts: [ShiftModel] = []
-    @Published var weeklySummary: WeeklySummary?
-    @Published var isLoading = false
-    @Published var error: Error?
+public class HomeViewModel: ObservableObject {
+    @Published public var todayShifts: [ShiftModel] = []
+    @Published public var weeklySummary: WeeklySummary?
+    @Published public var isLoading = false
+    @Published public var error: Error?
     
     private let repository: ShiftRepositoryProtocol
     
-    init(repository: ShiftRepositoryProtocol = ShiftRepository()) {
+    public init(repository: ShiftRepositoryProtocol = ShiftRepository()) {
         self.repository = repository
     }
     
     @MainActor
-    func loadData() async {
+    public func loadData() async {
         isLoading = true
         do {
             // Load today's shifts
@@ -36,21 +36,21 @@ class HomeViewModel: ObservableObject {
         isLoading = false
     }
     
-    func totalHoursWorked() -> TimeInterval {
+    public func totalHoursWorked() -> TimeInterval {
         return todayShifts.reduce(0) { $0 + $1.duration }
     }
     
-    func totalEarnings(rate: Double) -> Double {
+    public func totalEarnings(rate: Double) -> Double {
         return totalHoursWorked() / 3600 * rate
     }
 }
 
-struct WeeklySummary {
-    let totalHours: Double
-    let overtimeHours: Double
-    let totalShifts: Int
+public struct WeeklySummary {
+    public let totalHours: Double
+    public let overtimeHours: Double
+    public let totalShifts: Int
     
-    init(shifts: [ShiftModel]) {
+    public init(shifts: [ShiftModel]) {
         totalHours = shifts.reduce(0) { $0 + $1.duration / 3600 }
         overtimeHours = shifts.filter { $0.isOvertime }.reduce(0) { $0 + $1.duration / 3600 }
         totalShifts = shifts.count
