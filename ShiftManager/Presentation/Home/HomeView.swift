@@ -10,7 +10,7 @@ public struct HomeView: View {
         NavigationView {
             VStack(spacing: 16) {
                 // Title with custom font size
-                Text("Shift Manager")
+                Text("Shift Manager".localized)
                     .font(.system(size: 32, weight: .bold))
                     .padding(.top)
                 
@@ -20,7 +20,7 @@ public struct HomeView: View {
                         // Home Button (Main Screen)
                         Button(action: { showingUpcomingShifts = true }) {
                             MenuButton(
-                                title: "Upcoming Shifts",
+                                title: "Coming Shifts".localized,
                                 icon: "house.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -29,7 +29,7 @@ public struct HomeView: View {
                         // Shift Manager Button
                         NavigationLink(destination: ShiftManagerView()) {
                             MenuButton(
-                                title: "Shift Manager",
+                                title: "Shift Manager".localized,
                                 icon: "briefcase.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -38,7 +38,7 @@ public struct HomeView: View {
                         // Reports Button
                         NavigationLink(destination: ReportView()) {
                             MenuButton(
-                                title: "Reports",
+                                title: "Reports".localized,
                                 icon: "chart.bar.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -47,7 +47,7 @@ public struct HomeView: View {
                         // Guide Button
                         NavigationLink(destination: GuideView()) {
                             MenuButton(
-                                title: "Guide",
+                                title: "Guide".localized,
                                 icon: "info.circle.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -56,7 +56,7 @@ public struct HomeView: View {
                         // Overtime Rules Button
                         NavigationLink(destination: OvertimeRulesView()) {
                             MenuButton(
-                                title: "Overtime Rules",
+                                title: "Overtime Rules".localized,
                                 icon: "clock.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -65,7 +65,7 @@ public struct HomeView: View {
                         // Settings Button
                         NavigationLink(destination: SettingsView()) {
                             MenuButton(
-                                title: "Settings",
+                                title: "Settings".localized,
                                 icon: "gearshape.fill",
                                 color: Color(red: 0.8, green: 0.7, blue: 1.0)
                             )
@@ -78,11 +78,11 @@ public struct HomeView: View {
         .sheet(isPresented: $showingUpcomingShifts) {
             NavigationView {
                 UpcomingShiftsView()
-                    .navigationTitle("Upcoming Shifts")
+                    .navigationTitle("Upcoming Shifts".localized)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Done") {
+                            Button("Done".localized) {
                                 showingUpcomingShifts = false
                             }
                         }

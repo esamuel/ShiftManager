@@ -19,13 +19,11 @@ class WageCalculationService {
         let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
         let weekday = calendar.component(.weekday, from: date)
         
-        if startWorkOnSunday {
-            // If week starts on Sunday, Saturday is special
-            return weekday == 7 // 7 is Saturday
-        } else {
-            // If week starts on Monday, Sunday is special
-            return weekday == 1 // 1 is Sunday
-        }
+        // If week starts on Sunday, Saturday (7) is special
+        // If week starts on Monday, Sunday (1) is special
+        let isSpecial = weekday == (startWorkOnSunday ? 7 : 1)
+        print("Date: \(date), Weekday: \(weekday), StartWorkOnSunday: \(startWorkOnSunday), IsSpecial: \(isSpecial)")
+        return isSpecial
     }
     
     func calculateWage(for shift: ShiftModel) async throws -> WageCalculation {
@@ -33,76 +31,114 @@ class WageCalculationService {
         let hoursWorked = duration / 3600 // Convert seconds to hours
         
         // Get base settings
-        let baseHoursWeekday = Double(UserDefaults.standard.integer(forKey: "baseHoursWeekday"))
-        let baseHoursSpecialDay = Double(UserDefaults.standard.integer(forKey: "baseHoursSpecialDay"))
-        let hourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
+        let defaultHourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
         let taxDeduction = UserDefaults.standard.double(forKey: "taxDeduction") / 100
+        let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
         
-        // Determine day type for both start and end times
-        let isStartSpecial = isSpecialWorkDay(shift.startTime)
-        let isEndSpecial = isSpecialWorkDay(shift.endTime)
-        let isStartFestive = await isFestiveDay(shift.startTime)
-        let isEndFestive = await isFestiveDay(shift.endTime)
+        // Check if this is a patrol shift ("סייר")
+        let hourlyWage = shift.notes.contains("סייר") ? 46.04 : defaultHourlyWage
         
-        // If either start or end time is on a special day, treat the whole shift as special
-        let isSpecialDay = isStartSpecial || isEndSpecial || isStartFestive || isEndFestive || shift.isSpecialDay
+        // Determine if it's a special day based on the work week start setting
+        let weekday = calendar.component(.weekday, from: shift.startTime)
+        let isSpecialDayByDate = weekday == (startWorkOnSunday ? 7 : 1) // Saturday (7) for Sunday start, Sunday (1) for Monday start
         
-        // Get applicable overtime rules
-        let request = NSFetchRequest<OvertimeRule>(entityName: "OvertimeRule")
-        request.predicate = NSPredicate(format: "isActive == YES")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \OvertimeRule.dailyThreshold, ascending: true)]
+        // A day is special if either it's manually marked as special or it falls on the special day of the week
+        let isSpecialDay = shift.isSpecialDay || isSpecialDayByDate
         
-        let rules = try context.fetch(request)
-        
-        // Calculate wages based on rules
-        var remainingHours = hoursWorked
         var totalWage = 0.0
         var breakdowns: [WageBreakdown] = []
+        var remainingHours = hoursWorked
         
-        let baseHours = isSpecialDay ? baseHoursSpecialDay : baseHoursWeekday
-        
-        // First calculate base rate
-        if remainingHours > 0 {
-            let baseRateHours = min(remainingHours, baseHours)
-            let baseRate = isSpecialDay ? 1.5 : 1.0
-            let baseWage = baseRateHours * hourlyWage * baseRate
+        if isSpecialDay {
+            // Special day calculation
+            // Base hours (first 8 hours) at 150%
+            let baseHours = min(remainingHours, 8.0)
+            let baseWage = baseHours * hourlyWage * 1.5
             
             breakdowns.append(WageBreakdown(
-                hours: baseRateHours,
-                rate: baseRate,
+                hours: baseHours,
+                rate: 1.5,
                 amount: baseWage,
-                type: isSpecialDay ? .special : .regular
+                type: .special
             ))
             
             totalWage += baseWage
-            remainingHours -= baseRateHours
-        }
-        
-        // Apply overtime rules in order
-        for rule in rules where remainingHours > 0 {
-            let threshold = rule.dailyThreshold
-            let multiplier = rule.multiplier
+            remainingHours -= baseHours
             
-            if hoursWorked > threshold {
-                let overtimeHours = min(remainingHours, hoursWorked - threshold)
-                let overtimeWage = overtimeHours * hourlyWage * multiplier
+            // First overtime tier (hours 9-10) at 175%
+            if remainingHours > 0 {
+                let overtime1Hours = min(remainingHours, 2.0)
+                let overtime1Wage = overtime1Hours * hourlyWage * 1.75
                 
                 breakdowns.append(WageBreakdown(
-                    hours: overtimeHours,
-                    rate: multiplier,
-                    amount: overtimeWage,
+                    hours: overtime1Hours,
+                    rate: 1.75,
+                    amount: overtime1Wage,
                     type: .overtime
                 ))
                 
-                totalWage += overtimeWage
-                remainingHours -= overtimeHours
+                totalWage += overtime1Wage
+                remainingHours -= overtime1Hours
             }
-        }
-        
-        // Calculate weekly overtime if applicable
-        if let weeklyOvertime = try await calculateWeeklyOvertime(for: shift) {
-            totalWage += weeklyOvertime.amount
-            breakdowns.append(weeklyOvertime)
+            
+            // Second overtime tier (after 10 hours) at 200%
+            if remainingHours > 0 {
+                let overtime2Wage = remainingHours * hourlyWage * 2.0
+                
+                breakdowns.append(WageBreakdown(
+                    hours: remainingHours,
+                    rate: 2.0,
+                    amount: overtime2Wage,
+                    type: .overtime
+                ))
+                
+                totalWage += overtime2Wage
+            }
+        } else {
+            // Regular day calculation
+            // Base hours (first 8 hours) at 100%
+            let baseHours = min(remainingHours, 8.0)
+            let baseWage = baseHours * hourlyWage
+            
+            breakdowns.append(WageBreakdown(
+                hours: baseHours,
+                rate: 1.0,
+                amount: baseWage,
+                type: .regular
+            ))
+            
+            totalWage += baseWage
+            remainingHours -= baseHours
+            
+            // First overtime tier (hours 9-10) at 125%
+            if remainingHours > 0 {
+                let overtime1Hours = min(remainingHours, 2.0)
+                let overtime1Wage = overtime1Hours * hourlyWage * 1.25
+                
+                breakdowns.append(WageBreakdown(
+                    hours: overtime1Hours,
+                    rate: 1.25,
+                    amount: overtime1Wage,
+                    type: .overtime
+                ))
+                
+                totalWage += overtime1Wage
+                remainingHours -= overtime1Hours
+            }
+            
+            // Second overtime tier (after 10 hours) at 150%
+            if remainingHours > 0 {
+                let overtime2Wage = remainingHours * hourlyWage * 1.5
+                
+                breakdowns.append(WageBreakdown(
+                    hours: remainingHours,
+                    rate: 1.5,
+                    amount: overtime2Wage,
+                    type: .overtime
+                ))
+                
+                totalWage += overtime2Wage
+            }
         }
         
         let taxAmount = totalWage * taxDeduction
@@ -115,7 +151,7 @@ class WageCalculationService {
             netWage: netWage,
             breakdowns: breakdowns,
             isSpecialDay: isSpecialDay,
-            isFestiveDay: isStartFestive || isEndFestive
+            isFestiveDay: false
         )
     }
     

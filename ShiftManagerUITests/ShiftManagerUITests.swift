@@ -8,14 +8,30 @@
 import XCTest
 
 final class ShiftManagerUITests: XCTestCase {
-
+    let app = XCUIApplication()
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        app.launchArguments = ["-UITesting"]
+        app.launch()
+    }
+    
+    func testAppLaunch() throws {
+        // Verify the app launches successfully
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 5))
+    }
+    
+    func testTabBarNavigation() throws {
+        // Test navigation between tabs
+        let tabBar = app.tabBars.element
+        XCTAssertTrue(tabBar.exists)
+        
+        // Test each tab
+        let tabs = ["Home", "Shifts", "Settings"]
+        for tab in tabs {
+            tabBar.buttons[tab].tap()
+            XCTAssertTrue(app.navigationBars[tab].exists)
+        }
     }
 
     override func tearDownWithError() throws {

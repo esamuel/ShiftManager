@@ -47,7 +47,14 @@ struct DataImportView: View {
     private func addShift() {
         let shift = Shift(context: viewContext)
         shift.id = UUID()
-        shift.title = "Shift on \(startDate.formatted(date: .numeric, time: .omitted))"
+        
+        // Format the date in a localized way
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        let dateString = dateFormatter.string(from: startDate)
+        shift.title = String(format: "Shift on %@".localized, dateString)
+        
         shift.startTime = startDate
         shift.endTime = endDate
         shift.notes = notes

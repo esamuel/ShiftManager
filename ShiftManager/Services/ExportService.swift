@@ -236,11 +236,15 @@ class ExportService: ExportServiceProtocol {
             summaryTitle.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: headerAttributes)
             
             yPosition += 25
+            
+            // Get currency symbol from LocalizationManager
+            let currencySymbol = LocalizationManager.shared.currencySymbol
+            
             let summaryItems = [
                 "Total Working Days: \(summary.totalDays)",
                 "Total Hours: \(String(format: "%.2f", summary.totalHours))",
-                "Gross Wage: ₪\(String(format: "%.2f", summary.grossWage))",
-                "Net Wage: ₪\(String(format: "%.2f", summary.netWage))"
+                "Gross Wage: \(currencySymbol)\(String(format: "%.2f", summary.grossWage))",
+                "Net Wage: \(currencySymbol)\(String(format: "%.2f", summary.netWage))"
             ]
             
             for item in summaryItems {

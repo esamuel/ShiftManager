@@ -126,16 +126,28 @@ class ShiftManagerViewModel: ObservableObject {
             return
         }
         
+        // Determine if it's a special day based on the work week start setting
+        let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
+        let weekday = calendar.component(.weekday, from: shiftStart)
+        let isSpecialDay = weekday == (startWorkOnSunday ? 7 : 1) // Saturday (7) for Sunday start, Sunday (1) for Monday start
+        
         // Create new shift
         let entity = Shift(context: context)
         entity.id = UUID()
-        entity.title = "Shift on \(selectedDate.formatted(date: .numeric, time: .omitted))"
+        
+        // Format the date in a localized way
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        let dateString = dateFormatter.string(from: selectedDate)
+        entity.title = String(format: "Shift on %@".localized, dateString)
+        
         entity.startTime = shiftStart
         entity.endTime = shiftEnd
         entity.notes = notes
         entity.createdAt = Date()
         entity.isOvertime = false
-        entity.isSpecialDay = false
+        entity.isSpecialDay = isSpecialDay
         entity.category = ""
         
         // Calculate wages
@@ -256,15 +268,27 @@ class ShiftManagerViewModel: ObservableObject {
     }
     
     func createShift(startTime: Date, endTime: Date, notes: String) async {
+        let calendar = Calendar.current
+        let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
+        let weekday = calendar.component(.weekday, from: startTime)
+        let isSpecialDay = weekday == (startWorkOnSunday ? 7 : 1) // Saturday (7) for Sunday start, Sunday (1) for Monday start
+        
         let entity = Shift(context: context)
         entity.id = UUID()
-        entity.title = "Shift on \(selectedDate.formatted(date: .numeric, time: .omitted))"
+        
+        // Format the date in a localized way
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        let dateString = dateFormatter.string(from: selectedDate)
+        entity.title = String(format: "Shift on %@".localized, dateString)
+        
         entity.startTime = startTime
         entity.endTime = endTime
         entity.notes = notes
         entity.createdAt = Date()
         entity.isOvertime = false
-        entity.isSpecialDay = false
+        entity.isSpecialDay = isSpecialDay
         entity.category = ""
         
         if let calculation = try? await wageCalculationService.calculateWage(for: ShiftModel(

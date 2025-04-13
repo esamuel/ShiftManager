@@ -7,7 +7,7 @@ public struct UpcomingShiftsView: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Upcoming Shifts")
+            Text("Upcoming Shifts".localized)
                 .font(.title2)
                 .bold()
                 .padding(.horizontal)
@@ -16,7 +16,7 @@ public struct UpcomingShiftsView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if viewModel.upcomingShifts.isEmpty {
-                Text("No upcoming shifts")
+                Text("No upcoming shifts".localized)
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -53,7 +53,7 @@ public struct UpcomingShiftsView: View {
                                         .cornerRadius(8)
                                     }
                                 } else {
-                                    Text("No shifts scheduled")
+                                    Text("No shifts scheduled".localized)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                         .padding(8)

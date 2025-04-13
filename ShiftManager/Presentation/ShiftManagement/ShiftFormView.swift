@@ -7,21 +7,21 @@ struct ShiftFormView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Shift Details")) {
-                    TextField("Title", text: $viewModel.title)
+                Section(header: Text("Shift Details".localized)) {
+                    TextField("Title".localized, text: $viewModel.title)
                     
-                    DatePicker("Start Time", selection: $viewModel.startTime, displayedComponents: [.date, .hourAndMinute])
-                    DatePicker("End Time", selection: $viewModel.endTime, displayedComponents: [.date, .hourAndMinute])
+                    DatePicker("Start Time".localized, selection: $viewModel.startTime, displayedComponents: [.date, .hourAndMinute])
+                    DatePicker("End Time".localized, selection: $viewModel.endTime, displayedComponents: [.date, .hourAndMinute])
                     
-                    Toggle("Overtime", isOn: $viewModel.isOvertime)
+                    Toggle("Overtime".localized, isOn: $viewModel.isOvertime)
                     
-                    TextField("Notes", text: $viewModel.notes, axis: .vertical)
+                    TextField("Notes".localized, text: $viewModel.notes, axis: .vertical)
                         .lineLimit(3...6)
                 }
                 
-                Section(header: Text("Calculations")) {
+                Section(header: Text("Calculations".localized)) {
                     HStack {
-                        Text("Duration")
+                        Text("Duration".localized)
                         Spacer()
                         Text(viewModel.formattedDuration)
                             .foregroundColor(.secondary)
@@ -29,7 +29,7 @@ struct ShiftFormView: View {
                     
                     if viewModel.isOvertime {
                         HStack {
-                            Text("Overtime Hours")
+                            Text("Overtime Hours".localized)
                             Spacer()
                             Text(viewModel.formattedOvertimeHours)
                                 .foregroundColor(.secondary)
@@ -37,16 +37,16 @@ struct ShiftFormView: View {
                     }
                 }
             }
-            .navigationTitle(viewModel.isEditing ? "Edit Shift" : "New Shift")
+            .navigationTitle(viewModel.isEditing ? "Edit Shift".localized : "New Shift".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    Button("Cancel".localized) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    Button("Save".localized) {
                         Task {
                             await viewModel.save()
                             dismiss()
@@ -55,8 +55,8 @@ struct ShiftFormView: View {
                     .disabled(!viewModel.isValid)
                 }
             }
-            .alert("Error", isPresented: .constant(viewModel.error != nil)) {
-                Button("OK") { viewModel.error = nil }
+            .alert("Error".localized, isPresented: .constant(viewModel.error != nil)) {
+                Button("OK".localized) { viewModel.error = nil }
             } message: {
                 Text(viewModel.error?.localizedDescription ?? "")
             }

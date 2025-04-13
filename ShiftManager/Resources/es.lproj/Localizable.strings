@@ -1,0 +1,266 @@
+"Language" = "Idioma";
+"Settings" = "Ajustes";
+"Select Language" = "Seleccionar idioma";
+"Save" = "Guardar";
+"Cancel" = "Cancelar";
+"OK" = "Aceptar";
+"Error" = "Error";
+"Success" = "Éxito";
+"Loading" = "Cargando";
+"Please wait" = "Por favor espere";
+
+"Home" = "Inicio";
+"Manager" = "Gestor";
+"Reports" = "Informes";
+"Guide" = "Guía";
+"Settings" = "Ajustes";
+"Coming Shifts" = "Turnos Próximos";
+
+"Upcoming Shifts" = "Turnos próximos";
+"Done" = "Hecho";
+"Overtime Rules" = "Reglas de horas extras";
+
+"Personal Information" = "Información personal";
+"Username" = "Nombre de usuario";
+"Save Changes" = "Guardar cambios";
+"Appearance" = "Apariencia";
+"Theme" = "Tema";
+"System" = "Sistema";
+"Light" = "Claro";
+"Dark" = "Oscuro";
+"Shift Settings" = "Ajustes de turnos";
+"App Settings" = "Ajustes de la aplicación";
+"About" = "Acerca de";
+"Version" = "Versión";
+
+"Hourly Wage" = "Salario por hora";
+"Tax Deduction (%)" = "Deducción fiscal (%)";
+"Base Hours (Weekday)" = "Horas base (día laboral)";
+"Base Hours (Special Day)" = "Horas base (día especial)";
+"Hours Settings" = "Configuración de horas";
+"Wage Settings" = "Configuración de salario";
+"Start work on Sunday" = "Comenzar a trabajar el domingo";
+"Start work on Monday" = "Comenzar a trabajar el lunes";
+"Country" = "País";
+"Currency" = "Moneda";
+"Save Settings" = "Guardar ajustes";
+"Settings Saved" = "Ajustes guardados";
+
+"Welcome to ShiftManager" = "Bienvenido a ShiftManager";
+"ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features." = "ShiftManager te ayuda a realizar un seguimiento de tus turnos de trabajo, calcular salarios y gestionar horas extras. Esta guía te mostrará todas las funciones de la aplicación.";
+"1. Initial Setup" = "1. Configuración inicial";
+"Before you start, set up your basic information:" = "Antes de comenzar, configura tu información básica:";
+"Go to Settings → Personal Information and:" = "Ve a Ajustes → Información personal y:";
+"Enter your username" = "Ingresa tu nombre de usuario";
+"Tap 'Save Changes' to save your information" = "Toca 'Guardar cambios' para guardar tu información";
+"Navigate to Shift Settings and set your:" = "Navega a Ajustes de turnos y configura tu:";
+"Hourly wage" = "Salario por hora";
+"Tax deduction percentage" = "Porcentaje de deducción fiscal";
+"Base hours for weekdays and special days" = "Horas base para días laborales y días especiales";
+"Work week start day (Sunday/Monday)" = "Día de inicio de la semana laboral (domingo/lunes)";
+
+"Total Hours" = "Horas totales";
+"Regular Hours" = "Horas regulares";
+"Overtime Hours" = "Horas extras";
+"Earnings" = "Ganancias";
+"Tax Deductions" = "Deducciones fiscales";
+"Net Earnings" = "Ganancias netas";
+"Select Period" = "Seleccionar período";
+"Daily" = "Diario";
+"Weekly" = "Semanal";
+"Monthly" = "Mensual";
+"Yearly" = "Anual";
+"Custom" = "Personalizado";
+"Export Report" = "Exportar informe";
+"Share" = "Compartir";
+"Print" = "Imprimir";
+
+"Add Shift" = "Añadir turno";
+"Edit Shift" = "Editar turno";
+"Delete Shift" = "Eliminar turno";
+"Start Time" = "Hora de inicio";
+"End Time" = "Hora de fin";
+"Date" = "Fecha";
+"Notes" = "Notas";
+"Save Shift" = "Guardar turno";
+"Delete" = "Eliminar";
+"Are you sure you want to delete this shift?" = "¿Estás seguro de que quieres eliminar este turno?";
+"Shift Details" = "Detalles del turno";
+"Duration" = "Duración";
+"Regular Pay" = "Pago regular";
+"Overtime Pay" = "Pago de horas extras";
+"Total Pay" = "Pago total";
+
+"Shift Manager" = "Gestor de Turnos";
+"Shift Manager" = "Gestor de Turnos";
+"Reports" = "Informes";
+"Guide" = "Guía";
+"Overtime Rules" = "Reglas de horas extras";
+"Settings" = "Ajustes";
+"Upcoming Shifts" = "Turnos Próximos";
+"Done" = "Hecho";
+
+// Additional UI Elements
+"Add New Shift" = "Añadir nuevo turno";
+"Select Date" = "Seleccionar fecha";
+"Select Time" = "Seleccionar hora";
+"Add Note" = "Añadir nota";
+"Existing Shifts" = "Turnos existentes";
+"Current Month" = "Mes actual";
+"All Months" = "Todos los meses";
+"Special Day" = "Día especial";
+"Long Shift Warning" = "Advertencia de turno largo";
+"Accept" = "Aceptar";
+"No upcoming shifts" = "No hay turnos próximos";
+"No shifts scheduled" = "No hay turnos programados";
+"Weekly View" = "Vista semanal";
+"Monthly View" = "Vista mensual";
+"Wage Breakdown" = "Desglose salarial";
+"Total Working Days" = "Total días trabajados";
+"You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Estás intentando añadir un turno de más de 12 horas. ¿Estás seguro de que quieres continuar?";
+"A shift already exists for this date and time period." = "Ya existe un turno para esta fecha y periodo de tiempo.";
+"Shift Already Exists" = "El turno ya existe";
+"Calculations" = "Cálculos";
+"Title" = "Título";
+"Overtime" = "Horas extras";
+
+// Date and Time Format Strings
+"Start Time: %@" = "Hora de inicio: %@";
+"End Time: %@" = "Hora de fin: %@";
+"Start Time: %@ - End Time: %@" = "Hora de inicio: %@ - Hora de fin: %@";
+"Total Hours: %@" = "Horas totales: %@";
+"Gross Wage: ₪%@" = "Salario bruto: %@";
+"Net Wage: ₪%@" = "Salario neto: %@";
+"Select Date: %@" = "Seleccionar fecha: %@";
+
+// Month Names
+"January" = "Enero";
+"February" = "Febrero";
+"March" = "Marzo";
+"April" = "Abril";
+"May" = "Mayo";
+"June" = "Junio";
+"July" = "Julio";
+"August" = "Agosto";
+"September" = "Septiembre";
+"October" = "Octubre";
+"November" = "Noviembre";
+"December" = "Diciembre";
+
+// Day Names
+"Monday" = "Lunes";
+"Tuesday" = "Martes";
+"Wednesday" = "Miércoles";
+"Thursday" = "Jueves";
+"Friday" = "Viernes";
+"Saturday" = "Sábado";
+"Sunday" = "Domingo";
+
+// Date Components
+"%d in %@" = "%d de %@";
+"%@ %d, %d" = "%d de %@ de %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Vista semanal";
+"Monthly View" = "Vista mensual";
+"Wage Breakdown" = "Desglose salarial";
+"Total Working Days:" = "Total días trabajados:";
+"Total Hours:" = "Horas totales:";
+"Gross Wage:" = "Salario bruto:";
+"Net Wage:" = "Salario neto:";
+
+// Date Format Patterns
+"Shift on %@" = "Turno el %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Reglas de horas extras";
+"Base Hours (Weekday)" = "Horas base (día laboral)";
+"Base Hours (Special Day)" = "Horas base (día especial)";
+"hours" = "horas";
+"After %d hours at %.2fx rate @ %.2fx" = "Después de %d horas a tarifa %.2fx @ %.2fx";
+"Special Days" = "Días especiales";
+"Weekdays" = "Días laborales";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Añadir regla de horas extras";
+"Edit Overtime Rule" = "Editar regla de horas extras";
+"Hours Threshold" = "Umbral de horas";
+"Rate" = "Tarifa";
+"Applies to Special Days" = "Se aplica a días especiales";
+"Cancel" = "Cancelar";
+"Save" = "Guardar";
+
+// Search
+"Search" = "Buscar";
+"Search Period" = "Periodo de búsqueda";
+"Start Date" = "Fecha de inicio";
+"End Date" = "Fecha de fin";
+"Export to PDF" = "Exportar a PDF";
+"Total Working Days:" = "Total días trabajados:";
+"Total Hours:" = "Horas totales:";
+"Gross Wage:" = "Salario bruto:";
+"Net Wage:" = "Salario neto:";
+"No shifts found for the selected period" = "No se encontraron turnos para el período seleccionado";
+
+// Month Names
+"January" = "Enero";
+"February" = "Febrero";
+"March" = "Marzo";
+"April" = "Abril";
+"May" = "Mayo";
+"June" = "Junio";
+"July" = "Julio";
+"August" = "Agosto";
+"September" = "Septiembre";
+"October" = "Octubre";
+"November" = "Noviembre";
+"December" = "Diciembre";
+
+// Day Names
+"Monday" = "Lunes";
+"Tuesday" = "Martes";
+"Wednesday" = "Miércoles";
+"Thursday" = "Jueves";
+"Friday" = "Viernes";
+"Saturday" = "Sábado";
+"Sunday" = "Domingo";
+
+// Date Components
+"%d in %@" = "%d de %@";
+"%@ %d, %d" = "%d de %@ de %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Vista semanal";
+"Monthly View" = "Vista mensual";
+"Wage Breakdown" = "Desglose salarial";
+"Total Working Days:" = "Total días trabajados:";
+"Total Hours:" = "Horas totales:";
+"Gross Wage:" = "Salario bruto:";
+"Net Wage:" = "Salario neto:";
+
+// Date Format Patterns
+"Shift on %@" = "Turno el %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Reglas de horas extras";
+"Base Hours (Weekday)" = "Horas base (día laboral)";
+"Base Hours (Special Day)" = "Horas base (día especial)";
+"hours" = "horas";
+"After %d hours at %.2fx rate @ %.2fx" = "Después de %d horas a tarifa %.2fx @ %.2fx";
+"Special Days" = "Días especiales";
+"Weekdays" = "Días laborales";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Añadir regla de horas extras";
+"Edit Overtime Rule" = "Editar regla de horas extras";
+"Hours Threshold" = "Umbral de horas";
+"Rate" = "Tarifa";
+"Applies to Special Days" = "Se aplica a días especiales";
+"Cancel" = "Cancelar";
+"Save" = "Guardar"; 

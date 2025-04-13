@@ -40,7 +40,7 @@ struct OvertimeRulesView: View {
             }
             .padding(.bottom, 20)
         }
-        .navigationTitle("Overtime Rules")
+        .navigationTitle("Overtime Rules".localized)
         .sheet(isPresented: $showingAddRule) {
             AddOvertimeRuleView(viewModel: AddOvertimeRuleViewModel(onSave: { rule in
                 viewModel.addRule(rule)
@@ -64,10 +64,10 @@ struct OvertimeRulesView: View {
     private var baseHoursSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading) {
-                Text("Base Hours (Weekday)")
+                Text("Base Hours (Weekday)".localized)
                     .font(.headline)
                 HStack {
-                    Text("\(viewModel.baseHoursWeekday) hours")
+                    Text("\(viewModel.baseHoursWeekday) \("hours".localized)")
                         .font(.title2)
                     Spacer()
                     Button(action: { viewModel.editBaseHours(isWeekday: true) }) {
@@ -78,10 +78,10 @@ struct OvertimeRulesView: View {
             }
             
             VStack(alignment: .leading) {
-                Text("Base Hours (Special Day)")
+                Text("Base Hours (Special Day)".localized)
                     .font(.headline)
                 HStack {
-                    Text("\(viewModel.baseHoursSpecialDay) hours")
+                    Text("\(viewModel.baseHoursSpecialDay) \("hours".localized)")
                         .font(.title2)
                     Spacer()
                     Button(action: { viewModel.editBaseHours(isWeekday: false) }) {
@@ -102,7 +102,7 @@ struct OvertimeRuleCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("After \(Int(rule.threshold)) hours at \(String(format: "%.2f", rule.multiplier))x rate @ \(String(format: "%.2f", rule.multiplier))x")
+                Text(String(format: "After %d hours at %.2fx rate @ %.2fx".localized, Int(rule.threshold), rule.multiplier, rule.multiplier))
                     .font(.headline)
                 Spacer()
                 
@@ -117,7 +117,7 @@ struct OvertimeRuleCard: View {
                 }
             }
             
-            Text(rule.isEnabled ? "Special Days" : "Weekdays")
+            Text(rule.isEnabled ? "Special Days".localized : "Weekdays".localized)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }

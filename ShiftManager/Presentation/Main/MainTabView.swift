@@ -8,25 +8,19 @@ public struct MainTabView: View {
             HomeView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("Upcoming Shifts")
+                    Text("Home".localized)
                 }
             
             ShiftManagerView()
                 .tabItem {
                     Image(systemName: "calendar")
-                    Text("Manager")
+                    Text("Manager".localized)
                 }
             
             ReportView()
                 .tabItem {
                     Image(systemName: "chart.bar.fill")
-                    Text("Reports")
-                }
-            
-            AppSettingsView()
-                .tabItem {
-                    Image(systemName: "gearshape.fill")
-                    Text("Settings")
+                    Text("Reports".localized)
                 }
         }
     }

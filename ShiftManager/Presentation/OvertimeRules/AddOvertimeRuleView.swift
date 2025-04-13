@@ -9,7 +9,7 @@ struct AddOvertimeRuleView: View {
             Form {
                 Section {
                     HStack {
-                        Text("Hours Threshold")
+                        Text("Hours Threshold".localized)
                         Spacer()
                         TextField("8", value: $viewModel.hoursThreshold, format: .number)
                             .keyboardType(.numberPad)
@@ -18,7 +18,7 @@ struct AddOvertimeRuleView: View {
                     }
                     
                     HStack {
-                        Text("Rate")
+                        Text("Rate".localized)
                         Spacer()
                         TextField("1.5", value: $viewModel.rate, format: .number)
                             .keyboardType(.decimalPad)
@@ -28,20 +28,20 @@ struct AddOvertimeRuleView: View {
                 }
                 
                 Section {
-                    Toggle("Applies to Special Days", isOn: $viewModel.appliesSpecialDays)
+                    Toggle("Applies to Special Days".localized, isOn: $viewModel.appliesSpecialDays)
                 }
             }
-            .navigationTitle(viewModel.isEditing ? "Edit Overtime Rule" : "Add Overtime Rule")
+            .navigationTitle(viewModel.isEditing ? "Edit Overtime Rule".localized : "Add Overtime Rule".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    Button("Cancel".localized) {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    Button("Save".localized) {
                         viewModel.save()
                         dismiss()
                     }
@@ -82,7 +82,7 @@ class AddOvertimeRuleViewModel: ObservableObject {
     func save() {
         let rule = OvertimeRuleModel(
             id: existingRule?.id ?? UUID(),
-            name: "After \(hoursThreshold) hours at \(String(format: "%.2f", rate))x",
+            name: String(format: "After %d hours at %.2fx rate @ %.2fx".localized, hoursThreshold, rate, rate),
             threshold: Double(hoursThreshold),
             multiplier: rate,
             isEnabled: appliesSpecialDays

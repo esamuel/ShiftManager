@@ -1,0 +1,276 @@
+"Language" = "Язык";
+"Settings" = "Настройки";
+"Select Language" = "Выбрать язык";
+"Save" = "Сохранить";
+"Cancel" = "Отмена";
+"OK" = "ОК";
+"Error" = "Ошибка";
+"Success" = "Успех";
+"Loading" = "Загрузка";
+"Please wait" = "Пожалуйста, подождите";
+
+// Tab Bar
+"Home" = "Главная";
+"Manager" = "Менеджер";
+"Reports" = "Отчеты";
+"Guide" = "Руководство";
+"Settings" = "Настройки";
+
+// Home View
+"Upcoming Shifts" = "Предстоящие смены";
+"Coming Shifts" = "Предстоящие смены";
+"Done" = "Готово";
+"Overtime Rules" = "Правила сверхурочных";
+
+// Settings
+"Personal Information" = "Личная информация";
+"Username" = "Имя пользователя";
+"Save Changes" = "Сохранить изменения";
+"Appearance" = "Внешний вид";
+"Theme" = "Тема";
+"System" = "Системная";
+"Light" = "Светлая";
+"Dark" = "Темная";
+"Shift Settings" = "Настройки смен";
+"App Settings" = "Настройки приложения";
+"About" = "О приложении";
+"Version" = "Версия";
+"Country" = "Страна";
+"Currency" = "Валюта";
+
+// Shift Settings
+"Hourly Wage" = "Почасовая оплата";
+"Tax Deduction (%)" = "Налоговый вычет (%)";
+"Base Hours (Weekday)" = "Базовые часы (будни)";
+"Base Hours (Special Day)" = "Базовые часы (особый день)";
+"Start work on Sunday" = "Начать работу в воскресенье";
+"Start work on Monday" = "Начать работу в понедельник";
+"Save Settings" = "Сохранить настройки";
+"Settings Saved" = "Настройки сохранены";
+"Hours Settings" = "Настройки часов";
+"Wage Settings" = "Настройки зарплаты";
+
+// Guide
+"Welcome to ShiftManager" = "Добро пожаловать в ShiftManager";
+"ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features." = "ShiftManager помогает вам отслеживать рабочие смены, рассчитывать заработную плату и управлять сверхурочными. Это руководство познакомит вас со всеми функциями приложения.";
+"1. Initial Setup" = "1. Начальная настройка";
+"Before you start, set up your basic information:" = "Перед началом работы настройте основную информацию:";
+"Go to Settings → Personal Information and:" = "Перейдите в Настройки → Личная информация и:";
+"Enter your username" = "Введите имя пользователя";
+"Tap 'Save Changes' to save your information" = "Нажмите 'Сохранить изменения', чтобы сохранить информацию";
+"Navigate to Shift Settings and set your:" = "Перейдите в Настройки смен и установите:";
+"Hourly wage" = "Почасовая оплата";
+"Tax deduction percentage" = "Процент налогового вычета";
+"Base hours for weekdays and special days" = "Базовые часы для будней и особых дней";
+"Work week start day (Sunday/Monday)" = "День начала рабочей недели (воскресенье/понедельник)";
+
+// Reports
+"Total Hours" = "Всего часов";
+"Regular Hours" = "Обычные часы";
+"Overtime Hours" = "Сверхурочные часы";
+"Earnings" = "Заработок";
+"Tax Deductions" = "Налоговые вычеты";
+"Net Earnings" = "Чистый заработок";
+"Select Period" = "Выбрать период";
+"Daily" = "Ежедневно";
+"Weekly" = "Еженедельно";
+"Monthly" = "Ежемесячно";
+"Yearly" = "Ежегодно";
+"Custom" = "Настраиваемый";
+"Export Report" = "Экспорт отчета";
+"Share" = "Поделиться";
+"Print" = "Печать";
+
+// Shift Manager
+"Add Shift" = "Добавить смену";
+"Edit Shift" = "Редактировать смену";
+"Delete Shift" = "Удалить смену";
+"Start Time" = "Время начала";
+"End Time" = "Время окончания";
+"Date" = "Дата";
+"Notes" = "Заметки";
+"Save Shift" = "Сохранить смену";
+"Delete" = "Удалить";
+"Are you sure you want to delete this shift?" = "Вы уверены, что хотите удалить эту смену?";
+"Shift Details" = "Детали смены";
+"Duration" = "Продолжительность";
+"Regular Pay" = "Обычная оплата";
+"Overtime Pay" = "Оплата сверхурочных";
+"Total Pay" = "Общая оплата";
+
+// Main Page
+"Shift Manager" = "Менеджер смен";
+"Home" = "Главная";
+"Shift Manager" = "Менеджер смен";
+"Reports" = "Отчеты";
+"Guide" = "Руководство";
+"Overtime Rules" = "Правила сверхурочных";
+"Settings" = "Настройки";
+"Upcoming Shifts" = "Предстоящие смены";
+"Coming Shifts" = "Предстоящие смены";
+"Done" = "Готово";
+
+// Additional UI Elements
+"Add New Shift" = "Добавить новую смену";
+"Select Date" = "Выбрать дату";
+"Select Time" = "Выбрать время";
+"Add Note" = "Добавить заметку";
+"Existing Shifts" = "Существующие смены";
+"Current Month" = "Текущий месяц";
+"All Months" = "Все месяцы";
+"Special Day" = "Особый день";
+"Long Shift Warning" = "Предупреждение о длинной смене";
+"Accept" = "Принять";
+"No upcoming shifts" = "Нет предстоящих смен";
+"No shifts scheduled" = "Нет запланированных смен";
+"Weekly View" = "Недельный вид";
+"Monthly View" = "Месячный вид";
+"Wage Breakdown" = "Разбивка зарплаты";
+"Total Working Days" = "Всего рабочих дней";
+"You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Вы пытаетесь добавить смену длиннее 12 часов. Вы уверены, что хотите продолжить?";
+"A shift already exists for this date and time period." = "Смена для этой даты и периода времени уже существует.";
+"Shift Already Exists" = "Смена уже существует";
+"Calculations" = "Расчеты";
+"Title" = "Название";
+"Overtime" = "Сверхурочные";
+
+// Date and Time Format Strings
+"Start Time: %@" = "Время начала: %@";
+"End Time: %@" = "Время окончания: %@";
+"Start Time: %@ - End Time: %@" = "Время начала: %@ - Время окончания: %@";
+"Total Hours: %@" = "Всего часов: %@";
+"Gross Wage: ₪%@" = "Валовая зарплата: %@";
+"Net Wage: ₪%@" = "Чистая зарплата: %@";
+"Select Date: %@" = "Выбрать дату: %@";
+
+// Month Names
+"January" = "Январь";
+"February" = "Февраль";
+"March" = "Март";
+"April" = "Апрель";
+"May" = "Май";
+"June" = "Июнь";
+"July" = "Июль";
+"August" = "Август";
+"September" = "Сентябрь";
+"October" = "Октябрь";
+"November" = "Ноябрь";
+"December" = "Декабрь";
+
+// Day Names
+"Monday" = "Понедельник";
+"Tuesday" = "Вторник";
+"Wednesday" = "Среда";
+"Thursday" = "Четверг";
+"Friday" = "Пятница";
+"Saturday" = "Суббота";
+"Sunday" = "Воскресенье";
+
+// Date Components
+"%d in %@" = "%d %@";
+"%@ %d, %d" = "%d %@ %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Недельный вид";
+"Monthly View" = "Месячный вид";
+"Wage Breakdown" = "Разбивка зарплаты";
+"Total Working Days:" = "Всего рабочих дней:";
+"Total Hours:" = "Всего часов:";
+"Gross Wage:" = "Валовая зарплата:";
+"Net Wage:" = "Чистая зарплата:";
+
+// Date Format Patterns
+"Shift on %@" = "Смена на %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Правила сверхурочных";
+"Base Hours (Weekday)" = "Базовые часы (будни)";
+"Base Hours (Special Day)" = "Базовые часы (особый день)";
+"hours" = "часов";
+"After %d hours at %.2fx rate @ %.2fx" = "После %d часов по ставке %.2fx @ %.2fx";
+"Special Days" = "Особые дни";
+"Weekdays" = "Будни";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Добавить правило сверхурочных";
+"Edit Overtime Rule" = "Редактировать правило сверхурочных";
+"Hours Threshold" = "Пороговое значение часов";
+"Rate" = "Ставка";
+"Applies to Special Days" = "Применяется к особым дням";
+"Cancel" = "Отмена";
+"Save" = "Сохранить";
+
+// Search
+"Search" = "Поиск";
+"Search Period" = "Период поиска";
+"Start Date" = "Дата начала";
+"End Date" = "Дата окончания";
+"Export to PDF" = "Экспорт в PDF";
+"Total Working Days:" = "Всего рабочих дней:";
+"Total Hours:" = "Всего часов:";
+"Gross Wage:" = "Валовая зарплата:";
+"Net Wage:" = "Чистая зарплата:";
+"No shifts found for the selected period" = "Не найдено смен за выбранный период";
+
+// Month Names
+"January" = "Январь";
+"February" = "Февраль";
+"March" = "Март";
+"April" = "Апрель";
+"May" = "Май";
+"June" = "Июнь";
+"July" = "Июль";
+"August" = "Август";
+"September" = "Сентябрь";
+"October" = "Октябрь";
+"November" = "Ноябрь";
+"December" = "Декабрь";
+
+// Day Names
+"Monday" = "Понедельник";
+"Tuesday" = "Вторник";
+"Wednesday" = "Среда";
+"Thursday" = "Четверг";
+"Friday" = "Пятница";
+"Saturday" = "Суббота";
+"Sunday" = "Воскресенье";
+
+// Date Components
+"%d in %@" = "%d %@";
+"%@ %d, %d" = "%d %@ %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Недельный вид";
+"Monthly View" = "Месячный вид";
+"Wage Breakdown" = "Разбивка зарплаты";
+"Total Working Days:" = "Всего рабочих дней:";
+"Total Hours:" = "Всего часов:";
+"Gross Wage:" = "Валовая зарплата:";
+"Net Wage:" = "Чистая зарплата:";
+
+// Date Format Patterns
+"Shift on %@" = "Смена на %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Правила сверхурочных";
+"Base Hours (Weekday)" = "Базовые часы (будни)";
+"Base Hours (Special Day)" = "Базовые часы (особый день)";
+"hours" = "часов";
+"After %d hours at %.2fx rate @ %.2fx" = "После %d часов по ставке %.2fx @ %.2fx";
+"Special Days" = "Особые дни";
+"Weekdays" = "Будни";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Добавить правило сверхурочных";
+"Edit Overtime Rule" = "Редактировать правило сверхурочных";
+"Hours Threshold" = "Пороговое значение часов";
+"Rate" = "Ставка";
+"Applies to Special Days" = "Применяется к особым дням";
+"Cancel" = "Отмена";
+"Save" = "Сохранить"; 

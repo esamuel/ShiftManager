@@ -4,14 +4,23 @@ public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    public init() {}
-    
     public var body: some View {
         NavigationView {
             Form {
-                Section {
+                // Personal Information Section
+                Section(header: Text("Personal Information".localized)) {
                     HStack {
-                        Text("Hourly Wage")
+                        Text("Username".localized)
+                        Spacer()
+                        TextField("Username", text: $viewModel.username)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
+                
+                // Wage Settings Section
+                Section(header: Text("Wage Settings".localized)) {
+                    HStack {
+                        Text("Hourly Wage".localized)
                         Spacer()
                         TextField("0.00", value: $viewModel.hourlyWage, format: .number)
                             .keyboardType(.decimalPad)
@@ -19,7 +28,7 @@ public struct SettingsView: View {
                     }
                     
                     HStack {
-                        Text("Tax Deduction (%)")
+                        Text("Tax Deduction (%)".localized)
                         Spacer()
                         TextField("0.00", value: $viewModel.taxDeduction, format: .number)
                             .keyboardType(.decimalPad)
@@ -28,9 +37,10 @@ public struct SettingsView: View {
                     }
                 }
                 
-                Section {
+                // Hours Settings Section
+                Section(header: Text("Hours Settings".localized)) {
                     HStack {
-                        Text("Base Hours (Weekday)")
+                        Text("Base Hours (Weekday)".localized)
                         Spacer()
                         TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
                             .keyboardType(.numberPad)
@@ -38,7 +48,7 @@ public struct SettingsView: View {
                     }
                     
                     HStack {
-                        Text("Base Hours (Special Day)")
+                        Text("Base Hours (Special Day)".localized)
                         Spacer()
                         TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
                             .keyboardType(.numberPad)
@@ -46,19 +56,32 @@ public struct SettingsView: View {
                     }
                 }
                 
+                // Work Week Settings
                 Section {
-                    Toggle("Start work on Sunday", isOn: $viewModel.startWorkOnSunday)
+                    Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
                 }
                 
-                Section {
-                    Picker("Language", selection: $viewModel.selectedLanguage) {
-                        ForEach(Language.allCases) { language in
-                            Text(language.displayName)
-                                .tag(language)
+                // Language Settings
+                Section(header: Text("Language".localized)) {
+                    Button(action: {
+                        viewModel.showingLanguagePicker = true
+                    }) {
+                        HStack {
+                            Text("Language".localized)
+                            Spacer()
+                            Text(viewModel.selectedLanguage.displayName)
+                                .foregroundColor(.gray)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                                .font(.system(size: 13))
                         }
                     }
-                    
-                    Picker("Country", selection: $viewModel.selectedCountry) {
+                    .foregroundColor(.primary)
+                }
+                
+                // Country Settings
+                Section(header: Text("Currency".localized)) {
+                    Picker("Country".localized, selection: $viewModel.selectedCountry) {
                         ForEach(Country.allCases) { country in
                             Text(country.displayName)
                                 .tag(country)
@@ -66,34 +89,26 @@ public struct SettingsView: View {
                     }
                 }
                 
-                Section(header: Text("Data Management")) {
-                    NavigationLink("Import Data from Flutter") {
-                        DataImportView()
-                    }
-                    
-                    // Firebase User ID Display
-                    VStack(alignment: .leading) {
-                        Text("Your Firebase User ID")
-                            .font(.headline)
-                        Text("You can find your Firebase User ID in:")
-                            .font(.subheadline)
+                // About Section with App Version
+                Section(header: Text("About".localized)) {
+                    HStack {
+                        Text("Version".localized)
+                        Spacer()
+                        Text(viewModel.appVersion)
                             .foregroundColor(.gray)
-                        Text("1. Your Flutter app settings")
-                        Text("2. Firebase Console > Authentication > Users")
-                        Text("3. Your Flutter app's user profile")
                     }
-                    .padding(.vertical, 8)
                 }
                 
+                // Save Button
                 Section {
                     Button(action: viewModel.saveSettings) {
-                        Text("Save Settings")
+                        Text("Save Settings".localized)
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.purple)
                     }
                 }
             }
-            .navigationTitle("Shift Settings")
+            .navigationTitle("Settings".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -102,9 +117,44 @@ public struct SettingsView: View {
                     }
                 }
             }
-            .alert("Settings Saved", isPresented: $viewModel.showingSaveConfirmation) {
-                Button("OK", role: .cancel) { }
+            .alert("Settings Saved".localized, isPresented: $viewModel.showingSaveConfirmation) {
+                Button("OK".localized, role: .cancel) { }
             }
+            .sheet(isPresented: $viewModel.showingLanguagePicker) {
+                LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage, isPresented: $viewModel.showingLanguagePicker)
+            }
+        }
+    }
+}
+
+struct LanguagePickerView: View {
+    @Binding var selectedLanguage: Language
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(Language.allCases) { language in
+                    Button(action: {
+                        selectedLanguage = language
+                        isPresented = false
+                    }) {
+                        HStack {
+                            Text(language.displayName)
+                            Spacer()
+                            if selectedLanguage == language {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                    }
+                    .foregroundColor(.primary)
+                }
+            }
+            .navigationTitle("Select Language".localized)
+            .navigationBarItems(trailing: Button("Done".localized) {
+                isPresented = false
+            })
         }
     }
 }
@@ -112,4 +162,5 @@ public struct SettingsView: View {
 #Preview {
     SettingsView()
 } 
+
 

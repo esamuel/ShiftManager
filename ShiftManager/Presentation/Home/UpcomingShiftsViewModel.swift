@@ -72,9 +72,23 @@ public class UpcomingShiftsViewModel: ObservableObject {
     }
     
     func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d"
-        return formatter.string(from: date)
+        let calendar = Calendar.current
+        
+        // Get the localized day name
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "EEEE"
+        let dayName = dayFormatter.string(from: date)
+        
+        // Get the localized month name
+        let monthFormatter = DateFormatter()
+        monthFormatter.dateFormat = "MMM"
+        let monthName = monthFormatter.string(from: date)
+        
+        // Get the day number
+        let dayNumber = calendar.component(.day, from: date)
+        
+        // Format the date in the localized pattern: "Weekday, Month Day"
+        return "\(dayName), \(monthName) \(dayNumber)"
     }
     
     func formatTime(_ date: Date) -> String {

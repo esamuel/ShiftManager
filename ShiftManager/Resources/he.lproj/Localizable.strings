@@ -1,0 +1,307 @@
+"Language" = "שפה";
+"Settings" = "הגדרות";
+"Select Language" = "בחר שפה";
+"Save" = "שמור";
+"Cancel" = "ביטול";
+"OK" = "אישור";
+"Error" = "שגיאה";
+"Success" = "הצלחה";
+"Loading" = "טוען";
+"Please wait" = "אנא המתן";
+"Shift Manager" = "מנהל משמרות";
+"Home" = "בית";
+"Reports" = "דוחות";
+"Guide" = "מדריך";
+"Overtime Rules" = "חוקי שעות נוספות";
+"Done" = "סיום";
+"Upcoming Shifts" = "משמרות קרובות";
+"Manager" = "מנהל";
+"Coming Shifts" = "משמרות קרובות";
+
+// Common UI Elements
+"Language" = "שפה";
+"Settings" = "הגדרות";
+"Select Language" = "בחר שפה";
+"Save" = "שמור";
+"Cancel" = "ביטול";
+"OK" = "אישור";
+"Error" = "שגיאה";
+"Success" = "הצלחה";
+"Loading" = "טוען";
+"Please wait" = "אנא המתן";
+
+// Tab Bar
+"Home" = "בית";
+"Manager" = "מנהל";
+"Reports" = "דוחות";
+"Guide" = "מדריך";
+"Settings" = "הגדרות";
+
+// Home View
+"Upcoming Shifts" = "משמרות קרובות";
+"Done" = "סיום";
+"Overtime Rules" = "כללי שעות נוספות";
+
+// Settings
+"Personal Information" = "מידע אישי";
+"Username" = "שם משתמש";
+"Save Changes" = "שמור שינויים";
+"Appearance" = "מראה";
+"Theme" = "ערכת נושא";
+"System" = "מערכת";
+"Light" = "בהיר";
+"Dark" = "כהה";
+"Shift Settings" = "הגדרות משמרות";
+"App Settings" = "הגדרות אפליקציה";
+"About" = "אודות";
+"Version" = "גרסה";
+"Country" = "מדינה";
+"Currency" = "מטבע";
+
+// Shift Settings
+"Hourly Wage" = "שכר לשעה";
+"Tax Deduction (%)" = "ניכוי מס (%)";
+"Base Hours (Weekday)" = "שעות בסיס (יום חול)";
+"Base Hours (Special Day)" = "שעות בסיס (יום מיוחד)";
+"Start work on Sunday" = "התחל לעבוד ביום ראשון";
+"Start work on Monday" = "התחל לעבוד ביום שני";
+"Save Settings" = "שמור הגדרות";
+"Settings Saved" = "הגדרות נשמרו";
+"Hours Settings" = "הגדרות שעות";
+"Wage Settings" = "הגדרות שכר";
+
+// Guide
+"Welcome to ShiftManager" = "ברוכים הבאים ל-ShiftManager";
+"ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features." = "ShiftManager עוזר לך לעקוב אחר משמרות העבודה שלך, לחשב משכורות ולנהל שעות נוספות. מדריך זה ילווה אותך בכל תכונות האפליקציה.";
+"1. Initial Setup" = "1. הגדרה ראשונית";
+"Before you start, set up your basic information:" = "לפני שתתחיל, הגדר את המידע הבסיסי שלך:";
+"Go to Settings → Personal Information and:" = "עבור להגדרות → מידע אישי ו:";
+"Enter your username" = "הזן את שם המשתמש שלך";
+"Tap 'Save Changes' to save your information" = "הקש על 'שמור שינויים' כדי לשמור את המידע שלך";
+"Navigate to Shift Settings and set your:" = "נווט להגדרות משמרות והגדר את:";
+"Hourly wage" = "שכר לשעה";
+"Tax deduction percentage" = "אחוז ניכוי מס";
+"Base hours for weekdays and special days" = "שעות בסיס לימי חול וימים מיוחדים";
+"Work week start day (Sunday/Monday)" = "יום תחילת שבוע העבודה (ראשון/שני)";
+
+// Reports
+"Total Hours" = "סה״כ שעות";
+"Regular Hours" = "שעות רגילות";
+"Overtime Hours" = "שעות נוספות";
+"Earnings" = "השתכרות";
+"Tax Deductions" = "ניכויי מס";
+"Net Earnings" = "השתכרות נטו";
+"Select Period" = "בחר תקופה";
+"Daily" = "יומי";
+"Weekly" = "שבועי";
+"Monthly" = "חודשי";
+"Yearly" = "שנתי";
+"Custom" = "מותאם אישית";
+"Export Report" = "ייצא דוח";
+"Share" = "שתף";
+"Print" = "הדפס";
+
+// Shift Manager
+"Add Shift" = "הוסף משמרת";
+"Edit Shift" = "ערוך משמרת";
+"Delete Shift" = "מחק משמרת";
+"Start Time" = "שעת התחלה";
+"End Time" = "שעת סיום";
+"Date" = "תאריך";
+"Notes" = "הערות";
+"Save Shift" = "שמור משמרת";
+"Delete" = "מחק";
+"Are you sure you want to delete this shift?" = "האם אתה בטוח שברצונך למחוק משמרת זו?";
+"Shift Details" = "פרטי משמרת";
+"Duration" = "משך";
+"Regular Pay" = "תשלום רגיל";
+"Overtime Pay" = "תשלום שעות נוספות";
+"Total Pay" = "תשלום כולל";
+
+// Main Page
+"Shift Manager" = "מנהל משמרות";
+"Home" = "בית";
+"Shift Manager" = "מנהל משמרות";
+"Reports" = "דוחות";
+"Guide" = "מדריך";
+"Overtime Rules" = "חוקי שעות נוספות";
+"Settings" = "הגדרות";
+"Upcoming Shifts" = "משמרות קרובות";
+"Done" = "סיום";
+
+// Additional UI Elements
+"Add New Shift" = "הוסף משמרת חדשה";
+"Select Date" = "בחר תאריך";
+"Select Time" = "בחר שעה";
+"Add Note" = "הוסף הערה";
+"Existing Shifts" = "משמרות קיימות";
+"Current Month" = "חודש נוכחי";
+"All Months" = "כל החודשים";
+"Special Day" = "יום מיוחד";
+"Long Shift Warning" = "אזהרת משמרת ארוכה";
+"Accept" = "קבל";
+"No upcoming shifts" = "אין משמרות קרובות";
+"No shifts scheduled" = "לא נקבעו משמרות";
+"Weekly View" = "תצוגה שבועית";
+"Monthly View" = "תצוגה חודשית";
+"Wage Breakdown" = "פירוט שכר";
+"Total Working Days" = "סה\"כ ימי עבודה";
+"You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "אתה מנסה להוסיף משמרת ארוכה מ-12 שעות. האם אתה בטוח שברצונך להמשיך?";
+"A shift already exists for this date and time period." = "כבר קיימת משמרת לתאריך ולשעות אלה.";
+"Shift Already Exists" = "המשמרת כבר קיימת";
+"Calculations" = "חישובים";
+"Save Changes" = "שמור שינויים";
+"Title" = "כותרת";
+"Overtime" = "שעות נוספות";
+
+// Date and Time Format Strings
+"Start Time: %@" = "שעת התחלה: %@";
+"End Time: %@" = "שעת סיום: %@";
+"Start Time: %@ - End Time: %@" = "שעת התחלה: %@ - שעת סיום: %@";
+"Total Hours: %@" = "סה\"כ שעות: %@";
+"Gross Wage: ₪%@" = "שכר ברוטו: %@";
+"Net Wage: ₪%@" = "שכר נטו: %@";
+"Select Date: %@" = "בחר תאריך: %@";
+
+// Month Names
+"January" = "ינואר";
+"February" = "פברואר";
+"March" = "מרץ";
+"April" = "אפריל";
+"May" = "מאי";
+"June" = "יוני";
+"July" = "יולי";
+"August" = "אוגוסט";
+"September" = "ספטמבר";
+"October" = "אוקטובר";
+"November" = "נובמבר";
+"December" = "דצמבר";
+
+// Day Names
+"Monday" = "יום שני";
+"Tuesday" = "יום שלישי";
+"Wednesday" = "יום רביעי";
+"Thursday" = "יום חמישי";
+"Friday" = "יום שישי";
+"Saturday" = "יום שבת";
+"Sunday" = "יום ראשון";
+
+// Date Components
+"%d in %@" = "%d ב%@";
+"%@ %d, %d" = "%d ב%@ %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "תצוגה שבועית";
+"Monthly View" = "תצוגה חודשית";
+"Wage Breakdown" = "פירוט שכר";
+"Total Working Days:" = "סה\"כ ימי עבודה:";
+"Total Hours:" = "סה\"כ שעות:";
+"Gross Wage:" = "שכר ברוטו:";
+"Net Wage:" = "שכר נטו:";
+
+// Date Format Patterns
+"Shift on %@" = "משמרת ב-%@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "חוקי שעות נוספות";
+"Base Hours (Weekday)" = "שעות בסיס (יום חול)";
+"Base Hours (Special Day)" = "שעות בסיס (יום מיוחד)";
+"hours" = "שעות";
+"After %d hours at %.2fx rate @ %.2fx" = "אחרי %d שעות בתעריף %.2fx @ %.2fx";
+"Special Days" = "ימים מיוחדים";
+"Weekdays" = "ימי חול";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "הוסף חוק שעות נוספות";
+"Edit Overtime Rule" = "ערוך חוק שעות נוספות";
+"Hours Threshold" = "סף שעות";
+"Rate" = "תעריף";
+"Applies to Special Days" = "חל על ימים מיוחדים";
+"Cancel" = "ביטול";
+"Save" = "שמור";
+
+// Search
+"Search" = "חיפוש";
+"Search Period" = "תקופת חיפוש";
+"Start Date" = "תאריך התחלה";
+"End Date" = "תאריך סיום";
+"Export to PDF" = "ייצוא ל-PDF";
+"Total Working Days:" = "סה\"כ ימי עבודה:";
+"Total Hours:" = "סה\"כ שעות:";
+"Gross Wage:" = "שכר ברוטו:";
+"Net Wage:" = "שכר נטו:";
+"No shifts found for the selected period" = "לא נמצאו משמרות בתקופה שנבחרה";
+
+// Month Names
+"January" = "ינואר";
+"February" = "פברואר";
+"March" = "מרץ";
+"April" = "אפריל";
+"May" = "מאי";
+"June" = "יוני";
+"July" = "יולי";
+"August" = "אוגוסט";
+"September" = "ספטמבר";
+"October" = "אוקטובר";
+"November" = "נובמבר";
+"December" = "דצמבר";
+
+// Day Names
+"Monday" = "יום שני";
+"Tuesday" = "יום שלישי";
+"Wednesday" = "יום רביעי";
+"Thursday" = "יום חמישי";
+"Friday" = "יום שישי";
+"Saturday" = "יום שבת";
+"Sunday" = "יום ראשון";
+
+// Date Components
+"%d in %@" = "%d ב%@";
+"%@ %d, %d" = "%d ב%@ %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "תצוגה שבועית";
+"Monthly View" = "תצוגה חודשית";
+"Wage Breakdown" = "פירוט שכר";
+"Total Working Days:" = "סה\"כ ימי עבודה:";
+"Total Hours:" = "סה\"כ שעות:";
+"Gross Wage:" = "שכר ברוטו:";
+"Net Wage:" = "שכר נטו:";
+
+// Date Format Patterns
+"Shift on %@" = "משמרת ב-%@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "חוקי שעות נוספות";
+"Base Hours (Weekday)" = "שעות בסיס (יום חול)";
+"Base Hours (Special Day)" = "שעות בסיס (יום מיוחד)";
+"hours" = "שעות";
+"After %d hours at %.2fx rate @ %.2fx" = "אחרי %d שעות בתעריף %.2fx @ %.2fx";
+"Special Days" = "ימים מיוחדים";
+"Weekdays" = "ימי חול";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "הוסף חוק שעות נוספות";
+"Edit Overtime Rule" = "ערוך חוק שעות נוספות";
+"Hours Threshold" = "סף שעות";
+"Rate" = "תעריף";
+"Applies to Special Days" = "חל על ימים מיוחדים";
+"Cancel" = "ביטול";
+"Save" = "שמור";
+
+// Search
+"Search" = "חיפוש";
+"Search Period" = "תקופת חיפוש";
+"Start Date" = "תאריך התחלה";
+"End Date" = "תאריך סיום";
+"Export to PDF" = "ייצוא ל-PDF";
+"Total Working Days:" = "סה\"כ ימי עבודה:";
+"Total Hours:" = "סה\"כ שעות:";
+"Gross Wage:" = "שכר ברוטו:";
+"Net Wage:" = "שכר נטו:"; 

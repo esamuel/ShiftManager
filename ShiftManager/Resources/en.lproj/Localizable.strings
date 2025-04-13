@@ -1,0 +1,277 @@
+"Language" = "Language";
+"Settings" = "Settings";
+"Select Language" = "Select Language";
+"Save" = "Save";
+"Cancel" = "Cancel";
+"OK" = "OK";
+"Error" = "Error";
+"Success" = "Success";
+"Loading" = "Loading";
+"Please wait" = "Please wait";
+
+// Tab Bar
+"Home" = "Home";
+"Manager" = "Manager";
+"Reports" = "Reports";
+"Guide" = "Guide";
+"Settings" = "Settings";
+"Coming Shifts" = "Coming Shifts";
+
+// Home View
+"Upcoming Shifts" = "Upcoming Shifts";
+"Done" = "Done";
+"Overtime Rules" = "Overtime Rules";
+
+// Settings
+"Personal Information" = "Personal Information";
+"Username" = "Username";
+"Save Changes" = "Save Changes";
+"Appearance" = "Appearance";
+"Theme" = "Theme";
+"System" = "System";
+"Light" = "Light";
+"Dark" = "Dark";
+"Shift Settings" = "Shift Settings";
+"App Settings" = "App Settings";
+"About" = "About";
+"Version" = "Version";
+"Country" = "Country";
+"Currency" = "Currency";
+
+// Shift Settings
+"Hourly Wage" = "Hourly Wage";
+"Tax Deduction (%)" = "Tax Deduction (%)";
+"Base Hours (Weekday)" = "Base Hours (Weekday)";
+"Base Hours (Special Day)" = "Base Hours (Special Day)";
+"Start work on Sunday" = "Start work on Sunday";
+"Start work on Monday" = "Start work on Monday";
+"Save Settings" = "Save Settings";
+"Settings Saved" = "Settings Saved";
+"Hours Settings" = "Hours Settings";
+"Wage Settings" = "Wage Settings";
+
+// Guide
+"Welcome to ShiftManager" = "Welcome to ShiftManager";
+"ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features." = "ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features.";
+"1. Initial Setup" = "1. Initial Setup";
+"Before you start, set up your basic information:" = "Before you start, set up your basic information:";
+"Go to Settings → Personal Information and:" = "Go to Settings → Personal Information and:";
+"Enter your username" = "Enter your username";
+"Tap 'Save Changes' to save your information" = "Tap 'Save Changes' to save your information";
+"Navigate to Shift Settings and set your:" = "Navigate to Shift Settings and set your:";
+"Hourly wage" = "Hourly wage";
+"Tax deduction percentage" = "Tax deduction percentage";
+"Base hours for weekdays and special days" = "Base hours for weekdays and special days";
+"Work week start day (Sunday/Monday)" = "Work week start day (Sunday/Monday)";
+
+// Reports
+"Total Hours" = "Total Hours";
+"Regular Hours" = "Regular Hours";
+"Overtime Hours" = "Overtime Hours";
+"Earnings" = "Earnings";
+"Tax Deductions" = "Tax Deductions";
+"Net Earnings" = "Net Earnings";
+"Select Period" = "Select Period";
+"Daily" = "Daily";
+"Weekly" = "Weekly";
+"Monthly" = "Monthly";
+"Yearly" = "Yearly";
+"Custom" = "Custom";
+"Export Report" = "Export Report";
+"Share" = "Share";
+"Print" = "Print";
+
+// Shift Manager
+"Add Shift" = "Add Shift";
+"Edit Shift" = "Edit Shift";
+"Delete Shift" = "Delete Shift";
+"Start Time" = "Start Time";
+"End Time" = "End Time";
+"Date" = "Date";
+"Notes" = "Notes";
+"Save Shift" = "Save Shift";
+"Delete" = "Delete";
+"Are you sure you want to delete this shift?" = "Are you sure you want to delete this shift?";
+"Shift Details" = "Shift Details";
+"Duration" = "Duration";
+"Regular Pay" = "Regular Pay";
+"Overtime Pay" = "Overtime Pay";
+"Total Pay" = "Total Pay";
+
+// Main Page
+"Shift Manager" = "Shift Manager";
+"Home" = "Home";
+"Shift Manager" = "Shift Manager";
+"Reports" = "Reports";
+"Guide" = "Guide";
+"Overtime Rules" = "Overtime Rules";
+"Settings" = "Settings";
+"Upcoming Shifts" = "Upcoming Shifts";
+"Done" = "Done";
+"Coming Shifts" = "Coming Shifts";
+
+// Additional UI Elements
+"Add New Shift" = "Add New Shift";
+"Select Date" = "Select Date";
+"Select Time" = "Select Time";
+"Add Note" = "Add Note";
+"Existing Shifts" = "Existing Shifts";
+"Current Month" = "Current Month";
+"All Months" = "All Months";
+"Special Day" = "Special Day";
+"Long Shift Warning" = "Long Shift Warning";
+"Accept" = "Accept";
+"No upcoming shifts" = "No upcoming shifts";
+"No shifts scheduled" = "No shifts scheduled";
+"Weekly View" = "Weekly View";
+"Monthly View" = "Monthly View";
+"Wage Breakdown" = "Wage Breakdown";
+"Total Working Days" = "Total Working Days";
+"You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?";
+"A shift already exists for this date and time period." = "A shift already exists for this date and time period.";
+"Shift Already Exists" = "Shift Already Exists";
+"Calculations" = "Calculations";
+"Save Changes" = "Save Changes";
+"Title" = "Title";
+"Overtime" = "Overtime";
+
+// Date and Time Format Strings
+"Start Time: %@" = "Start Time: %@";
+"End Time: %@" = "End Time: %@";
+"Start Time: %@ - End Time: %@" = "Start Time: %@ - End Time: %@";
+"Total Hours: %@" = "Total Hours: %@";
+"Gross Wage: ₪%@" = "Gross Wage: %@";
+"Net Wage: ₪%@" = "Net Wage: %@";
+"Select Date: %@" = "Select Date: %@";
+
+// Month Names
+"January" = "January";
+"February" = "February";
+"March" = "March";
+"April" = "April";
+"May" = "May";
+"June" = "June";
+"July" = "July";
+"August" = "August";
+"September" = "September";
+"October" = "October";
+"November" = "November";
+"December" = "December";
+
+// Day Names
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Sunday" = "Sunday";
+
+// Date Components
+"%d in %@" = "%d in %@";
+"%@ %d, %d" = "%@ %d, %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Weekly View";
+"Monthly View" = "Monthly View";
+"Wage Breakdown" = "Wage Breakdown";
+"Total Working Days:" = "Total Working Days:";
+"Total Hours:" = "Total Hours:";
+"Gross Wage:" = "Gross Wage:";
+"Net Wage:" = "Net Wage:";
+
+// Date Format Patterns
+"Shift on %@" = "Shift on %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Overtime Rules";
+"Base Hours (Weekday)" = "Base Hours (Weekday)";
+"Base Hours (Special Day)" = "Base Hours (Special Day)";
+"hours" = "hours";
+"After %d hours at %.2fx rate @ %.2fx" = "After %d hours at %.2fx rate @ %.2fx";
+"Special Days" = "Special Days";
+"Weekdays" = "Weekdays";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Add Overtime Rule";
+"Edit Overtime Rule" = "Edit Overtime Rule";
+"Hours Threshold" = "Hours Threshold";
+"Rate" = "Rate";
+"Applies to Special Days" = "Applies to Special Days";
+"Cancel" = "Cancel";
+"Save" = "Save";
+
+// Search
+"Search" = "Search";
+"Search Period" = "Search Period";
+"Start Date" = "Start Date";
+"End Date" = "End Date";
+"Export to PDF" = "Export to PDF";
+"Total Working Days:" = "Total Working Days:";
+"Total Hours:" = "Total Hours:";
+"Gross Wage:" = "Gross Wage:";
+"Net Wage:" = "Net Wage:";
+"No shifts found for the selected period" = "No shifts found for the selected period";
+
+// Month Names
+"January" = "January";
+"February" = "February";
+"March" = "March";
+"April" = "April";
+"May" = "May";
+"June" = "June";
+"July" = "July";
+"August" = "August";
+"September" = "September";
+"October" = "October";
+"November" = "November";
+"December" = "December";
+
+// Day Names
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Sunday" = "Sunday";
+
+// Date Components
+"%d in %@" = "%d in %@";
+"%@ %d, %d" = "%@ %d, %d";
+"%@ - %@" = "%@ - %@";
+
+// Weekly View Tab Labels
+"Weekly View" = "Weekly View";
+"Monthly View" = "Monthly View";
+"Wage Breakdown" = "Wage Breakdown";
+"Total Working Days:" = "Total Working Days:";
+"Total Hours:" = "Total Hours:";
+"Gross Wage:" = "Gross Wage:";
+"Net Wage:" = "Net Wage:";
+
+// Date Format Patterns
+"Shift on %@" = "Shift on %@";
+"%@ %d" = "%@ %d";
+"%@, %@ %d" = "%@, %@ %d";
+
+// Overtime Rules
+"Overtime Rules" = "Overtime Rules";
+"Base Hours (Weekday)" = "Base Hours (Weekday)";
+"Base Hours (Special Day)" = "Base Hours (Special Day)";
+"hours" = "hours";
+"After %d hours at %.2fx rate @ %.2fx" = "After %d hours at %.2fx rate @ %.2fx";
+"Special Days" = "Special Days";
+"Weekdays" = "Weekdays";
+
+// Add Overtime Rule
+"Add Overtime Rule" = "Add Overtime Rule";
+"Edit Overtime Rule" = "Edit Overtime Rule";
+"Hours Threshold" = "Hours Threshold";
+"Rate" = "Rate";
+"Applies to Special Days" = "Applies to Special Days";
+"Cancel" = "Cancel";
+"Save" = "Save"; 

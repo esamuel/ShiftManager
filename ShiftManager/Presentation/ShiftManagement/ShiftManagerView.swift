@@ -26,7 +26,7 @@ struct ShiftManagerView: View {
     var body: some View {
         VStack(spacing: 12) {
             // Header
-            Text("Add New Shift")
+            Text("Add New Shift".localized)
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
@@ -34,7 +34,7 @@ struct ShiftManagerView: View {
             // Date Selection
             Button(action: { viewModel.showDatePicker = true }) {
                 HStack {
-                    Text("Select Date: \(dateFormatter.string(from: viewModel.selectedDate))")
+                    Text(String(format: "Select Date: %@".localized, dateFormatter.string(from: viewModel.selectedDate)))
                         .font(.headline)
                         .foregroundColor(.white)
                     Spacer()
@@ -51,7 +51,7 @@ struct ShiftManagerView: View {
                 // Start Time
                 Button(action: { viewModel.showStartTimePicker = true }) {
                     HStack {
-                        Text("Start Time: \(timeFormatter.string(from: viewModel.startTime))")
+                        Text(String(format: "Start Time: %@".localized, timeFormatter.string(from: viewModel.startTime)))
                             .font(.headline)
                             .foregroundColor(.white)
                         Spacer()
@@ -65,7 +65,7 @@ struct ShiftManagerView: View {
                 // End Time
                 Button(action: { viewModel.showEndTimePicker = true }) {
                     HStack {
-                        Text("End Time: \(timeFormatter.string(from: viewModel.endTime))")
+                        Text(String(format: "End Time: %@".localized, timeFormatter.string(from: viewModel.endTime)))
                             .font(.headline)
                             .foregroundColor(.white)
                         Spacer()
@@ -80,7 +80,7 @@ struct ShiftManagerView: View {
             
             // Notes
             VStack(alignment: .leading, spacing: 4) {
-                Text("Add Note")
+                Text("Add Note".localized)
                     .font(.headline)
                     .padding(.horizontal)
                 
@@ -97,7 +97,7 @@ struct ShiftManagerView: View {
             
             // Add Shift Button
             Button(action: { viewModel.addShift() }) {
-                Text("Add Shift")
+                Text("Add Shift".localized)
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -111,10 +111,10 @@ struct ShiftManagerView: View {
             // Existing Shifts Section
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Existing Shifts")
+                    Text("Existing Shifts".localized)
                         .font(.title2)
                     Spacer()
-                    Toggle("Current Month", isOn: $viewModel.showCurrentMonthOnly)
+                    Toggle(viewModel.showCurrentMonthOnly ? "Current Month".localized : "All Months".localized, isOn: $viewModel.showCurrentMonthOnly)
                         .toggleStyle(SwitchToggleStyle(tint: .purple))
                 }
                 .padding(.horizontal)
@@ -132,7 +132,7 @@ struct ShiftManagerView: View {
                 }
             }
         }
-        .navigationTitle("Shift Manager")
+        .navigationTitle("Shift Manager".localized)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showDatePicker) {
             DatePickerSheet(selectedDate: $viewModel.selectedDate,
@@ -155,20 +155,20 @@ struct ShiftManagerView: View {
                         viewModel.isEditing = false
                     }
                 })
-                .navigationTitle("Edit Shift")
-                .navigationBarItems(trailing: Button("Cancel") {
+                .navigationTitle("Edit Shift".localized)
+                .navigationBarItems(trailing: Button("Cancel".localized) {
                     viewModel.isEditing = false
                 })
             }
         }
-        .alert("Shift Already Exists", isPresented: $viewModel.showingDuplicateAlert) {
-            Button("OK", role: .cancel) { }
+        .alert("Shift Already Exists".localized, isPresented: $viewModel.showingDuplicateAlert) {
+            Button("OK".localized, role: .cancel) { }
         } message: {
-            Text("A shift already exists for this date and time period.")
+            Text("A shift already exists for this date and time period.".localized)
         }
-        .alert("Long Shift Warning", isPresented: $viewModel.showingLongShiftAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Accept") {
+        .alert("Long Shift Warning".localized, isPresented: $viewModel.showingLongShiftAlert) {
+            Button("Cancel".localized, role: .cancel) { }
+            Button("Accept".localized) {
                 // Create the shift despite the warning
                 let calendar = Calendar.current
                 let startComponents = calendar.dateComponents([.hour, .minute], from: viewModel.startTime)
@@ -188,7 +188,7 @@ struct ShiftManagerView: View {
                 }
             }
         } message: {
-            Text("You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?")
+            Text("You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?".localized)
         }
         .task {
             await viewModel.loadShifts()
@@ -196,7 +196,7 @@ struct ShiftManagerView: View {
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") {
+                Button("Done".localized) {
                     isNotesFocused = false
                 }
             }
@@ -243,18 +243,25 @@ struct ShiftCard: View {
             }
             
             // Times
-            Text("Start Time: \(shift.startTime, format: .dateTime.hour().minute()) - End Time: \(shift.endTime, format: .dateTime.hour().minute())")
+            let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
+            let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
+            Text(String(format: "Start Time: %@ - End Time: %@".localized, startTime, endTime))
             
             // Duration and Wages
             HStack {
-                Text("Total Hours: \(shift.duration / 3600, specifier: "%.2f")")
+                let formattedDuration = String(format: "%.2f", shift.duration / 3600)
+                Text(String(format: "Total Hours: %@".localized, formattedDuration))
                     .foregroundColor(.primary)
             }
             
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Gross Wage: ₪\(shift.grossWage, specifier: "%.2f")")
-                    Text("Net Wage: ₪\(shift.netWage, specifier: "%.2f")")
+                    let formattedGrossWage = String(format: "%.2f", shift.grossWage)
+                    let formattedNetWage = String(format: "%.2f", shift.netWage)
+                    
+                    // Use asCurrency extension for proper currency symbol display
+                    Text("Gross Wage:".localized + " " + shift.grossWage.asCurrency)
+                    Text("Net Wage:".localized + " " + shift.netWage.asCurrency)
                 }
             }
             
@@ -277,11 +284,11 @@ struct DatePickerSheet: View {
     
     var body: some View {
         NavigationView {
-            DatePicker("Select Date",
+            DatePicker("Select Date".localized,
                       selection: $selectedDate,
                       displayedComponents: .date)
                 .datePickerStyle(.graphical)
-                .navigationBarItems(trailing: Button("Done") {
+                .navigationBarItems(trailing: Button("Done".localized) {
                     isPresented = false
                 })
                 .padding()
@@ -295,11 +302,11 @@ struct TimePickerSheet: View {
     
     var body: some View {
         NavigationView {
-            DatePicker("Select Time",
+            DatePicker("Select Time".localized,
                       selection: $selectedTime,
                       displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
-                .navigationBarItems(trailing: Button("Done") {
+                .navigationBarItems(trailing: Button("Done".localized) {
                     isPresented = false
                 })
                 .padding()
@@ -329,16 +336,16 @@ struct EditShiftView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Shift Details")) {
-                DatePicker("Date", selection: $editedDate, displayedComponents: .date)
-                DatePicker("Start Time", selection: $editedStartTime, displayedComponents: .hourAndMinute)
-                DatePicker("End Time", selection: $editedEndTime, displayedComponents: .hourAndMinute)
-                Toggle("Special Day", isOn: $isSpecialDay)
-                TextField("Notes", text: $editedNotes)
+            Section(header: Text("Shift Details".localized)) {
+                DatePicker("Date".localized, selection: $editedDate, displayedComponents: .date)
+                DatePicker("Start Time".localized, selection: $editedStartTime, displayedComponents: .hourAndMinute)
+                DatePicker("End Time".localized, selection: $editedEndTime, displayedComponents: .hourAndMinute)
+                Toggle("Special Day".localized, isOn: $isSpecialDay)
+                TextField("Notes".localized, text: $editedNotes)
             }
             
             Section {
-                Button("Save Changes") {
+                Button("Save Changes".localized) {
                     let calendar = Calendar.current
                     
                     // Combine date and time
