@@ -259,6 +259,11 @@ struct ShiftCard: View {
                     // Use asCurrency extension for proper currency symbol display
                     Text("Gross Wage:".localized + " " + shift.grossWage.asCurrency)
                     Text("Net Wage:".localized + " " + shift.netWage.asCurrency)
+                    
+                    // Add tax calculation note
+                    Text("Tax calculation is an estimate".localized)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
             }
             

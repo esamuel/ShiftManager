@@ -28,7 +28,7 @@
 "Username" = "Benutzername";
 "Save Changes" = "Änderungen speichern";
 "Appearance" = "Erscheinungsbild";
-"Theme" = "Design";
+"Theme" = "Thema";
 "System" = "System";
 "Light" = "Hell";
 "Dark" = "Dunkel";
@@ -265,4 +265,75 @@
 // Date Format Patterns
 "Shift on %@" = "Schicht am %@";
 "%@ %d" = "%@ %d";
-"%@, %@ %d" = "%@, %@ %d"; 
+"%@, %@ %d" = "%@, %@ %d";
+
+// Tooltips
+"Help" = "Hilfe";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "Dieser Prozentsatz wird von Ihren Gesamteinnahmen abgezogen, um Ihr Nettoeinkommen zu berechnen. Die tatsächliche Steuer kann je nach lokalen Vorschriften variieren.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "Standardarbeitszeit für einen regulären Wochentag, bevor die Überstundenberechnung beginnt.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "Standardarbeitszeit für besondere Tage (Wochenenden, Feiertage), bevor die Überstundenberechnung beginnt.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "Legt den ersten Tag Ihrer Arbeitswoche für Berichte und Berechnungen fest. Verschiedene Länder verwenden unterschiedliche Standards.";
+"The number of hours after which this overtime rate starts to apply." = "Die Anzahl der Stunden, nach denen dieser Überstundensatz angewendet wird.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "Der Multiplikator, der auf Ihren Stundenlohn angewendet wird (z.B. 1,5 für anderthalbfache Zeit, 2,0 für doppelte Zeit).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "Wenn aktiviert, gilt diese Regel für Wochenenden und Feiertage. Wenn deaktiviert, gilt sie für reguläre Wochentage.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "Hinweis: Die Steuerberechnung ist eine Schätzung und kann je nach lokalen Vorschriften variieren.";
+"Tax calculation is an estimate" = "Die Steuerberechnung ist eine Schätzung";
+
+// Help & FAQ
+"Help & FAQ" = "Hilfe & FAQ";
+"Frequently Asked Questions" = "Häufig gestellte Fragen";
+"User Guide" = "Benutzerhandbuch";
+"Contact Support" = "Support kontaktieren";
+"Close" = "Schließen";
+"General Questions" = "Allgemeine Fragen";
+"How do I add a new shift?" = "Wie füge ich eine neue Schicht hinzu?";
+"Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed." = "Gehen Sie zur Manager-Registerkarte und tippen Sie auf die Schaltfläche +. Sie können Datum, Startzeit, Endzeit festlegen und sie bei Bedarf als besonderen Tag markieren.";
+"How is overtime calculated?" = "Wie werden Überstunden berechnet?";
+"Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up." = "Überstunden werden auf Basis Ihrer Einstellungen für Basisstunden und Überstundenregeln berechnet. Alle über die Basisstunden hinaus gearbeiteten Stunden folgen den von Ihnen eingerichteten Überstundenregeln.";
+"Can I export my shift data?" = "Kann ich meine Schichtdaten exportieren?";
+"Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF." = "Ja, im Berichte-Tab können Sie Ihre Schichtdaten nach verschiedenen Zeiträumen anzeigen und als PDF exportieren.";
+"What is the tax deduction setting?" = "Was ist die Einstellung für Steuerabzug?";
+"The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location." = "Der Steuerabzugsprozentsatz wird verwendet, um Ihr Nettoeinkommen nach Steuern zu schätzen. Dies ist nur eine Schätzung und spiegelt möglicherweise nicht die tatsächlichen Steuern an Ihrem Standort wider.";
+"What are base hours?" = "Was sind Basisstunden?";
+"Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days." = "Basisstunden definieren, wie viele Stunden Sie arbeiten können, bevor Überstunden beginnen. Sie können unterschiedliche Werte für normale Wochentage und besondere Tage festlegen.";
+"How do I change the app language?" = "Wie ändere ich die App-Sprache?";
+"In Settings, tap on the Language option and select your preferred language from the list." = "Tippen Sie in den Einstellungen auf die Option Sprache und wählen Sie Ihre bevorzugte Sprache aus der Liste aus.";
+"Troubleshooting" = "Fehlerbehebung";
+"My shifts aren't showing up correctly" = "Meine Schichten werden nicht korrekt angezeigt";
+"Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist." = "Stellen Sie sicher, dass sich Ihre Schichten nicht überschneiden und dass Sie sie ordnungsgemäß gespeichert haben. Versuchen Sie, die App neu zu starten, wenn Probleme weiterhin bestehen.";
+"The overtime calculations look wrong" = "Die Überstundenberechnungen sehen falsch aus";
+"Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules." = "Überprüfen Sie Ihre Überstundenregeln und Basisstundeneinstellungen, um sicherzustellen, dass sie Ihren Erwartungen entsprechen. Denken Sie daran, dass besondere Tage unterschiedliche Regeln haben können.";
+"Contact Information" = "Kontaktinformationen";
+"Email: support@shiftsmanager.com" = "E-Mail: support@shiftsmanager.com";
+"Message" = "Nachricht";
+"Subject" = "Betreff";
+"Describe your issue or question..." = "Beschreiben Sie Ihr Problem oder Ihre Frage...";
+"Send Message" = "Nachricht senden";
+"Message Sent" = "Nachricht gesendet";
+"Thank you for your message. We'll get back to you soon." = "Vielen Dank für Ihre Nachricht. Wir werden uns in Kürze bei Ihnen melden.";
+
+// Theme Settings
+"Appearance" = "Erscheinungsbild";
+"Theme" = "Thema";
+"System" = "System";
+"Light" = "Hell";
+"Dark" = "Dunkel";
+"How do I change the app theme?" = "Wie ändere ich das App-Thema?";
+"In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark)." = "Gehen Sie in den Einstellungen zum Abschnitt Erscheinungsbild und wählen Sie Ihr bevorzugtes Thema (System, Hell oder Dunkel).";
+
+// Feedback
+"Send Feedback" = "Feedback senden";
+"App Feedback" = "App-Feedback";
+"Rate Your Experience" = "Bewerten Sie Ihre Erfahrung";
+"Feedback Category" = "Feedback-Kategorie";
+"Category" = "Kategorie";
+"General" = "Allgemein";
+"Usability" = "Benutzerfreundlichkeit";
+"Features" = "Funktionen";
+"Bug Report" = "Fehlerbericht";
+"Suggestions" = "Vorschläge";
+"Your Feedback" = "Ihr Feedback";
+"Tell us what you think about the app..." = "Teilen Sie uns mit, was Sie über die App denken...";
+"Submit Feedback" = "Feedback abschicken";
+"Feedback Sent" = "Feedback gesendet";
+"Thank you for your feedback! We'll use it to improve the app." = "Vielen Dank für Ihr Feedback! Wir werden es nutzen, um die App zu verbessern."; 

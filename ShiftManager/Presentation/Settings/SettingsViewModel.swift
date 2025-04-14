@@ -1,6 +1,30 @@
 import Foundation
 import SwiftUI
 
+public enum Theme: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+    
+    public var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .system: return "System".localized
+        case .light: return "Light".localized
+        case .dark: return "Dark".localized
+        }
+    }
+    
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
+
 public enum Language: String, CaseIterable, Identifiable {
     case english = "en"
     case hebrew = "he"
@@ -76,8 +100,11 @@ public class SettingsViewModel: ObservableObject {
     }
     @Published var selectedLanguage: Language
     @Published var selectedCountry: Country
+    @Published var selectedTheme: Theme
     @Published var showingSaveConfirmation = false
     @Published var showingLanguagePicker = false
+    @Published var showSetupReminder = false
+    @Published var showingShareSheet = false
     
     // App version property
     var appVersion: String {
@@ -103,6 +130,10 @@ public class SettingsViewModel: ObservableObject {
         
         self.selectedCountry = Country(rawValue: UserDefaults.standard.string(forKey: "country") ?? "israel") ?? .israel
         
+        // Initialize theme
+        let savedTheme = UserDefaults.standard.string(forKey: "theme") ?? "system"
+        self.selectedTheme = Theme(rawValue: savedTheme) ?? .system
+        
         // Set default values if not already set
         if self.hourlyWage == 0 {
             self.hourlyWage = 40.04
@@ -111,6 +142,21 @@ public class SettingsViewModel: ObservableObject {
             self.baseHoursSpecialDay = 8
             self.startWorkOnSunday = true
             saveSettings()
+        }
+        
+        // Check if we should show the setup reminder
+        checkSetupStatus()
+    }
+    
+    // Check if basic setup is complete
+    func checkSetupStatus() {
+        let hasCompletedSetup = UserDefaults.standard.bool(forKey: "hasCompletedSetup")
+        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: "hasLaunchedBefore")
+        
+        // Only show reminder if the app has been launched before (onboarding completed)
+        // but user hasn't saved settings at least once
+        if hasLaunchedBefore && !hasCompletedSetup && username.isEmpty {
+            showSetupReminder = true
         }
     }
     
@@ -123,6 +169,10 @@ public class SettingsViewModel: ObservableObject {
         UserDefaults.standard.set(startWorkOnSunday, forKey: "startWorkOnSunday")
         UserDefaults.standard.set(selectedLanguage.rawValue, forKey: "selectedLanguage")
         UserDefaults.standard.set(selectedCountry.rawValue, forKey: "country")
+        UserDefaults.standard.set(selectedTheme.rawValue, forKey: "theme")
+        
+        // Mark that setup has been completed
+        UserDefaults.standard.set(true, forKey: "hasCompletedSetup")
         
         // Update LocalizationManager
         LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)

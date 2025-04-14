@@ -201,6 +201,13 @@ public struct ReportView: View {
                 .padding(.horizontal)
             }
             .padding(.vertical)
+            
+            // Add a note about tax calculation estimates
+            Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 2)
         }
         .navigationTitle("Reports".localized)
         .navigationBarTitleDisplayMode(.inline)
@@ -374,6 +381,14 @@ public struct SearchShiftView: View {
                                     }
                                 }
                                 .padding(.horizontal)
+                                
+                                // Add a note about tax calculation estimates
+                                Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top, 2)
                             }
                             .padding(.vertical)
                         }

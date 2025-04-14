@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct GuideView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var animateContent = false
     
     public init() {}
     
@@ -10,13 +11,13 @@ public struct GuideView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     // Welcome Section
-                    GuideSection(title: "Welcome to ShiftManager".localized, icon: "hand.wave.fill") {
+                    GuideSection(title: "Welcome to ShiftManager".localized, iconName: "hand.wave.fill") {
                         Text("ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features.".localized)
                             .padding(.bottom)
                     }
                     
                     // Settings Section
-                    GuideSection(title: "1. Initial Setup".localized, icon: "gearshape.fill") {
+                    GuideSection(title: "1. Initial Setup".localized, iconName: "gearshape.fill") {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Before you start, set up your basic information:".localized)
                                 .padding(.bottom, 4)
@@ -33,7 +34,7 @@ public struct GuideView: View {
                     }
                     
                     // Overtime Rules Section
-                    GuideSection(title: "2. Overtime Rules".localized, icon: "clock.fill") {
+                    GuideSection(title: "2. Overtime Rules".localized, iconName: "clock.fill") {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Configure your overtime rules:".localized)
                                 .padding(.bottom, 4)
@@ -47,7 +48,7 @@ public struct GuideView: View {
                     }
                     
                     // Shift Management Section
-                    GuideSection(title: "3. Managing Shifts".localized, icon: "calendar") {
+                    GuideSection(title: "3. Managing Shifts".localized, iconName: "calendar") {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Add and manage your shifts:".localized)
                                 .padding(.bottom, 4)
@@ -61,7 +62,7 @@ public struct GuideView: View {
                     }
                     
                     // Reports Section
-                    GuideSection(title: "4. Reports".localized, icon: "chart.bar.fill") {
+                    GuideSection(title: "4. Reports".localized, iconName: "chart.bar.fill") {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("View and export your work data:".localized)
                                 .padding(.bottom, 4)
@@ -75,7 +76,7 @@ public struct GuideView: View {
                     }
                     
                     // Tips Section
-                    GuideSection(title: "5. Tips & Tricks".localized, icon: "lightbulb.fill") {
+                    GuideSection(title: "5. Tips & Tricks".localized, iconName: "lightbulb.fill") {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Make the most of ShiftManager:".localized)
                                 .padding(.bottom, 4)
@@ -88,15 +89,29 @@ public struct GuideView: View {
                     }
                 }
                 .padding()
+                .opacity(animateContent ? 1 : 0)
+                .offset(y: animateContent ? 0 : 20)
             }
             .navigationTitle("User Guide".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done".localized) {
+                    Button(action: {
                         dismiss()
+                    }) {
+                        Text("Done".localized)
+                            .fontWeight(.medium)
+                            .foregroundColor(.purple)
                     }
+                    .buttonStyle(.bordered)
+                    .accessibilityLabel("Close Guide".localized)
                 }
+            }
+        }
+        .onAppear {
+            // Animate content appearance
+            withAnimation(.easeOut(duration: 0.3).delay(0.2)) {
+                animateContent = true
             }
         }
     }
@@ -104,19 +119,19 @@ public struct GuideView: View {
 
 struct GuideSection<Content: View>: View {
     let title: String
-    let icon: String
+    let iconName: String
     let content: () -> Content
     
-    init(title: String, icon: String, @ViewBuilder content: @escaping () -> Content) {
+    init(title: String, iconName: String, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
-        self.icon = icon
+        self.iconName = iconName
         self.content = content
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: icon)
+                Image(systemName: iconName)
                     .foregroundColor(.purple)
                     .font(.title2)
                 Text(title)

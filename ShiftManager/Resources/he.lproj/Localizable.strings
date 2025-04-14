@@ -263,4 +263,75 @@
 "Use the search feature to find specific shifts" = "השתמש בתכונת החיפוש כדי למצוא משמרות ספציפיות";
 "Export reports regularly for record-keeping" = "ייצא דוחות באופן קבוע לשמירת רשומות";
 "Keep your overtime rules up to date" = "שמור על חוקי השעות הנוספות שלך מעודכנים";
-"Mark special days to ensure correct wage calculations" = "סמן ימים מיוחדים כדי להבטיח חישובי שכר נכונים"; 
+"Mark special days to ensure correct wage calculations" = "סמן ימים מיוחדים כדי להבטיח חישובי שכר נכונים";
+
+// Tooltips
+"Help" = "עזרה";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "אחוז זה ינוכה מהשכר שלך כדי לחשב את ההכנסה נטו. המס בפועל עשוי להשתנות בהתאם לתקנות המקומיות.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "שעות עבודה רגילות ביום חול לפני שמתחיל חישוב שעות נוספות.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "שעות עבודה רגילות בימים מיוחדים (סופי שבוע, חגים) לפני שמתחיל חישוב שעות נוספות.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "קובע את היום הראשון בשבוע העבודה שלך לדיווח ולחישובים. מדינות שונות משתמשות בתקנים שונים.";
+"The number of hours after which this overtime rate starts to apply." = "מספר השעות שלאחריו תעריף השעות הנוספות מתחיל לחול.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "המכפיל המופעל על השכר השעתי שלך (למשל, 1.5 עבור שעה וחצי, 2.0 עבור כפול).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "אם מופעל, כלל זה יחול על סופי שבוע וחגים. אם מושבת, הוא חל על ימי חול רגילים.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "הערה: חישוב המס הוא הערכה ועשוי להשתנות בהתאם לתקנות המקומיות.";
+"Tax calculation is an estimate" = "חישוב המס הוא הערכה";
+
+// Help & FAQ
+"Help & FAQ" = "עזרה ושאלות נפוצות";
+"Frequently Asked Questions" = "שאלות נפוצות";
+"User Guide" = "מדריך למשתמש";
+"Contact Support" = "צור קשר עם התמיכה";
+"Close" = "סגור";
+"General Questions" = "שאלות כלליות";
+"How do I add a new shift?" = "כיצד אני מוסיף משמרת חדשה?";
+"Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed." = "עבור אל הכרטיסייה 'מנהל' והקש על כפתור ה-+. אתה יכול לקבוע את התאריך, שעת התחלה, שעת סיום, ולסמן אותו כיום מיוחד אם צריך.";
+"How is overtime calculated?" = "כיצד מחושבות שעות נוספות?";
+"Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up." = "שעות נוספות מחושבות על סמך ההגדרות שלך לשעות בסיס וכללי שעות נוספות. כל שעות עבודה מעבר לשעות הבסיס יעקבו אחר כללי השעות הנוספות שהגדרת.";
+"Can I export my shift data?" = "האם אני יכול לייצא את נתוני המשמרות שלי?";
+"Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF." = "כן, בכרטיסיית 'דוחות' אתה יכול לצפות בנתוני המשמרות שלך לפי תקופות זמן שונות ולייצא אותם ל-PDF.";
+"What is the tax deduction setting?" = "מהי הגדרת ניכוי המס?";
+"The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location." = "אחוז ניכוי המס משמש להערכת הכנסתך נטו לאחר מסים. זו רק הערכה ואינה משקפת בהכרח את המסים בפועל באזורך.";
+"What are base hours?" = "מהן שעות בסיס?";
+"Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days." = "שעות בסיס מגדירות כמה שעות אתה יכול לעבוד לפני שמתחילות שעות נוספות. אתה יכול להגדיר ערכים שונים לימי חול רגילים וימים מיוחדים.";
+"How do I change the app language?" = "איך אני משנה את שפת האפליקציה?";
+"In Settings, tap on the Language option and select your preferred language from the list." = "בהגדרות, הקש על אפשרות השפה ובחר את השפה המועדפת עליך מהרשימה.";
+"Troubleshooting" = "פתרון בעיות";
+"My shifts aren't showing up correctly" = "המשמרות שלי אינן מוצגות כראוי";
+"Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist." = "ודא שהמשמרות שלך אינן חופפות ושהן נשמרו כראוי. נסה להפעיל מחדש את האפליקציה אם הבעיות נמשכות.";
+"The overtime calculations look wrong" = "חישובי השעות הנוספות נראים שגויים";
+"Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules." = "בדוק את כללי השעות הנוספות והגדרות שעות הבסיס שלך כדי לוודא שהם תואמים את ציפיותיך. זכור שלימים מיוחדים עשויים להיות כללים שונים.";
+"Contact Information" = "פרטי יצירת קשר";
+"Email: support@shiftsmanager.com" = "אימייל: support@shiftsmanager.com";
+"Message" = "הודעה";
+"Subject" = "נושא";
+"Describe your issue or question..." = "תאר את הבעיה או השאלה שלך...";
+"Send Message" = "שלח הודעה";
+"Message Sent" = "הודעה נשלחה";
+"Thank you for your message. We'll get back to you soon." = "תודה על ההודעה שלך. נחזור אליך בהקדם.";
+
+// Theme Settings
+"Appearance" = "מראה";
+"Theme" = "ערכת נושא";
+"System" = "מערכת";
+"Light" = "בהיר";
+"Dark" = "כהה";
+"How do I change the app theme?" = "איך אני משנה את ערכת הנושא של האפליקציה?";
+"In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark)." = "בהגדרות, עבור לסעיף מראה ובחר את ערכת הנושא המועדפת עליך (מערכת, בהיר או כהה).";
+
+// Feedback
+"Send Feedback" = "שלח משוב";
+"App Feedback" = "משוב על האפליקציה";
+"Rate Your Experience" = "דרג את החוויה שלך";
+"Feedback Category" = "קטגוריית משוב";
+"Category" = "קטגוריה";
+"General" = "כללי";
+"Usability" = "שימושיות";
+"Features" = "תכונות";
+"Bug Report" = "דיווח על באג";
+"Suggestions" = "הצעות";
+"Your Feedback" = "המשוב שלך";
+"Tell us what you think about the app..." = "ספר לנו מה דעתך על האפליקציה...";
+"Submit Feedback" = "שלח משוב";
+"Feedback Sent" = "המשוב נשלח";
+"Thank you for your feedback! We'll use it to improve the app." = "תודה על המשוב שלך! נשתמש בו כדי לשפר את האפליקציה."; 

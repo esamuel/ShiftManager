@@ -304,4 +304,76 @@
 "Use the search feature to find specific shifts" = "Use the search feature to find specific shifts";
 "Export reports regularly for record-keeping" = "Export reports regularly for record-keeping";
 "Keep your overtime rules up to date" = "Keep your overtime rules up to date";
-"Mark special days to ensure correct wage calculations" = "Mark special days to ensure correct wage calculations"; 
+"Mark special days to ensure correct wage calculations" = "Mark special days to ensure correct wage calculations";
+
+// Tooltips
+"Help" = "Help";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "Standard work hours for a regular weekday before overtime calculation begins.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "Standard work hours for special days (weekends, holidays) before overtime calculation begins.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "Sets the first day of your work week for reporting and calculations. Different countries use different standards.";
+"The number of hours after which this overtime rate starts to apply." = "The number of hours after which this overtime rate starts to apply.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "Note: Tax calculation is an estimate and may vary based on local regulations.";
+"Tax calculation is an estimate" = "Tax calculation is an estimate";
+
+// Help & FAQ
+"Help & FAQ" = "Help & FAQ";
+"Frequently Asked Questions" = "Frequently Asked Questions";
+"User Guide" = "User Guide";
+"Contact Support" = "Contact Support";
+"Close" = "Close";
+"General Questions" = "General Questions";
+"How do I add a new shift?" = "How do I add a new shift?";
+"Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed." = "Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed.";
+"How is overtime calculated?" = "How is overtime calculated?";
+"Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up." = "Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up.";
+"Can I export my shift data?" = "Can I export my shift data?";
+"Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF." = "Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF.";
+"What is the tax deduction setting?" = "What is the tax deduction setting?";
+"The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location." = "The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location.";
+"What are base hours?" = "What are base hours?";
+"Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days." = "Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days.";
+"How do I change the app language?" = "How do I change the app language?";
+"In Settings, tap on the Language option and select your preferred language from the list." = "In Settings, tap on the Language option and select your preferred language from the list.";
+"Troubleshooting" = "Troubleshooting";
+"My shifts aren't showing up correctly" = "My shifts aren't showing up correctly";
+"Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist." = "Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist.";
+"The overtime calculations look wrong" = "The overtime calculations look wrong";
+"Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules." = "Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules.";
+"Contact Information" = "Contact Information";
+"Email: support@shiftsmanager.com" = "Email: support@shiftsmanager.com";
+"Message" = "Message";
+"Subject" = "Subject";
+"Describe your issue or question..." = "Describe your issue or question...";
+"Send Message" = "Send Message";
+"Message Sent" = "Message Sent";
+"Thank you for your message. We'll get back to you soon." = "Thank you for your message. We'll get back to you soon.";
+
+// Theme Settings
+"Appearance" = "Appearance";
+"Theme" = "Theme";
+"System" = "System";
+"Light" = "Light";
+"Dark" = "Dark";
+"How do I change the app theme?" = "How do I change the app theme?";
+"In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark)." = "In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark).";
+
+// Feedback
+"Send Feedback" = "Send Feedback";
+"App Feedback" = "App Feedback";
+"Rate Your Experience" = "Rate Your Experience";
+"Feedback Category" = "Feedback Category";
+"Category" = "Category";
+"General" = "General";
+"Usability" = "Usability";
+"Features" = "Features";
+"Bug Report" = "Bug Report";
+"Suggestions" = "Suggestions";
+"Your Feedback" = "Your Feedback";
+"Tell us what you think about the app..." = "Tell us what you think about the app...";
+"Submit Feedback" = "Submit Feedback";
+"Feedback Sent" = "Feedback Sent";
+"Thank you for your feedback! We'll use it to improve the app." = "Thank you for your feedback! We'll use it to improve the app.";
+"Tell Friends" = "Tell Friends"; 

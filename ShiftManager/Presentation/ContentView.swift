@@ -9,10 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var localizationManager = LocalizationManager.shared
+    @StateObject private var themeManager = ThemeManager.shared
     
     var body: some View {
         MainTabView()
             .refreshOnLanguageChange()
+            .id(themeManager.refreshID) // Force refresh on theme change
+            .withAppTheme() // Apply theme
     }
 }
 

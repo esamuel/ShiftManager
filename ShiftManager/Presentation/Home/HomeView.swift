@@ -3,6 +3,7 @@ import SwiftUI
 public struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var showingUpcomingShifts = true
+    @State private var showingGuide = false
     
     public init() {}
     
@@ -10,9 +11,28 @@ public struct HomeView: View {
         NavigationView {
             VStack(spacing: 16) {
                 // Title with custom font size
-                Text("Shift Manager".localized)
-                    .font(.system(size: 32, weight: .bold))
-                    .padding(.top)
+                HStack {
+                    Text("Shift Manager".localized)
+                        .font(.system(size: 32, weight: .bold))
+                    
+                    Spacer()
+                    
+                    // Help button
+                    Button(action: { 
+                        showingGuide = true
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.title2)
+                            .foregroundColor(.purple)
+                            .padding(8)
+                            .background(Color.purple.opacity(0.1))
+                            .clipShape(Circle())
+                    }
+                    .accessibilityLabel("Help".localized)
+                    .help("Open User Guide".localized)
+                }
+                .padding(.top)
+                .padding(.horizontal)
                 
                 // Menu Buttons
                 ScrollView {
@@ -88,6 +108,9 @@ public struct HomeView: View {
                         }
                     }
             }
+        }
+        .sheet(isPresented: $showingGuide) {
+            GuideView()
         }
     }
 }

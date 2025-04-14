@@ -241,4 +241,75 @@
 "Use the search feature to find specific shifts" = "Используйте функцию поиска для нахождения конкретных смен";
 "Export reports regularly for record-keeping" = "Регулярно экспортируйте отчеты для ведения учета";
 "Keep your overtime rules up to date" = "Поддерживайте актуальность правил сверхурочных";
-"Mark special days to ensure correct wage calculations" = "Отмечайте особые дни для обеспечения правильного расчета заработной платы"; 
+"Mark special days to ensure correct wage calculations" = "Отмечайте особые дни для обеспечения правильного расчета заработной платы";
+
+// Tooltips
+"Help" = "Помощь";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "Этот процент будет вычтен из вашего общего заработка для расчета чистого дохода. Фактический налог может отличаться в зависимости от местных норм.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "Стандартные рабочие часы для обычного рабочего дня до начала расчета сверхурочных.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "Стандартные рабочие часы для особых дней (выходных, праздников) до начала расчета сверхурочных.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "Устанавливает первый день вашей рабочей недели для отчетности и расчетов. В разных странах используются разные стандарты.";
+"The number of hours after which this overtime rate starts to apply." = "Количество часов, после которых начинает применяться эта ставка сверхурочных.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "Множитель, применяемый к вашей почасовой ставке (например, 1,5 для полуторной оплаты, 2,0 для двойной оплаты).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "Если включено, это правило будет применяться к выходным и праздничным дням. Если отключено, оно применяется к обычным рабочим дням.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "Примечание: Расчет налога является приблизительным и может отличаться в зависимости от местных норм.";
+"Tax calculation is an estimate" = "Расчет налога приблизительный";
+
+// Help & FAQ
+"Help & FAQ" = "Помощь и часто задаваемые вопросы";
+"Frequently Asked Questions" = "Часто задаваемые вопросы";
+"User Guide" = "Руководство пользователя";
+"Contact Support" = "Связаться с поддержкой";
+"Close" = "Закрыть";
+"General Questions" = "Общие вопросы";
+"How do I add a new shift?" = "Как добавить новую смену?";
+"Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed." = "Перейдите на вкладку Менеджер и нажмите кнопку +. Вы можете установить дату, время начала, время окончания и при необходимости отметить его как особый день.";
+"How is overtime calculated?" = "Как рассчитывается сверхурочное время?";
+"Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up." = "Сверхурочное время рассчитывается на основе ваших настроек базовых часов и правил сверхурочной работы. Любые часы, отработанные сверх базовых часов, будут следовать установленным вами правилам сверхурочной работы.";
+"Can I export my shift data?" = "Могу ли я экспортировать данные своих смен?";
+"Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF." = "Да, на вкладке Отчеты вы можете просматривать данные смен по разным периодам времени и экспортировать их в PDF.";
+"What is the tax deduction setting?" = "Что такое настройка налогового вычета?";
+"The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location." = "Процент налогового вычета используется для оценки вашего чистого дохода после уплаты налогов. Это только оценка и может не отражать фактические налоги в вашем регионе.";
+"What are base hours?" = "Что такое базовые часы?";
+"Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days." = "Базовые часы определяют, сколько часов вы можете работать до начала сверхурочной работы. Вы можете установить разные значения для обычных будних дней и особых дней.";
+"How do I change the app language?" = "Как изменить язык приложения?";
+"In Settings, tap on the Language option and select your preferred language from the list." = "В Настройках нажмите на опцию Язык и выберите предпочитаемый язык из списка.";
+"Troubleshooting" = "Устранение неполадок";
+"My shifts aren't showing up correctly" = "Мои смены отображаются неправильно";
+"Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist." = "Убедитесь, что ваши смены не перекрываются и что вы правильно их сохранили. Попробуйте перезапустить приложение, если проблемы не устраняются.";
+"The overtime calculations look wrong" = "Расчеты сверхурочных выглядят неправильно";
+"Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules." = "Проверьте правила сверхурочной работы и настройки базовых часов, чтобы убедиться, что они соответствуют вашим ожиданиям. Помните, что особые дни могут иметь разные правила.";
+"Contact Information" = "Контактная информация";
+"Email: support@shiftsmanager.com" = "Email: support@shiftsmanager.com";
+"Message" = "Сообщение";
+"Subject" = "Тема";
+"Describe your issue or question..." = "Опишите вашу проблему или вопрос...";
+"Send Message" = "Отправить сообщение";
+"Message Sent" = "Сообщение отправлено";
+"Thank you for your message. We'll get back to you soon." = "Спасибо за ваше сообщение. Мы свяжемся с вами в ближайшее время.";
+
+// Theme Settings
+"Appearance" = "Внешний вид";
+"Theme" = "Тема";
+"System" = "Системная";
+"Light" = "Светлая";
+"Dark" = "Темная";
+"How do I change the app theme?" = "Как изменить тему приложения?";
+"In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark)." = "В Настройках перейдите в раздел Внешний вид и выберите предпочитаемую тему (Системная, Светлая или Темная).";
+
+// Feedback
+"Send Feedback" = "Отправить отзыв";
+"App Feedback" = "Отзыв о приложении";
+"Rate Your Experience" = "Оцените ваш опыт";
+"Feedback Category" = "Категория отзыва";
+"Category" = "Категория";
+"General" = "Общее";
+"Usability" = "Удобство использования";
+"Features" = "Функциональность";
+"Bug Report" = "Отчет об ошибке";
+"Suggestions" = "Предложения";
+"Your Feedback" = "Ваш отзыв";
+"Tell us what you think about the app..." = "Расскажите нам, что вы думаете о приложении...";
+"Submit Feedback" = "Отправить отзыв";
+"Feedback Sent" = "Отзыв отправлен";
+"Thank you for your feedback! We'll use it to improve the app." = "Спасибо за ваш отзыв! Мы используем его для улучшения приложения."; 

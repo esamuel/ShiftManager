@@ -235,4 +235,75 @@
 "Use the search feature to find specific shifts" = "Utilisez la fonction de recherche pour trouver des quarts spécifiques";
 "Export reports regularly for record-keeping" = "Exportez régulièrement des rapports pour la tenue de registres";
 "Keep your overtime rules up to date" = "Maintenez vos règles d'heures supplémentaires à jour";
-"Mark special days to ensure correct wage calculations" = "Marquez les jours spéciaux pour garantir des calculs de salaire corrects"; 
+"Mark special days to ensure correct wage calculations" = "Marquez les jours spéciaux pour garantir des calculs de salaire corrects";
+
+// Tooltips
+"Help" = "Aide";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "Ce pourcentage sera déduit de vos revenus totaux pour calculer votre revenu net. L'impôt réel peut varier selon les réglementations locales.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "Heures de travail standard pour un jour de semaine normal avant que le calcul des heures supplémentaires ne commence.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "Heures de travail standard pour les jours spéciaux (week-ends, jours fériés) avant que le calcul des heures supplémentaires ne commence.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "Définit le premier jour de votre semaine de travail pour les rapports et les calculs. Différents pays utilisent différentes normes.";
+"The number of hours after which this overtime rate starts to apply." = "Le nombre d'heures après lequel ce taux d'heures supplémentaires commence à s'appliquer.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "Le multiplicateur appliqué à votre salaire horaire (par exemple, 1,5 pour une fois et demie, 2,0 pour un double temps).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "Si activée, cette règle s'appliquera aux week-ends et jours fériés. Si désactivée, elle s'applique aux jours de semaine normaux.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "Remarque : Le calcul des impôts est une estimation et peut varier selon les réglementations locales.";
+"Tax calculation is an estimate" = "Le calcul des impôts est une estimation";
+
+// Help & FAQ
+"Help & FAQ" = "Aide et FAQ";
+"Frequently Asked Questions" = "Questions Fréquemment Posées";
+"User Guide" = "Guide d'Utilisation";
+"Contact Support" = "Contacter le Support";
+"Close" = "Fermer";
+"General Questions" = "Questions Générales";
+"How do I add a new shift?" = "Comment ajouter un nouveau quart de travail ?";
+"Go to the Manager tab and tap the + button. You can set the date, start time, end time, and mark it as a special day if needed." = "Allez dans l'onglet Gestionnaire et appuyez sur le bouton +. Vous pouvez définir la date, l'heure de début, l'heure de fin et le marquer comme jour spécial si nécessaire.";
+"How is overtime calculated?" = "Comment les heures supplémentaires sont-elles calculées ?";
+"Overtime is calculated based on your settings for base hours and overtime rules. Any hours worked beyond the base hours will follow the overtime rules you've set up." = "Les heures supplémentaires sont calculées en fonction de vos paramètres d'heures de base et des règles d'heures supplémentaires. Toutes les heures travaillées au-delà des heures de base suivront les règles d'heures supplémentaires que vous avez configurées.";
+"Can I export my shift data?" = "Puis-je exporter mes données de quart de travail ?";
+"Yes, in the Reports tab you can view your shift data by different time periods and export it to PDF." = "Oui, dans l'onglet Rapports, vous pouvez consulter vos données de quart de travail par différentes périodes et les exporter en PDF.";
+"What is the tax deduction setting?" = "Qu'est-ce que le paramètre de déduction fiscale ?";
+"The tax deduction percentage is used to estimate your net income after taxes. This is only an estimate and may not reflect actual taxes in your location." = "Le pourcentage de déduction fiscale est utilisé pour estimer votre revenu net après impôts. Il s'agit uniquement d'une estimation et peut ne pas refléter les impôts réels dans votre région.";
+"What are base hours?" = "Que sont les heures de base ?";
+"Base hours define how many hours you can work before overtime begins. You can set different values for regular weekdays and special days." = "Les heures de base définissent combien d'heures vous pouvez travailler avant que les heures supplémentaires ne commencent. Vous pouvez définir différentes valeurs pour les jours de semaine normaux et les jours spéciaux.";
+"How do I change the app language?" = "Comment changer la langue de l'application ?";
+"In Settings, tap on the Language option and select your preferred language from the list." = "Dans Paramètres, appuyez sur l'option Langue et sélectionnez votre langue préférée dans la liste.";
+"Troubleshooting" = "Dépannage";
+"My shifts aren't showing up correctly" = "Mes quarts de travail ne s'affichent pas correctement";
+"Make sure your shifts don't overlap and that you've saved them properly. Try restarting the app if issues persist." = "Assurez-vous que vos quarts de travail ne se chevauchent pas et que vous les avez correctement enregistrés. Essayez de redémarrer l'application si les problèmes persistent.";
+"The overtime calculations look wrong" = "Les calculs d'heures supplémentaires semblent incorrects";
+"Check your overtime rules and base hours settings to ensure they match your expectations. Remember that special days may have different rules." = "Vérifiez vos règles d'heures supplémentaires et vos paramètres d'heures de base pour vous assurer qu'ils correspondent à vos attentes. N'oubliez pas que les jours spéciaux peuvent avoir des règles différentes.";
+"Contact Information" = "Informations de Contact";
+"Email: support@shiftsmanager.com" = "Email: support@shiftsmanager.com";
+"Message" = "Message";
+"Subject" = "Sujet";
+"Describe your issue or question..." = "Décrivez votre problème ou question...";
+"Send Message" = "Envoyer le Message";
+"Message Sent" = "Message Envoyé";
+"Thank you for your message. We'll get back to you soon." = "Merci pour votre message. Nous vous répondrons bientôt.";
+
+// Theme Settings
+"Appearance" = "Apparence";
+"Theme" = "Thème";
+"System" = "Système";
+"Light" = "Clair";
+"Dark" = "Sombre";
+"How do I change the app theme?" = "Comment changer le thème de l'application ?";
+"In Settings, go to the Appearance section and select your preferred theme (System, Light, or Dark)." = "Dans Paramètres, allez à la section Apparence et sélectionnez votre thème préféré (Système, Clair ou Sombre).";
+
+// Feedback
+"Send Feedback" = "Envoyer des Commentaires";
+"App Feedback" = "Commentaires sur l'Application";
+"Rate Your Experience" = "Évaluez Votre Expérience";
+"Feedback Category" = "Catégorie de Commentaires";
+"Category" = "Catégorie";
+"General" = "Général";
+"Usability" = "Ergonomie";
+"Features" = "Fonctionnalités";
+"Bug Report" = "Rapport de Bug";
+"Suggestions" = "Suggestions";
+"Your Feedback" = "Vos Commentaires";
+"Tell us what you think about the app..." = "Dites-nous ce que vous pensez de l'application...";
+"Submit Feedback" = "Soumettre les Commentaires";
+"Feedback Sent" = "Commentaires Envoyés";
+"Thank you for your feedback! We'll use it to improve the app." = "Merci pour vos commentaires ! Nous les utiliserons pour améliorer l'application."; 
