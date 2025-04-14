@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 class LocalizationManager: ObservableObject {
     static let shared = LocalizationManager()
@@ -8,6 +9,8 @@ class LocalizationManager: ObservableObject {
         didSet {
             UserDefaults.standard.set(currentLanguage, forKey: "selectedLanguage")
             UserDefaults.standard.synchronize()
+            // Generate a new ID to force view refreshes
+            refreshID = UUID()
             NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
         }
     }
@@ -19,6 +22,9 @@ class LocalizationManager: ObservableObject {
             NotificationCenter.default.post(name: NSNotification.Name("CountryChanged"), object: nil)
         }
     }
+    
+    // Published property that changes whenever language changes
+    @Published var refreshID = UUID()
     
     var currencySymbol: String {
         return currentCountry.currencySymbol
@@ -79,4 +85,11 @@ class LocalizationManager: ObservableObject {
 struct AppLanguage {
     let code: String
     let name: String
+}
+
+// MARK: - View Extension for Language Refresh
+extension View {
+    func refreshOnLanguageChange() -> some View {
+        self.id(LocalizationManager.shared.refreshID)
+    }
 } 

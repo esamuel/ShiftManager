@@ -14,6 +14,7 @@
 "Manager" = "Manager";
 "Reports" = "Reports";
 "Guide" = "Guide";
+"User Guide" = "User Guide";
 "Settings" = "Settings";
 "Coming Shifts" = "Coming Shifts";
 
@@ -274,4 +275,33 @@
 "Rate" = "Rate";
 "Applies to Special Days" = "Applies to Special Days";
 "Cancel" = "Cancel";
-"Save" = "Save"; 
+"Save" = "Save";
+
+// Additional Guide Content
+"2. Overtime Rules" = "2. Overtime Rules";
+"Configure your overtime rules:" = "Configure your overtime rules:";
+"Set base hours for regular weekdays and special days" = "Set base hours for regular weekdays and special days";
+"Add overtime rules with:" = "Add overtime rules with:";
+"Hours threshold (when overtime starts)" = "Hours threshold (when overtime starts)";
+"Rate multiplier (e.g., 1.5x for 150%)" = "Rate multiplier (e.g., 1.5x for 150%)";
+"Choose if rule applies to special days" = "Choose if rule applies to special days";
+"3. Managing Shifts" = "3. Managing Shifts";
+"Add and manage your shifts:" = "Add and manage your shifts:";
+"Tap the '+' button to add a new shift" = "Tap the '+' button to add a new shift";
+"Set start and end times" = "Set start and end times";
+"Mark special days with the star icon" = "Mark special days with the star icon";
+"View and edit existing shifts" = "View and edit existing shifts";
+"Delete shifts using the delete button (trash icon)" = "Delete shifts using the delete button (trash icon)";
+"4. Reports" = "4. Reports";
+"View and export your work data:" = "View and export your work data:";
+"Switch between weekly and monthly views" = "Switch between weekly and monthly views";
+"View total hours and wages" = "View total hours and wages";
+"See breakdown of regular and overtime hours" = "See breakdown of regular and overtime hours";
+"Export reports to PDF" = "Export reports to PDF";
+"Search shifts by date range" = "Search shifts by date range";
+"5. Tips & Tricks" = "5. Tips & Tricks";
+"Make the most of ShiftManager:" = "Make the most of ShiftManager:";
+"Use the search feature to find specific shifts" = "Use the search feature to find specific shifts";
+"Export reports regularly for record-keeping" = "Export reports regularly for record-keeping";
+"Keep your overtime rules up to date" = "Keep your overtime rules up to date";
+"Mark special days to ensure correct wage calculations" = "Mark special days to ensure correct wage calculations"; 

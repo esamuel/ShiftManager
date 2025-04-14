@@ -1,4 +1,6 @@
 import Foundation
+import Combine
+import SwiftUI
 
 public class UpcomingShiftsViewModel: ObservableObject {
     @Published var upcomingShifts: [Date: [ShiftModel]] = [:]
@@ -20,6 +22,7 @@ public class UpcomingShiftsViewModel: ObservableObject {
             // Calculate date range
             let calendar = Calendar.current
             var startDate: Date
+            let currentDate = Date() // Current date and time for filtering
             
             if startWorkOnSunday {
                 // If starting on Sunday, find the most recent Sunday
@@ -50,16 +53,22 @@ public class UpcomingShiftsViewModel: ObservableObject {
                 }
             }
             
-            // Add shifts to their respective days
+            // Add shifts to their respective days, only if they haven't happened yet
             for shift in shifts {
-                let dayStart = calendar.startOfDay(for: shift.startTime)
-                groupedShifts[dayStart, default: []].append(shift)
+                // Only include shifts that haven't ended yet (end time is in the future)
+                if shift.endTime > currentDate {
+                    let dayStart = calendar.startOfDay(for: shift.startTime)
+                    groupedShifts[dayStart, default: []].append(shift)
+                }
             }
             
             // Sort shifts within each day by start time
             for (day, dayShifts) in groupedShifts {
                 groupedShifts[day] = dayShifts.sorted { $0.startTime < $1.startTime }
             }
+            
+            // Remove days with no shifts
+            groupedShifts = groupedShifts.filter { !$0.value.isEmpty }
             
             await MainActor.run {
                 self.upcomingShifts = groupedShifts
@@ -72,19 +81,23 @@ public class UpcomingShiftsViewModel: ObservableObject {
     }
     
     func formatDate(_ date: Date) -> String {
-        let calendar = Calendar.current
+        // Get current language locale
+        let locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         
         // Get the localized day name
         let dayFormatter = DateFormatter()
+        dayFormatter.locale = locale
         dayFormatter.dateFormat = "EEEE"
         let dayName = dayFormatter.string(from: date)
         
         // Get the localized month name
         let monthFormatter = DateFormatter()
+        monthFormatter.locale = locale
         monthFormatter.dateFormat = "MMM"
         let monthName = monthFormatter.string(from: date)
         
         // Get the day number
+        let calendar = Calendar.current
         let dayNumber = calendar.component(.day, from: date)
         
         // Format the date in the localized pattern: "Weekday, Month Day"
@@ -93,6 +106,7 @@ public class UpcomingShiftsViewModel: ObservableObject {
     
     func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }

@@ -256,9 +256,6 @@ struct ShiftCard: View {
             
             HStack {
                 VStack(alignment: .leading) {
-                    let formattedGrossWage = String(format: "%.2f", shift.grossWage)
-                    let formattedNetWage = String(format: "%.2f", shift.netWage)
-                    
                     // Use asCurrency extension for proper currency symbol display
                     Text("Gross Wage:".localized + " " + shift.grossWage.asCurrency)
                     Text("Net Wage:".localized + " " + shift.netWage.asCurrency)

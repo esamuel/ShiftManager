@@ -103,7 +103,7 @@ class ShiftFormViewModel: ObservableObject {
             self.startTime = shift.startTime
             self.endTime = shift.endTime
             self.isOvertime = shift.isOvertime
-            self.notes = shift.notes ?? ""
+            self.notes = shift.notes
         }
     }
     

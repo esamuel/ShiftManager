@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct MainTabView: View {
+    @StateObject private var localizationManager = LocalizationManager.shared
+    
     public init() {}
     
     public var body: some View {
@@ -23,6 +25,7 @@ public struct MainTabView: View {
                     Text("Reports".localized)
                 }
         }
+        .refreshOnLanguageChange()
     }
 }
 

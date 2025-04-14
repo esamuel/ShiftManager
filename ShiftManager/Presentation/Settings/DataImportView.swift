@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 struct DataImportView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -50,6 +51,7 @@ struct DataImportView: View {
         
         // Format the date in a localized way
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .none
         let dateString = dateFormatter.string(from: startDate)

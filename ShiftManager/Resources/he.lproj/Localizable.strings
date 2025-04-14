@@ -12,6 +12,7 @@
 "Home" = "בית";
 "Reports" = "דוחות";
 "Guide" = "מדריך";
+"User Guide" = "מדריך משתמש";
 "Overtime Rules" = "חוקי שעות נוספות";
 "Done" = "סיום";
 "Upcoming Shifts" = "משמרות קרובות";
@@ -235,73 +236,31 @@
 "Net Wage:" = "שכר נטו:";
 "No shifts found for the selected period" = "לא נמצאו משמרות בתקופה שנבחרה";
 
-// Month Names
-"January" = "ינואר";
-"February" = "פברואר";
-"March" = "מרץ";
-"April" = "אפריל";
-"May" = "מאי";
-"June" = "יוני";
-"July" = "יולי";
-"August" = "אוגוסט";
-"September" = "ספטמבר";
-"October" = "אוקטובר";
-"November" = "נובמבר";
-"December" = "דצמבר";
-
-// Day Names
-"Monday" = "יום שני";
-"Tuesday" = "יום שלישי";
-"Wednesday" = "יום רביעי";
-"Thursday" = "יום חמישי";
-"Friday" = "יום שישי";
-"Saturday" = "יום שבת";
-"Sunday" = "יום ראשון";
-
-// Date Components
-"%d in %@" = "%d ב%@";
-"%@ %d, %d" = "%d ב%@ %d";
-"%@ - %@" = "%@ - %@";
-
-// Weekly View Tab Labels
-"Weekly View" = "תצוגה שבועית";
-"Monthly View" = "תצוגה חודשית";
-"Wage Breakdown" = "פירוט שכר";
-"Total Working Days:" = "סה\"כ ימי עבודה:";
-"Total Hours:" = "סה\"כ שעות:";
-"Gross Wage:" = "שכר ברוטו:";
-"Net Wage:" = "שכר נטו:";
-
-// Date Format Patterns
-"Shift on %@" = "משמרת ב-%@";
-"%@ %d" = "%@ %d";
-"%@, %@ %d" = "%@, %@ %d";
-
-// Overtime Rules
-"Overtime Rules" = "חוקי שעות נוספות";
-"Base Hours (Weekday)" = "שעות בסיס (יום חול)";
-"Base Hours (Special Day)" = "שעות בסיס (יום מיוחד)";
-"hours" = "שעות";
-"After %d hours at %.2fx rate @ %.2fx" = "אחרי %d שעות בתעריף %.2fx @ %.2fx";
-"Special Days" = "ימים מיוחדים";
-"Weekdays" = "ימי חול";
-
-// Add Overtime Rule
-"Add Overtime Rule" = "הוסף חוק שעות נוספות";
-"Edit Overtime Rule" = "ערוך חוק שעות נוספות";
-"Hours Threshold" = "סף שעות";
-"Rate" = "תעריף";
-"Applies to Special Days" = "חל על ימים מיוחדים";
-"Cancel" = "ביטול";
-"Save" = "שמור";
-
-// Search
-"Search" = "חיפוש";
-"Search Period" = "תקופת חיפוש";
-"Start Date" = "תאריך התחלה";
-"End Date" = "תאריך סיום";
-"Export to PDF" = "ייצוא ל-PDF";
-"Total Working Days:" = "סה\"כ ימי עבודה:";
-"Total Hours:" = "סה\"כ שעות:";
-"Gross Wage:" = "שכר ברוטו:";
-"Net Wage:" = "שכר נטו:"; 
+// Additional Guide Content
+"2. Overtime Rules" = "2. חוקי שעות נוספות";
+"Configure your overtime rules:" = "הגדר את חוקי השעות הנוספות שלך:";
+"Set base hours for regular weekdays and special days" = "הגדר שעות בסיס לימי חול וימים מיוחדים";
+"Add overtime rules with:" = "הוסף חוקי שעות נוספות עם:";
+"Hours threshold (when overtime starts)" = "סף שעות (מתי מתחילות שעות נוספות)";
+"Rate multiplier (e.g., 1.5x for 150%)" = "מכפיל תעריף (למשל, 1.5x עבור 150%)";
+"Choose if rule applies to special days" = "בחר אם החוק חל על ימים מיוחדים";
+"3. Managing Shifts" = "3. ניהול משמרות";
+"Add and manage your shifts:" = "הוסף ונהל את המשמרות שלך:";
+"Tap the '+' button to add a new shift" = "הקש על כפתור '+' כדי להוסיף משמרת חדשה";
+"Set start and end times" = "הגדר זמני התחלה וסיום";
+"Mark special days with the star icon" = "סמן ימים מיוחדים עם סמל הכוכב";
+"View and edit existing shifts" = "צפה וערוך משמרות קיימות";
+"Delete shifts using the delete button (trash icon)" = "מחק משמרות באמצעות כפתור המחיקה (סמל פח)";
+"4. Reports" = "4. דוחות";
+"View and export your work data:" = "צפה וייצא את נתוני העבודה שלך:";
+"Switch between weekly and monthly views" = "עבור בין תצוגות שבועיות וחודשיות";
+"View total hours and wages" = "צפה בסך השעות והשכר";
+"See breakdown of regular and overtime hours" = "ראה פירוט של שעות רגילות ושעות נוספות";
+"Export reports to PDF" = "ייצא דוחות ל-PDF";
+"Search shifts by date range" = "חפש משמרות לפי טווח תאריכים";
+"5. Tips & Tricks" = "5. טיפים וטריקים";
+"Make the most of ShiftManager:" = "הפק את המרב מ-ShiftManager:";
+"Use the search feature to find specific shifts" = "השתמש בתכונת החיפוש כדי למצוא משמרות ספציפיות";
+"Export reports regularly for record-keeping" = "ייצא דוחות באופן קבוע לשמירת רשומות";
+"Keep your overtime rules up to date" = "שמור על חוקי השעות הנוספות שלך מעודכנים";
+"Mark special days to ensure correct wage calculations" = "סמן ימים מיוחדים כדי להבטיח חישובי שכר נכונים"; 

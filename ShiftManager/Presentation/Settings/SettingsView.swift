@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var localizationManager = LocalizationManager.shared
     @Environment(\.dismiss) private var dismiss
     
     public var body: some View {
@@ -121,8 +122,11 @@ public struct SettingsView: View {
                 Button("OK".localized, role: .cancel) { }
             }
             .sheet(isPresented: $viewModel.showingLanguagePicker) {
-                LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage, isPresented: $viewModel.showingLanguagePicker)
+                LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage, isPresented: $viewModel.showingLanguagePicker, onLanguageSelected: { language in
+                    viewModel.applyLanguageChange(language)
+                })
             }
+            .refreshOnLanguageChange()
         }
     }
 }
@@ -130,6 +134,7 @@ public struct SettingsView: View {
 struct LanguagePickerView: View {
     @Binding var selectedLanguage: Language
     @Binding var isPresented: Bool
+    var onLanguageSelected: (Language) -> Void
     
     var body: some View {
         NavigationView {
@@ -137,6 +142,7 @@ struct LanguagePickerView: View {
                 ForEach(Language.allCases) { language in
                     Button(action: {
                         selectedLanguage = language
+                        onLanguageSelected(language)
                         isPresented = false
                     }) {
                         HStack {
@@ -155,6 +161,7 @@ struct LanguagePickerView: View {
             .navigationBarItems(trailing: Button("Done".localized) {
                 isPresented = false
             })
+            .refreshOnLanguageChange()
         }
     }
 }

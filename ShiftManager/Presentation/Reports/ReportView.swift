@@ -14,51 +14,63 @@ public struct ReportView: View {
     
     public init() {}
     
+    // Create separate view components to simplify the main body
+    private var weeklyViewButton: some View {
+        Button(action: {
+            selectedView = .weekly
+            viewModel.selectedView = .weekly
+            viewModel.switchView(to: .weekly)
+        }) {
+            Text("Weekly View".localized)
+                .font(.headline)
+                .foregroundColor(selectedView == .weekly ? .purple : .gray)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+        }
+        .background(
+            VStack {
+                Spacer()
+                Rectangle()
+                    .fill(selectedView == .weekly ? Color.purple : Color.clear)
+                    .frame(height: 2)
+            }
+        )
+    }
+    
+    private var monthlyViewButton: some View {
+        Button(action: {
+            selectedView = .monthly
+            viewModel.selectedView = .monthly
+            viewModel.switchView(to: .monthly)
+        }) {
+            Text("Monthly View".localized)
+                .font(.headline)
+                .foregroundColor(selectedView == .monthly ? .purple : .gray)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+        }
+        .background(
+            VStack {
+                Spacer()
+                Rectangle()
+                    .fill(selectedView == .monthly ? Color.purple : Color.clear)
+                    .frame(height: 2)
+            }
+        )
+    }
+    
+    private var viewTypeSelectorBar: some View {
+        HStack(spacing: 0) {
+            weeklyViewButton
+            monthlyViewButton
+        }
+        .padding(.horizontal)
+    }
+    
     public var body: some View {
         VStack(spacing: 0) {
             // View Type Selector
-            HStack(spacing: 0) {
-                Button(action: {
-                    selectedView = .weekly
-                    viewModel.selectedView = .weekly
-                    viewModel.switchView(to: .weekly)
-                }) {
-                    Text("Weekly View".localized)
-                        .font(.headline)
-                        .foregroundColor(selectedView == .weekly ? .purple : .gray)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                }
-                .background(
-                    VStack {
-                        Spacer()
-                        Rectangle()
-                            .fill(selectedView == .weekly ? Color.purple : Color.clear)
-                            .frame(height: 2)
-                    }
-                )
-                
-                Button(action: {
-                    selectedView = .monthly
-                    viewModel.selectedView = .monthly
-                    viewModel.switchView(to: .monthly)
-                }) {
-                    Text("Monthly View".localized)
-                        .font(.headline)
-                        .foregroundColor(selectedView == .monthly ? .purple : .gray)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                }
-                .background(
-                    VStack {
-                        Spacer()
-                        Rectangle()
-                            .fill(selectedView == .monthly ? Color.purple : Color.clear)
-                            .frame(height: 2)
-                    }
-                )
-            }
-            .padding(.horizontal)
+            viewTypeSelectorBar
             
             // Date Navigation
             HStack {
@@ -118,14 +130,12 @@ public struct ReportView: View {
                     HStack {
                         Text("Gross Wage:".localized)
                         Spacer()
-                        let formattedGrossWage = String(format: "%.2f", viewModel.grossWage)
                         Text(viewModel.grossWage.asCurrency)
                     }
                     
                     HStack {
                         Text("Net Wage:".localized)
                         Spacer()
-                        let formattedNetWage = String(format: "%.2f", viewModel.netWage)
                         Text(viewModel.netWage.asCurrency)
                     }
                 }
@@ -226,7 +236,6 @@ public struct ShiftReportCard: View {
             
             HStack {
                 Spacer()
-                let formattedGrossWage = String(format: "%.2f", shift.grossWage)
                 Text(shift.grossWage.asCurrency)
                     .font(.headline)
                     .foregroundColor(.purple)

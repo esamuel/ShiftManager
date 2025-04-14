@@ -131,6 +131,13 @@ public class SettingsViewModel: ObservableObject {
         showingSaveConfirmation = true
     }
     
+    // Method to apply language change immediately
+    func applyLanguageChange(_ language: Language) {
+        selectedLanguage = language
+        UserDefaults.standard.set(selectedLanguage.rawValue, forKey: "selectedLanguage")
+        LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)
+    }
+    
     func formatDuration(_ duration: Double) -> String {
         let hours = Int(duration) / 3600
         let minutes = Int(duration) / 60 % 60

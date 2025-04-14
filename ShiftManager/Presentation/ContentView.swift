@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var localizationManager = LocalizationManager.shared
+    
     var body: some View {
         MainTabView()
+            .refreshOnLanguageChange()
     }
 }
 

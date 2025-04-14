@@ -100,8 +100,6 @@ public class ReportViewModel: ObservableObject {
     }
     
     private func updatePeriodRange() {
-        let today = Date()
-        
         if selectedView == .weekly {
             // Get the start of the week containing currentPeriodStart
             let weekday = calendar.component(.weekday, from: currentPeriodStart)

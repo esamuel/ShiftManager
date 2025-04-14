@@ -14,11 +14,12 @@
 "Manager" = "Менеджер";
 "Reports" = "Отчеты";
 "Guide" = "Руководство";
+"User Guide" = "Руководство пользователя";
 "Settings" = "Настройки";
+"Coming Shifts" = "Предстоящие смены";
 
 // Home View
 "Upcoming Shifts" = "Предстоящие смены";
-"Coming Shifts" = "Предстоящие смены";
 "Done" = "Готово";
 "Overtime Rules" = "Правила сверхурочных";
 
@@ -101,13 +102,11 @@
 // Main Page
 "Shift Manager" = "Менеджер смен";
 "Home" = "Главная";
-"Shift Manager" = "Менеджер смен";
 "Reports" = "Отчеты";
 "Guide" = "Руководство";
 "Overtime Rules" = "Правила сверхурочных";
 "Settings" = "Настройки";
 "Upcoming Shifts" = "Предстоящие смены";
-"Coming Shifts" = "Предстоящие смены";
 "Done" = "Готово";
 
 // Additional UI Elements
@@ -215,62 +214,31 @@
 "Net Wage:" = "Чистая зарплата:";
 "No shifts found for the selected period" = "Не найдено смен за выбранный период";
 
-// Month Names
-"January" = "Январь";
-"February" = "Февраль";
-"March" = "Март";
-"April" = "Апрель";
-"May" = "Май";
-"June" = "Июнь";
-"July" = "Июль";
-"August" = "Август";
-"September" = "Сентябрь";
-"October" = "Октябрь";
-"November" = "Ноябрь";
-"December" = "Декабрь";
-
-// Day Names
-"Monday" = "Понедельник";
-"Tuesday" = "Вторник";
-"Wednesday" = "Среда";
-"Thursday" = "Четверг";
-"Friday" = "Пятница";
-"Saturday" = "Суббота";
-"Sunday" = "Воскресенье";
-
-// Date Components
-"%d in %@" = "%d %@";
-"%@ %d, %d" = "%d %@ %d";
-"%@ - %@" = "%@ - %@";
-
-// Weekly View Tab Labels
-"Weekly View" = "Недельный вид";
-"Monthly View" = "Месячный вид";
-"Wage Breakdown" = "Разбивка зарплаты";
-"Total Working Days:" = "Всего рабочих дней:";
-"Total Hours:" = "Всего часов:";
-"Gross Wage:" = "Валовая зарплата:";
-"Net Wage:" = "Чистая зарплата:";
-
-// Date Format Patterns
-"Shift on %@" = "Смена на %@";
-"%@ %d" = "%@ %d";
-"%@, %@ %d" = "%@, %@ %d";
-
-// Overtime Rules
-"Overtime Rules" = "Правила сверхурочных";
-"Base Hours (Weekday)" = "Базовые часы (будни)";
-"Base Hours (Special Day)" = "Базовые часы (особый день)";
-"hours" = "часов";
-"After %d hours at %.2fx rate @ %.2fx" = "После %d часов по ставке %.2fx @ %.2fx";
-"Special Days" = "Особые дни";
-"Weekdays" = "Будни";
-
-// Add Overtime Rule
-"Add Overtime Rule" = "Добавить правило сверхурочных";
-"Edit Overtime Rule" = "Редактировать правило сверхурочных";
-"Hours Threshold" = "Пороговое значение часов";
-"Rate" = "Ставка";
-"Applies to Special Days" = "Применяется к особым дням";
-"Cancel" = "Отмена";
-"Save" = "Сохранить"; 
+// Additional Guide Content
+"2. Overtime Rules" = "2. Правила сверхурочных";
+"Configure your overtime rules:" = "Настройте правила сверхурочных:";
+"Set base hours for regular weekdays and special days" = "Установите базовые часы для будней и особых дней";
+"Add overtime rules with:" = "Добавьте правила сверхурочных с:";
+"Hours threshold (when overtime starts)" = "Пороговое значение часов (когда начинаются сверхурочные)";
+"Rate multiplier (e.g., 1.5x for 150%)" = "Множитель ставки (напр., 1.5x для 150%)";
+"Choose if rule applies to special days" = "Выберите, применяется ли правило к особым дням";
+"3. Managing Shifts" = "3. Управление сменами";
+"Add and manage your shifts:" = "Добавляйте и управляйте своими сменами:";
+"Tap the '+' button to add a new shift" = "Нажмите кнопку '+', чтобы добавить новую смену";
+"Set start and end times" = "Установите время начала и окончания";
+"Mark special days with the star icon" = "Отмечайте особые дни значком звезды";
+"View and edit existing shifts" = "Просматривайте и редактируйте существующие смены";
+"Delete shifts using the delete button (trash icon)" = "Удаляйте смены с помощью кнопки удаления (значок корзины)";
+"4. Reports" = "4. Отчеты";
+"View and export your work data:" = "Просматривайте и экспортируйте данные о своей работе:";
+"Switch between weekly and monthly views" = "Переключайтесь между недельным и месячным видами";
+"View total hours and wages" = "Просматривайте общее количество часов и заработную плату";
+"See breakdown of regular and overtime hours" = "Смотрите разбивку обычных и сверхурочных часов";
+"Export reports to PDF" = "Экспортируйте отчеты в PDF";
+"Search shifts by date range" = "Ищите смены по диапазону дат";
+"5. Tips & Tricks" = "5. Советы и подсказки";
+"Make the most of ShiftManager:" = "Извлеките максимум из ShiftManager:";
+"Use the search feature to find specific shifts" = "Используйте функцию поиска для нахождения конкретных смен";
+"Export reports regularly for record-keeping" = "Регулярно экспортируйте отчеты для ведения учета";
+"Keep your overtime rules up to date" = "Поддерживайте актуальность правил сверхурочных";
+"Mark special days to ensure correct wage calculations" = "Отмечайте особые дни для обеспечения правильного расчета заработной платы"; 

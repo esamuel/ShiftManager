@@ -13,6 +13,7 @@
 "Manager" = "Gestionnaire";
 "Reports" = "Rapports";
 "Guide" = "Guide";
+"User Guide" = "Guide d'Utilisation";
 "Settings" = "Paramètres";
 "Coming Shifts" = "Quarts à Venir";
 
@@ -207,76 +208,31 @@
 "Net Wage:" = "Salaire net:";
 "No shifts found for the selected period" = "Aucun quart trouvé pour la période sélectionnée";
 
-// Month Names
-"January" = "Janvier";
-"February" = "Février";
-"March" = "Mars";
-"April" = "Avril";
-"May" = "Mai";
-"June" = "Juin";
-"July" = "Juillet";
-"August" = "Août";
-"September" = "Septembre";
-"October" = "Octobre";
-"November" = "Novembre";
-"December" = "Décembre";
-
-// Day Names
-"Monday" = "Lundi";
-"Tuesday" = "Mardi";
-"Wednesday" = "Mercredi";
-"Thursday" = "Jeudi";
-"Friday" = "Vendredi";
-"Saturday" = "Samedi";
-"Sunday" = "Dimanche";
-
-// Date Components
-"%d in %@" = "%d %@";
-"%@ %d, %d" = "%d %@ %d";
-"%@ - %@" = "%@ - %@";
-
-// Weekly View Tab Labels
-"Weekly View" = "Vue hebdomadaire";
-"Monthly View" = "Vue mensuelle";
-"Wage Breakdown" = "Détail du salaire";
-"Total Working Days:" = "Total jours travaillés:";
-"Total Hours:" = "Heures totales:";
-"Gross Wage:" = "Salaire brut:";
-"Net Wage:" = "Salaire net:";
-
-// Date Format Patterns
-"Shift on %@" = "Quart du %@";
-"%@ %d" = "%@ %d";
-"%@, %@ %d" = "%@, %@ %d";
-
-"Hours Settings" = "Paramètres des heures";
-"Wage Settings" = "Paramètres de salaire";
-
-// Overtime Rules
-"Overtime Rules" = "Règles des heures supplémentaires";
-"Base Hours (Weekday)" = "Heures de base (jour de semaine)";
-"Base Hours (Special Day)" = "Heures de base (jour spécial)";
-"hours" = "heures";
-"After %d hours at %.2fx rate @ %.2fx" = "Après %d heures au taux de %.2fx @ %.2fx";
-"Special Days" = "Jours spéciaux";
-"Weekdays" = "Jours de semaine";
-
-// Add Overtime Rule
-"Add Overtime Rule" = "Ajouter une règle d'heures supplémentaires";
-"Edit Overtime Rule" = "Modifier une règle d'heures supplémentaires";
-"Hours Threshold" = "Seuil d'heures";
-"Rate" = "Taux";
-"Applies to Special Days" = "S'applique aux jours spéciaux";
-"Cancel" = "Annuler";
-"Save" = "Enregistrer";
-
-// Search
-"Search" = "Rechercher";
-"Search Period" = "Période de recherche";
-"Start Date" = "Date de début";
-"End Date" = "Date de fin";
-"Export to PDF" = "Exporter en PDF";
-"Total Working Days:" = "Total jours travaillés:";
-"Total Hours:" = "Heures totales:";
-"Gross Wage:" = "Salaire brut:";
-"Net Wage:" = "Salaire net:"; 
+// Additional Guide Content
+"2. Overtime Rules" = "2. Règles des Heures Supplémentaires";
+"Configure your overtime rules:" = "Configurez vos règles d'heures supplémentaires:";
+"Set base hours for regular weekdays and special days" = "Définissez les heures de base pour les jours de semaine et les jours spéciaux";
+"Add overtime rules with:" = "Ajoutez des règles d'heures supplémentaires avec:";
+"Hours threshold (when overtime starts)" = "Seuil d'heures (quand les heures supplémentaires commencent)";
+"Rate multiplier (e.g., 1.5x for 150%)" = "Multiplicateur de taux (ex., 1,5x pour 150%)";
+"Choose if rule applies to special days" = "Choisissez si la règle s'applique aux jours spéciaux";
+"3. Managing Shifts" = "3. Gestion des Quarts";
+"Add and manage your shifts:" = "Ajoutez et gérez vos quarts:";
+"Tap the '+' button to add a new shift" = "Appuyez sur le bouton '+' pour ajouter un nouveau quart";
+"Set start and end times" = "Définissez les heures de début et de fin";
+"Mark special days with the star icon" = "Marquez les jours spéciaux avec l'icône étoile";
+"View and edit existing shifts" = "Consultez et modifiez les quarts existants";
+"Delete shifts using the delete button (trash icon)" = "Supprimez des quarts en utilisant le bouton de suppression (icône de corbeille)";
+"4. Reports" = "4. Rapports";
+"View and export your work data:" = "Consultez et exportez vos données de travail:";
+"Switch between weekly and monthly views" = "Basculez entre les vues hebdomadaires et mensuelles";
+"View total hours and wages" = "Consultez les heures totales et les salaires";
+"See breakdown of regular and overtime hours" = "Consultez la répartition des heures normales et supplémentaires";
+"Export reports to PDF" = "Exportez les rapports en PDF";
+"Search shifts by date range" = "Recherchez des quarts par plage de dates";
+"5. Tips & Tricks" = "5. Astuces et Conseils";
+"Make the most of ShiftManager:" = "Tirez le meilleur parti de ShiftManager:";
+"Use the search feature to find specific shifts" = "Utilisez la fonction de recherche pour trouver des quarts spécifiques";
+"Export reports regularly for record-keeping" = "Exportez régulièrement des rapports pour la tenue de registres";
+"Keep your overtime rules up to date" = "Maintenez vos règles d'heures supplémentaires à jour";
+"Mark special days to ensure correct wage calculations" = "Marquez les jours spéciaux pour garantir des calculs de salaire corrects"; 

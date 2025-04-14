@@ -13,6 +13,7 @@
 "Manager" = "Gestor";
 "Reports" = "Informes";
 "Guide" = "Guía";
+"User Guide" = "Guía de Usuario";
 "Settings" = "Ajustes";
 "Coming Shifts" = "Turnos Próximos";
 
@@ -263,4 +264,33 @@
 "Rate" = "Tarifa";
 "Applies to Special Days" = "Se aplica a días especiales";
 "Cancel" = "Cancelar";
-"Save" = "Guardar"; 
+"Save" = "Guardar";
+
+// Additional Guide Content
+"2. Overtime Rules" = "2. Reglas de Horas Extras";
+"Configure your overtime rules:" = "Configura tus reglas de horas extras:";
+"Set base hours for regular weekdays and special days" = "Establece horas base para días laborales y días especiales";
+"Add overtime rules with:" = "Añade reglas de horas extras con:";
+"Hours threshold (when overtime starts)" = "Umbral de horas (cuando comienzan las horas extras)";
+"Rate multiplier (e.g., 1.5x for 150%)" = "Multiplicador de tarifa (ej., 1.5x para 150%)";
+"Choose if rule applies to special days" = "Elige si la regla aplica a días especiales";
+"3. Managing Shifts" = "3. Gestión de Turnos";
+"Add and manage your shifts:" = "Añade y gestiona tus turnos:";
+"Tap the '+' button to add a new shift" = "Toca el botón '+' para añadir un nuevo turno";
+"Set start and end times" = "Establece horas de inicio y fin";
+"Mark special days with the star icon" = "Marca días especiales con el icono de estrella";
+"View and edit existing shifts" = "Visualiza y edita turnos existentes";
+"Delete shifts using the delete button (trash icon)" = "Elimina turnos usando el botón de eliminar (icono de papelera)";
+"4. Reports" = "4. Informes";
+"View and export your work data:" = "Visualiza y exporta tus datos de trabajo:";
+"Switch between weekly and monthly views" = "Cambia entre vistas semanales y mensuales";
+"View total hours and wages" = "Visualiza horas totales y salarios";
+"See breakdown of regular and overtime hours" = "Observa el desglose de horas regulares y extras";
+"Export reports to PDF" = "Exporta informes a PDF";
+"Search shifts by date range" = "Busca turnos por rango de fechas";
+"5. Tips & Tricks" = "5. Consejos y Trucos";
+"Make the most of ShiftManager:" = "Aprovecha al máximo ShiftManager:";
+"Use the search feature to find specific shifts" = "Usa la función de búsqueda para encontrar turnos específicos";
+"Export reports regularly for record-keeping" = "Exporta informes regularmente para mantener registros";
+"Keep your overtime rules up to date" = "Mantén actualizadas tus reglas de horas extras";
+"Mark special days to ensure correct wage calculations" = "Marca días especiales para asegurar cálculos correctos de salario"; 

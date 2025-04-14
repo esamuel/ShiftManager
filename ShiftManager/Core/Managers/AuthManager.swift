@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-class AuthManager: ObservableObject {
+class AuthManager: ObservableObject, @unchecked Sendable {
     static let shared = AuthManager()
     
     @Published var isAuthenticated: Bool = false
@@ -16,16 +16,16 @@ class AuthManager: ObservableObject {
     func signIn(email: String, password: String) async throws {
         // TODO: Implement actual authentication logic
         // For now, just simulate successful login
-        DispatchQueue.main.async {
-            self.isAuthenticated = true
-            self.currentUser = User(id: "1", email: email, name: "Test User")
+        DispatchQueue.main.async { [weak self] in
+            self?.isAuthenticated = true
+            self?.currentUser = User(id: "1", email: email, name: "Test User")
         }
     }
     
     func signOut() {
-        DispatchQueue.main.async {
-            self.isAuthenticated = false
-            self.currentUser = nil
+        DispatchQueue.main.async { [weak self] in
+            self?.isAuthenticated = false
+            self?.currentUser = nil
         }
     }
 }
