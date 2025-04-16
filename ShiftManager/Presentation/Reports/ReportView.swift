@@ -2,6 +2,7 @@ import SwiftUI
 import PDFKit
 import UniformTypeIdentifiers
 import UIKit
+import Charts
 
 public struct ReportView: View {
     @StateObject private var viewModel = ReportViewModel()
@@ -99,20 +100,8 @@ public struct ReportView: View {
                 .foregroundColor(.gray)
                 .padding(.bottom)
             
-            // Shifts List
-            ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(viewModel.shifts) { shift in
-                        ShiftReportCard(shift: shift)
-                    }
-                }
-                .padding()
-            }
-            
-            // Summary Section
+            // Summary Section moved to top (non-scrolling)
             VStack(spacing: 8) {
-                Divider()
-                
                 Group {
                     HStack {
                         Text("Total Working Days:".localized)
@@ -140,82 +129,137 @@ public struct ReportView: View {
                     }
                 }
                 .padding(.horizontal)
-                
-                Text("Wage Breakdown".localized)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.top)
-                
-                Group {
-                    // Regular day rates
-                    if viewModel.regularHours > 0 {
-                        HStack {
-                            Text("100%")
-                            Spacer()
-                            let formattedHours = String(format: "%.2f", viewModel.regularHours)
-                            Text(formattedHours)
-                        }
-                    }
-                    
-                    // First overtime (125%)
-                    if viewModel.overtimeHours125 > 0 {
-                        HStack {
-                            Text("125%")
-                            Spacer()
-                            let formattedHours = String(format: "%.2f", viewModel.overtimeHours125)
-                            Text(formattedHours)
-                        }
-                    }
-                    
-                    // Second overtime (150%)
-                    if viewModel.overtimeHours150 > 0 {
-                        HStack {
-                            Text("150%")
-                            Spacer()
-                            let formattedHours = String(format: "%.2f", viewModel.overtimeHours150)
-                            Text(formattedHours)
-                        }
-                    }
-                    
-                    // Special day overtime (175%)
-                    if viewModel.overtimeHours175 > 0 {
-                        HStack {
-                            Text("175%")
-                            Spacer()
-                            let formattedHours = String(format: "%.2f", viewModel.overtimeHours175)
-                            Text(formattedHours)
-                        }
-                    }
-                    
-                    // Special day extended overtime (200%)
-                    if viewModel.overtimeHours200 > 0 {
-                        HStack {
-                            Text("200%")
-                            Spacer()
-                            let formattedHours = String(format: "%.2f", viewModel.overtimeHours200)
-                            Text(formattedHours)
-                        }
-                    }
-                }
-                .padding(.horizontal)
             }
-            .padding(.vertical)
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground))
             
-            // Add a note about tax calculation estimates
-            Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 2)
+            Divider()
+            
+            // Scrollable Content
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Wage Breakdown Section moved up
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Wage Breakdown".localized)
+                            .font(.headline)
+                            .padding(.top, 8)
+                        
+                        Group {
+                            // Regular day rates
+                            if viewModel.regularHours > 0 {
+                                HStack {
+                                    Text("100%")
+                                    Spacer()
+                                    let formattedHours = String(format: "%.2f", viewModel.regularHours)
+                                    Text(formattedHours)
+                                }
+                            }
+                            
+                            // First overtime (125%)
+                            if viewModel.overtimeHours125 > 0 {
+                                HStack {
+                                    Text("125%")
+                                    Spacer()
+                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours125)
+                                    Text(formattedHours)
+                                }
+                            }
+                            
+                            // Second overtime (150%)
+                            if viewModel.overtimeHours150 > 0 {
+                                HStack {
+                                    Text("150%")
+                                    Spacer()
+                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours150)
+                                    Text(formattedHours)
+                                }
+                            }
+                            
+                            // Special day overtime (175%)
+                            if viewModel.overtimeHours175 > 0 {
+                                HStack {
+                                    Text("175%")
+                                    Spacer()
+                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours175)
+                                    Text(formattedHours)
+                                }
+                            }
+                            
+                            // Special day extended overtime (200%)
+                            if viewModel.overtimeHours200 > 0 {
+                                HStack {
+                                    Text("200%")
+                                    Spacer()
+                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours200)
+                                    Text(formattedHours)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Visual Charts Section 
+                    VStack(spacing: 12) {
+                        Text("Visual Summary".localized)
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 16)
+                        
+                        // Hours Breakdown Chart
+                        HoursChartView(
+                            regularHours: viewModel.regularHours,
+                            overtimeHours125: viewModel.overtimeHours125,
+                            overtimeHours150: viewModel.overtimeHours150,
+                            overtimeHours175: viewModel.overtimeHours175,
+                            overtimeHours200: viewModel.overtimeHours200
+                        )
+                        
+                        // Wage Distribution Chart
+                        WageChartView(
+                            regularHours: viewModel.regularHours,
+                            overtimeHours125: viewModel.overtimeHours125,
+                            overtimeHours150: viewModel.overtimeHours150,
+                            overtimeHours175: viewModel.overtimeHours175,
+                            overtimeHours200: viewModel.overtimeHours200,
+                            hourlyRate: UserDefaults.standard.double(forKey: "hourlyWage")
+                        )
+                    }
+                    .padding(.horizontal)
+                    
+                    // List of shifts moved to bottom of scrollView
+                    Text("Shifts".localized)
+                        .font(.title2)
+                        .fontWeight(.medium)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 16)
+                    
+                    ForEach(viewModel.shifts) { shift in
+                        ShiftReportCard(shift: shift)
+                    }
+                    
+                    // Add a note about tax calculation estimates
+                    Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 8)
+                }
+                .padding()
+            }
         }
         .navigationTitle("Reports".localized)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { showingSearchSheet = true }) {
                     Image(systemName: "magnifyingglass")
                 }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                // No need for a manual back button as NavigationView provides one automatically
+                // when navigating from another view
             }
         }
         .sheet(isPresented: $showingSearchSheet) {
@@ -232,25 +276,44 @@ public struct ShiftReportCard: View {
     }
     
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(shift.startTime, style: .date)
-                .font(.headline)
-            
-            let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
-            let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
-            Text(String(format: "Start Time: %@ - End Time: %@".localized, startTime, endTime))
-                .foregroundColor(.secondary)
-            
-            HStack {
-                Spacer()
-                Text(shift.grossWage.asCurrency)
-                    .font(.headline)
-                    .foregroundColor(.purple)
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(shift.startTime, style: .date)
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                
+                let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
+                let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
+                Text(String(format: "%@ - %@".localized, startTime, endTime))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
+            
+            Spacer()
+            
+            VStack(alignment: .center, spacing: 4) {
+                let formattedDuration = String(format: "%.2f", shift.duration / 3600)
+                Text("\(formattedDuration)h")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                if shift.isSpecialDay {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.caption)
+                }
+            }
+            
+            Spacer()
+            
+            Text(shift.grossWage.asCurrency)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.purple)
         }
-        .padding()
+        .padding(8)
         .background(Color.secondary.opacity(0.1))
-        .cornerRadius(10)
+        .cornerRadius(8)
         .shadow(radius: 1)
     }
 }
@@ -274,6 +337,8 @@ public struct SearchShiftView: View {
                 let username = UserDefaults.standard.string(forKey: "username") ?? "User"
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
+                dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+                dateFormatter.formattingContext = .standalone
                 
                 let periodString = "\(dateFormatter.string(from: startDate)) - \(dateFormatter.string(from: endDate))"
                 pdfData = try await exportService.generateSearchReport(
@@ -296,41 +361,70 @@ public struct SearchShiftView: View {
     
     public var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
+            VStack(spacing: 8) {
                 // Date Selection
                 Form {
                     Section(header: Text("Search Period".localized)) {
-                        DatePicker("Start Date".localized,
-                                 selection: $startDate,
-                                 displayedComponents: [.date])
-                        
-                        DatePicker("End Date".localized,
-                                 selection: $endDate,
-                                 displayedComponents: [.date])
-                    }
-                    
-                    Section {
-                        Button("Search".localized) {
-                            Task {
-                                await viewModel.loadShiftsForDateRange(start: startDate, end: endDate)
-                                showResults = true
+                        VStack(spacing: 0) {
+                            HStack {
+                                Text("Start Date:".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                
+                                DatePicker("", 
+                                         selection: $startDate,
+                                         displayedComponents: [.date])
+                                .labelsHidden()
+                                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
                             }
+                            .padding(.vertical, 2)
+                            
+                            HStack {
+                                Text("End Date:".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                
+                                DatePicker("", 
+                                         selection: $endDate,
+                                         displayedComponents: [.date])
+                                .labelsHidden()
+                                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
+                            }
+                            .padding(.vertical, 2)
                         }
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.purple)
-                        .cornerRadius(10)
                     }
                 }
+                .frame(height: 140) // Reduced height to accommodate the button outside the form
+                
+                // Search button moved outside the form for better styling control
+                Button {
+                    Task {
+                        await viewModel.loadShiftsForDateRange(start: startDate, end: endDate)
+                        showResults = true
+                    }
+                } label: {
+                    Text("Search".localized)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.purple)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
                 
                 if showResults {
                     if viewModel.shifts.isEmpty {
-                        Text("No shifts found for the selected period".localized)
-                            .foregroundColor(.gray)
-                            .padding()
+                        EmptyStateView(
+                            title: "No Shifts Found".localized,
+                            message: "No shifts found for the selected period. Try adjusting your search criteria.".localized
+                        )
+                        .padding()
                     } else {
-                        VStack {
+                        VStack(spacing: 4) {
                             // Export to PDF Button
                             Button(action: exportToPDF) {
                                 HStack {
@@ -338,21 +432,22 @@ public struct SearchShiftView: View {
                                     Text("Export to PDF".localized)
                                 }
                                 .foregroundColor(.blue)
-                                .padding()
+                                .padding(.vertical, 4)
                             }
                             
                             // Results Section
                             ScrollView {
-                                VStack(spacing: 16) {
+                                LazyVStack(spacing: 8) {
                                     ForEach(viewModel.shifts) { shift in
                                         ShiftReportCard(shift: shift)
+                                            .padding(.horizontal, 12)
                                     }
                                 }
-                                .padding()
+                                .padding(.vertical, 8)
                             }
                             
                             // Summary Section
-                            VStack(spacing: 8) {
+                            VStack(spacing: 4) {
                                 Divider()
                                 
                                 Group {
@@ -388,9 +483,9 @@ public struct SearchShiftView: View {
                                     .foregroundColor(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.horizontal)
-                                    .padding(.top, 2)
+                                    .padding(.top, 1)
                             }
-                            .padding(.vertical)
+                            .padding(.vertical, 4)
                         }
                     }
                 }
@@ -398,8 +493,8 @@ public struct SearchShiftView: View {
             .navigationTitle("Search".localized)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel".localized) {
-                        dismiss()
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
                     }
                 }
             }
@@ -440,8 +535,8 @@ public struct PrintOptionsView: View {
             .navigationTitle("Print Report")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
                     }
                 }
             }
@@ -464,8 +559,8 @@ public struct PDFPreviewView: View {
             PDFKitView(data: data)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Done") {
-                            dismiss()
+                        Button(action: { dismiss() }) {
+                            Image(systemName: "xmark")
                         }
                     }
                     ToolbarItem(placement: .primaryAction) {

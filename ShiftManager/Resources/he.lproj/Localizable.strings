@@ -232,12 +232,16 @@
 "Search Period" = "תקופת חיפוש";
 "Start Date" = "תאריך התחלה";
 "End Date" = "תאריך סיום";
+"Start Date:" = "תאריך התחלה:";
+"End Date:" = "תאריך סיום:";
 "Export to PDF" = "ייצוא ל-PDF";
 "Total Working Days:" = "סה\"כ ימי עבודה:";
 "Total Hours:" = "סה\"כ שעות:";
 "Gross Wage:" = "שכר ברוטו:";
 "Net Wage:" = "שכר נטו:";
 "No shifts found for the selected period" = "לא נמצאו משמרות בתקופה שנבחרה";
+"No Shifts Found" = "לא נמצאו משמרות";
+"No shifts found for the selected period. Try adjusting your search criteria." = "לא נמצאו משמרות בתקופה שנבחרה. נסה לשנות את קריטריוני החיפוש.";
 
 // Additional Guide Content
 "2. Overtime Rules" = "2. חוקי שעות נוספות";
