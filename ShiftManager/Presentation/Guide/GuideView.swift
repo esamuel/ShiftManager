@@ -106,7 +106,21 @@ public struct GuideView: View {
                     .buttonStyle(.bordered)
                     .accessibilityLabel("Close Guide".localized)
                 }
+                
+                // Add an empty leading item to avoid system back button
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EmptyView()
+                }
             }
+        }
+        .onAppear {
+            // Clear back button text on appear
+            UINavigationBar.appearance().backItem?.backButtonTitle = ""
+            UINavigationBar.appearance().topItem?.backButtonTitle = ""
+            
+            // Apply fixes more aggressively
+            BackButtonFix.shared.replaceBackButtonsWithCustom()
+            LocalizationManager.shared.clearHebrewPreviousText()
         }
         .onAppear {
             // Animate content appearance

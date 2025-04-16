@@ -94,6 +94,15 @@ public struct HomeView: View {
                     .padding()
                 }
             }
+            .onAppear {
+                // Clear back button text on appear
+                UINavigationBar.appearance().backItem?.backButtonTitle = ""
+                UINavigationBar.appearance().topItem?.backButtonTitle = ""
+                
+                // Apply fixes more aggressively
+                BackButtonFix.shared.replaceBackButtonsWithCustom()
+                LocalizationManager.shared.clearHebrewPreviousText()
+            }
         }
         .sheet(isPresented: $showingUpcomingShifts) {
             NavigationView {
