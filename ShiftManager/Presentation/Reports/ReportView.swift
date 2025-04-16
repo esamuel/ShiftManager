@@ -318,6 +318,29 @@ public struct ShiftReportCard: View {
     }
 }
 
+public struct CustomDateView: View {
+    let date: Date
+    let calendar = Calendar.current
+    
+    public init(date: Date) {
+        self.date = date
+    }
+    
+    public var body: some View {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.formattingContext = .standalone
+        
+        return Text(dateFormatter.string(from: date))
+            .font(.body)
+            .foregroundColor(.primary)
+            .multilineTextAlignment(LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+    }
+}
+
 public struct SearchShiftView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = ReportViewModel()
@@ -372,11 +395,24 @@ public struct SearchShiftView: View {
                                     .foregroundColor(.secondary)
                                     .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
                                 
-                                DatePicker("", 
-                                         selection: $startDate,
-                                         displayedComponents: [.date])
-                                .labelsHidden()
-                                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
+                                ZStack {
+                                    // Display formatted date
+                                    CustomDateView(date: startDate)
+                                        .frame(height: 44)
+                                        .frame(maxWidth: .infinity, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(.systemGray5))
+                                        .cornerRadius(8)
+                                    
+                                    // Actual date picker (transparent overlay)
+                                    DatePicker("", 
+                                             selection: $startDate,
+                                             displayedComponents: [.date])
+                                    .labelsHidden()
+                                    .environment(\.locale, Locale(identifier: LocalizationManager.shared.currentLanguage))
+                                    .opacity(0.015) // Nearly invisible but still interactive
+                                    .frame(maxWidth: .infinity)
+                                }
                             }
                             .padding(.vertical, 2)
                             
@@ -386,11 +422,24 @@ public struct SearchShiftView: View {
                                     .foregroundColor(.secondary)
                                     .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
                                 
-                                DatePicker("", 
-                                         selection: $endDate,
-                                         displayedComponents: [.date])
-                                .labelsHidden()
-                                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
+                                ZStack {
+                                    // Display formatted date
+                                    CustomDateView(date: endDate)
+                                        .frame(height: 44)
+                                        .frame(maxWidth: .infinity, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(.systemGray5))
+                                        .cornerRadius(8)
+                                    
+                                    // Actual date picker (transparent overlay)
+                                    DatePicker("", 
+                                             selection: $endDate,
+                                             displayedComponents: [.date])
+                                    .labelsHidden()
+                                    .environment(\.locale, Locale(identifier: LocalizationManager.shared.currentLanguage))
+                                    .opacity(0.015) // Nearly invisible but still interactive
+                                    .frame(maxWidth: .infinity)
+                                }
                             }
                             .padding(.vertical, 2)
                         }
