@@ -141,16 +141,22 @@ public struct MenuButton: View {
                 .font(.title2)
                 .foregroundColor(.white)
                 .frame(width: 32, height: 32)
+                .background(color)
+                .clipShape(Circle())
             
             Text(title)
                 .font(.title3)
-                .fontWeight(.medium)
+                .fontWeight(.semibold)
                 .foregroundColor(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(2)
+                .multilineTextAlignment(LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
             
             Spacer()
             
             Image(systemName: "chevron.right")
                 .foregroundColor(.gray)
+                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
         }
         .padding()
         .background(color.opacity(0.2))

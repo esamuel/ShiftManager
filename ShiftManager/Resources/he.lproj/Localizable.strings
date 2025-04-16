@@ -129,6 +129,7 @@
 "Settings" = "הגדרות";
 "Upcoming Shifts" = "משמרות קרובות";
 "Done" = "סיום";
+"Coming Shifts" = "משמרות קרובות";
 
 // Additional UI Elements
 "Add New Shift" = "הוסף משמרת חדשה";
@@ -143,6 +144,8 @@
 "Accept" = "קבל";
 "No upcoming shifts" = "אין משמרות קרובות";
 "No shifts scheduled" = "לא נקבעו משמרות";
+"No Upcoming Shifts" = "אין משמרות קרובות";
+"You don't have any upcoming shifts scheduled." = "אין לך משמרות קרובות מתוכננות.";
 "Weekly View" = "תצוגה שבועית";
 "Monthly View" = "תצוגה חודשית";
 "Wage Breakdown" = "פירוט שכר";
@@ -334,4 +337,16 @@
 "Tell us what you think about the app..." = "ספר לנו מה דעתך על האפליקציה...";
 "Submit Feedback" = "שלח משוב";
 "Feedback Sent" = "המשוב נשלח";
-"Thank you for your feedback! We'll use it to improve the app." = "תודה על המשוב שלך! נשתמש בו כדי לשפר את האפליקציה."; 
+"Thank you for your feedback! We'll use it to improve the app." = "תודה על המשוב שלך! נשתמש בו כדי לשפר את האפליקציה.";
+
+// Navigation
+"Back" = "";
+"Previous" = "";
+"back" = "";
+"חזור" = "";
+"Back Button" = "";
+"backButtonTitle" = "";
+
+// ... existing code ... 
+
+"Back" = "";

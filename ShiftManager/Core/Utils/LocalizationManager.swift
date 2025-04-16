@@ -12,6 +12,10 @@ class LocalizationManager: ObservableObject {
             UserDefaults.standard.synchronize()
             // Generate a new ID to force view refreshes
             refreshID = UUID()
+            
+            // Update UI direction for RTL languages
+            updateUIDirection()
+            
             NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
         }
     }
@@ -50,6 +54,29 @@ class LocalizationManager: ObservableObject {
         // Initialize current country
         let countryString = UserDefaults.standard.string(forKey: "country") ?? "israel"
         self.currentCountry = Country(rawValue: countryString) ?? .israel
+        
+        // Update UI direction for RTL languages
+        updateUIDirection()
+    }
+    
+    private func updateUIDirection() {
+        // Set semantic content attribute for RTL languages
+        let isRTL = currentLanguage == "he" || currentLanguage == "ar"
+        
+        if isRTL {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+        } else {
+            UIView.appearance().semanticContentAttribute = .forceLeftToRight
+        }
+        
+        // Force update all windows to refresh layout direction
+        if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
+            for scene in windowScenes {
+                for window in scene.windows {
+                    window.rootViewController?.view.semanticContentAttribute = isRTL ? .forceRightToLeft : .forceLeftToRight
+                }
+            }
+        }
     }
     
     func localizedString(for key: String) -> String {
