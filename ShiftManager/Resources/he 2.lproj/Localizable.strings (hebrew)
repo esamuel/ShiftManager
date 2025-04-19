@@ -20,16 +20,7 @@
 "Coming Shifts" = "משמרות קרובות";
 
 // Common UI Elements
-"Language" = "שפה";
-"Settings" = "הגדרות";
-"Select Language" = "בחר שפה";
-"Save" = "שמור";
-"Cancel" = "ביטול";
-"OK" = "אישור";
-"Error" = "שגיאה";
-"Success" = "הצלחה";
-"Loading" = "טוען";
-"Please wait" = "אנא המתן";
+// (Duplicate keys removed, see above for definitions)
 
 // Tab Bar
 "Home" = "בית";
@@ -167,7 +158,7 @@
 "Net Wage: ₪%@" = "שכר נטו: %@";
 "Select Date: %@" = "בחר תאריך: %@";
 
-// Month Names
+// Month Names - full names for report title
 "January" = "ינואר";
 "February" = "פברואר";
 "March" = "מרץ";
@@ -189,6 +180,15 @@
 "Friday" = "יום שישי";
 "Saturday" = "יום שבת";
 "Sunday" = "יום ראשון";
+
+// Day Names (Abbreviated for Calendar)
+"Sun" = "א'";
+"Mon" = "ב'";
+"Tue" = "ג'";
+"Wed" = "ד'";
+"Thu" = "ה'";
+"Fri" = "ו'";
+"Sat" = "ש'";
 
 // Date Components
 "%d in %@" = "%d ב%@";
@@ -228,8 +228,53 @@
 "Save" = "שמור";
 
 // Search
-"Search" = "חיפוש";
+
+// Date Picker Localization
+"Select a Date" = "בחר תאריך";
+"January" = "ינואר";
+"February" = "פברואר";
+"March" = "מרץ";
+"April" = "אפריל";
+"May" = "מאי";
+"June" = "יוני";
+"July" = "יולי";
+"August" = "אוגוסט";
+"September" = "ספטמבר";
+"October" = "אוקטובר";
+"November" = "נובמבר";
+"December" = "דצמבר";
+"Sunday" = "ראשון";
+"Monday" = "שני";
+"Tuesday" = "שלישי";
+"Wednesday" = "רביעי";
+"Thursday" = "חמישי";
+"Friday" = "שישי";
+"Saturday" = "שבת";
+"Sun" = "א'";
+"Mon" = "ב'";
+"Tue" = "ג'";
+"Wed" = "ד'";
+"Thu" = "ה'";
+"Fri" = "ו'";
+"Sat" = "ש'";
+
 "Search Period" = "תקופת חיפוש";
+"No shifts found for the selected period." = "לא נמצאו משמרות לתקופה שנבחרה.";
+"No Shifts Found" = "לא נמצאו משמרות";
+"Try selecting a different date range" = "נסה לבחור טווח תאריכים אחר";
+
+
+
+
+
+
+"Start Date:" = "תאריך התחלה:";
+"End Date:" = "תאריך סיום:";
+
+
+
+"Search" = "חיפוש";
+
 "Start Date" = "תאריך התחלה";
 "End Date" = "תאריך סיום";
 "Start Date:" = "תאריך התחלה:";
@@ -239,9 +284,9 @@
 "Total Hours:" = "סה\"כ שעות:";
 "Gross Wage:" = "שכר ברוטו:";
 "Net Wage:" = "שכר נטו:";
-"No shifts found for the selected period" = "לא נמצאו משמרות בתקופה שנבחרה";
-"No Shifts Found" = "לא נמצאו משמרות";
-"No shifts found for the selected period. Try adjusting your search criteria." = "לא נמצאו משמרות בתקופה שנבחרה. נסה לשנות את קריטריוני החיפוש.";
+
+
+
 
 // Additional Guide Content
 "2. Overtime Rules" = "2. חוקי שעות נוספות";
@@ -351,6 +396,16 @@
 "Back Button" = "";
 "backButtonTitle" = "";
 
-// ... existing code ... 
+// Chart Visualizations
+"Visual Summary" = "סיכום חזותי";
+"Hours Breakdown" = "פילוח שעות";
+"Wage Distribution" = "חלוקת שכר";
+"Regular (100%)" = "רגיל (100%)";
+"Overtime (125%)" = "שעות נוספות (125%)";
+"Overtime (150%)" = "שעות נוספות (150%)";
+"Overtime (175%)" = "שעות נוספות (175%)";
+"Overtime (200%)" = "שעות נוספות (200%)";
+"No wage data available for the selected period" = "אין נתוני שכר זמינים לתקופה שנבחרה";
+"Shifts" = "משמרות";
 
 "Back" = "";
