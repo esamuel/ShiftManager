@@ -15,15 +15,79 @@ class WageCalculationService {
         self.calendar = calendar
     }
     
+    // MARK: - Special Day Detection
+    /// Returns the user's selected work country, or device locale if not set
+    private func workCountry() -> Country {
+        if let raw = UserDefaults.standard.string(forKey: "country"),
+           let country = Country(rawValue: raw) {
+            return country
+        }
+        return .israel // fallback, or use device locale mapping if preferred
+    }
+
+    /// Returns a calendar configured for the work country
+    private func workCalendar() -> Calendar {
+        switch workCountry() {
+        case .israel:
+            var cal = Calendar(identifier: .gregorian)
+            cal.locale = Locale(identifier: "he_IL")
+            cal.firstWeekday = 1 // Sunday
+            return cal
+        case .usa:
+            var cal = Calendar(identifier: .gregorian)
+            cal.locale = Locale(identifier: "en_US")
+            cal.firstWeekday = 2 // Monday
+            return cal
+        case .uk:
+            var cal = Calendar(identifier: .gregorian)
+            cal.locale = Locale(identifier: "en_GB")
+            cal.firstWeekday = 2 // Monday
+            return cal
+        case .eu:
+            var cal = Calendar(identifier: .gregorian)
+            cal.locale = Locale(identifier: "en_IE")
+            cal.firstWeekday = 2 // Monday
+            return cal
+        case .russia:
+            var cal = Calendar(identifier: .gregorian)
+            cal.locale = Locale(identifier: "ru_RU")
+            cal.firstWeekday = 2 // Monday
+            return cal
+        }
+    }
+
+    /// Returns true if the date is a weekend (according to work country)
+    private func isWeekend(_ date: Date) -> Bool {
+        let cal = workCalendar()
+        return cal.isDateInWeekend(date)
+    }
+
+    /// Returns true if the date is a Jewish holiday (only for Israel)
+    private func isJewishHoliday(_ date: Date) -> Bool {
+        if workCountry() != .israel { return false }
+        let hebrewCalendar = Calendar(identifier: .hebrew)
+        let components = hebrewCalendar.dateComponents([.month, .day], from: date)
+        let holidays: [(month: Int, day: Int)] = [
+            (1, 15),   // Passover
+            (7, 1),    // Rosh Hashanah
+            (7, 10),   // Yom Kippur
+            (7, 15)    // Sukkot
+        ]
+        return holidays.contains { $0.month == components.month && $0.day == components.day }
+    }
+
+    /// Returns true if the date is a global public holiday (placeholder for API integration)
+    private func isGlobalHoliday(_ date: Date) -> Bool {
+        // TODO: Integrate with a public holiday API or local DB, use workCountry()
+        return false
+    }
+
+    /// Returns true if the date is a special work day (weekend or holiday)
     private func isSpecialWorkDay(_ date: Date) -> Bool {
-        let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
-        let weekday = calendar.component(.weekday, from: date)
-        
-        // If week starts on Sunday, Saturday (7) is special
-        // If week starts on Monday, Sunday (1) is special
-        let isSpecial = weekday == (startWorkOnSunday ? 7 : 1)
-        print("Date: \(date), Weekday: \(weekday), StartWorkOnSunday: \(startWorkOnSunday), IsSpecial: \(isSpecial)")
-        return isSpecial
+        if isWeekend(date) { return true }
+        if isJewishHoliday(date) { return true }
+        if isGlobalHoliday(date) { return true }
+        return false
     }
     
     func calculateWage(for shift: ShiftModel) async throws -> WageCalculation {
@@ -33,17 +97,14 @@ class WageCalculationService {
         // Get base settings
         let defaultHourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
         let taxDeduction = UserDefaults.standard.double(forKey: "taxDeduction") / 100
-        let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
         
         // Check if this is a patrol shift ("סייר")
         let hourlyWage = shift.notes.contains("סייר") ? 46.04 : defaultHourlyWage
         
-        // Determine if it's a special day based on the work week start setting
-        let weekday = calendar.component(.weekday, from: shift.startTime)
-        let isSpecialDayByDate = weekday == (startWorkOnSunday ? 7 : 1) // Saturday (7) for Sunday start, Sunday (1) for Monday start
-        
-        // A day is special if either it's manually marked as special or it falls on the special day of the week
-        let isSpecialDay = shift.isSpecialDay || isSpecialDayByDate
+        // Dynamic detection of special days (weekend, Jewish/Israeli holiday, or global holiday)
+        let isSpecialDayDynamic = isSpecialWorkDay(shift.startTime)
+        // A day is special if either it's manually marked as special or detected as special
+        let isSpecialDay = shift.isSpecialDay || isSpecialDayDynamic
         
         var totalWage = 0.0
         var breakdowns: [WageBreakdown] = []

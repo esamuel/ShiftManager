@@ -24,6 +24,10 @@ public class ReportViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var error: String?
     
+    // Date picker sheet states
+    @Published var showingStartDatePicker = false
+    @Published var showingEndDatePicker = false
+    
     private let calendar: Calendar
     private let repository: ShiftRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -47,55 +51,86 @@ public class ReportViewModel: ObservableObject {
     }
     
     var periodTitle: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        
-        // Get the month name from localized strings
+        // Get the month name and year from the current period
         let month = calendar.component(.month, from: currentPeriodStart)
         let year = calendar.component(.year, from: currentPeriodStart)
         
+        // Get localized month name directly
         let monthNames = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ]
         
+        // Make sure to apply localization to the month name
         let localizedMonth = monthNames[month - 1].localized
-        return "\(localizedMonth) \(year)"
+        
+        // For RTL languages like Hebrew, reverse the order
+        if LocalizationManager.shared.currentLanguage == "he" || LocalizationManager.shared.currentLanguage == "ar" {
+            return "\(year) \(localizedMonth)"
+        } else {
+            return "\(localizedMonth) \(year)"
+        }
     }
     
     var periodRangeText: String {
-        let dayFormatter = DateFormatter()
-        dayFormatter.dateFormat = "d"
+        // Get basic date components
+        let startDay = calendar.component(.day, from: currentPeriodStart)
+        let endDay = calendar.component(.day, from: currentPeriodEnd)
+        let startMonth = calendar.component(.month, from: currentPeriodStart) - 1 // 0-based index
+        let endMonth = calendar.component(.month, from: currentPeriodEnd) - 1 // 0-based index
+        let startYear = calendar.component(.year, from: currentPeriodStart)
+        let endYear = calendar.component(.year, from: currentPeriodEnd)
         
-        let startDay = dayFormatter.string(from: currentPeriodStart)
-        let endDay = dayFormatter.string(from: currentPeriodEnd)
+        // Hebrew months
+        let hebrewMonths = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", 
+                             "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
         
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "MMM"
-        
-        let month = calendar.component(.month, from: currentPeriodStart)
-        let endMonth = calendar.component(.month, from: currentPeriodEnd)
-        
+        // English month names to localize
         let monthNames = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ]
         
-        let localizedMonth = monthNames[month - 1].localized
-        let localizedEndMonth = monthNames[endMonth - 1].localized
-        
-        let year = calendar.component(.year, from: currentPeriodStart)
-        let endYear = calendar.component(.year, from: currentPeriodEnd)
-        
-        let shortMonth = String(localizedMonth.prefix(3))
-        let shortEndMonth = String(localizedEndMonth.prefix(3))
-        
-        if month == endMonth && year == endYear {
-            return "\(startDay) \(shortMonth) \(year) - \(endDay) \(shortMonth) \(year)"
-        } else if year == endYear {
-            return "\(startDay) \(shortMonth) - \(endDay) \(shortEndMonth) \(year)"
-        } else {
-            return "\(startDay) \(shortMonth) \(year) - \(endDay) \(shortEndMonth) \(endYear)"
+        // Use hard-coded Hebrew months directly for Hebrew language
+        if LocalizationManager.shared.currentLanguage == "he" {
+            let startMonthName = hebrewMonths[startMonth]
+            let endMonthName = hebrewMonths[endMonth]
+            
+            if startMonth == endMonth && startYear == endYear {
+                return "\(startDay) \(startMonthName) - \(endDay) \(startMonthName) \(startYear)"
+            } else if startYear == endYear {
+                return "\(startDay) \(startMonthName) - \(endDay) \(endMonthName) \(startYear)"
+            } else {
+                return "\(startDay) \(startMonthName) \(startYear) - \(endDay) \(endMonthName) \(endYear)"
+            }
+        } 
+        else if LocalizationManager.shared.currentLanguage == "ar" {
+            // Handle Arabic with localized month names
+            let startMonthName = monthNames[startMonth].localized
+            let endMonthName = monthNames[endMonth].localized
+            
+            if startMonth == endMonth && startYear == endYear {
+                return "\(startDay) \(startMonthName) - \(endDay) \(startMonthName) \(startYear)"
+            } else if startYear == endYear {
+                return "\(startDay) \(startMonthName) - \(endDay) \(endMonthName) \(startYear)"
+            } else {
+                return "\(startDay) \(startMonthName) \(startYear) - \(endDay) \(endMonthName) \(endYear)"
+            }
+        }
+        else {
+            // For other languages, use localized month names
+            let startMonthName = monthNames[startMonth].localized
+            let endMonthName = monthNames[endMonth].localized
+            let shortStartMonth = String(startMonthName.prefix(3))
+            let shortEndMonth = String(endMonthName.prefix(3))
+            
+            if startMonth == endMonth && startYear == endYear {
+                return "\(startDay) \(shortStartMonth) \(startYear) - \(endDay) \(shortStartMonth) \(startYear)"
+            } else if startYear == endYear {
+                return "\(startDay) \(shortStartMonth) - \(endDay) \(shortEndMonth) \(startYear)"
+            } else {
+                return "\(startDay) \(shortStartMonth) \(startYear) - \(endDay) \(shortEndMonth) \(endYear)"
+            }
         }
     }
     
@@ -108,16 +143,17 @@ public class ReportViewModel: ObservableObject {
             
             // End of week is 6 days after start (inclusive of both start and end)
             currentPeriodEnd = calendar.date(byAdding: .day, value: 6, to: currentPeriodStart)!
-            // Add one day to include the entire end day
-            currentPeriodEnd = calendar.date(byAdding: .day, value: 1, to: currentPeriodEnd)!
         } else {
             // Get the start of the month containing currentPeriodStart
             var components = calendar.dateComponents([.year, .month], from: currentPeriodStart)
             currentPeriodStart = calendar.date(from: components)!
             
-            // End of month is the start of next month minus 1 second
+            // End of month is the last day of the month at 23:59:59
             components.month! += 1
-            currentPeriodEnd = calendar.date(from: components)!
+            let nextMonth = calendar.date(from: components)!
+            currentPeriodEnd = calendar.date(byAdding: .day, value: -1, to: nextMonth)!
+            // Set time to end of day to include the entire last day
+            currentPeriodEnd = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: currentPeriodEnd)!
         }
     }
     
@@ -150,7 +186,13 @@ public class ReportViewModel: ObservableObject {
     private func loadShifts() {
         Task {
             do {
-                let shifts = try await repository.fetchShiftsInDateRange(from: currentPeriodStart, to: currentPeriodEnd)
+                // Set start date to beginning of the day
+                let startOfDay = calendar.startOfDay(for: currentPeriodStart)
+                
+                // For end date, use start of next day after currentPeriodEnd to include the entire last day
+                let endOfDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: currentPeriodEnd))!
+                
+                let shifts = try await repository.fetchShiftsInDateRange(from: startOfDay, to: endOfDay)
                 await MainActor.run {
                     // Sort shifts by date
                     self.shifts = shifts.sorted { $0.startTime < $1.startTime }
@@ -339,6 +381,18 @@ public class ReportViewModel: ObservableObject {
         }
         
         return reports.sorted { $0.date > $1.date }
+    }
+
+    public func searchShifts(from startDate: Date, to endDate: Date) async {
+        do {
+            let shifts = try await repository.fetchShiftsInDateRange(from: startDate, to: endDate)
+            await MainActor.run {
+                self.shifts = shifts.sorted { $0.startTime < $1.startTime }
+                calculateSummary()
+            }
+        } catch {
+            print("Error loading shifts: \(error)")
+        }
     }
 }
 

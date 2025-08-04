@@ -13,6 +13,8 @@ struct ShiftManagerView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        formatter.formattingContext = .standalone
         return formatter
     }()
     
@@ -20,6 +22,7 @@ struct ShiftManagerView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         return formatter
     }()
     
@@ -120,38 +123,71 @@ struct ShiftManagerView: View {
                 .padding(.horizontal)
                 
                 ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(viewModel.filteredShifts) { shift in
-                            ShiftCard(shift: shift,
-                                    onDelete: { await viewModel.deleteShift(shift) },
-                                    onEdit: { viewModel.startEditing(shift) },
-                                    onToggleSpecial: { await viewModel.toggleSpecialDay(shift) })
+                    if viewModel.filteredShifts.isEmpty {
+                        EmptyStateView(
+                            title: "No Shifts Found".localized,
+                            message: "You don't have any shifts scheduled. Add your first shift using the form above.".localized
+                        )
+                        .padding(.top, 20)
+                    } else {
+                        LazyVStack(spacing: 8) {
+                            ForEach(viewModel.filteredShifts) { shift in
+                                ShiftCard(shift: shift,
+                                        onDelete: { viewModel.deleteShift(shift) },
+                                        onEdit: { viewModel.startEditing(shift) },
+                                        onToggleSpecial: { viewModel.toggleSpecialDay(shift) })
+                            }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                 }
             }
         }
         .navigationTitle("Shift Manager".localized)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showDatePicker) {
-            DatePickerSheet(selectedDate: $viewModel.selectedDate,
-                          isPresented: $viewModel.showDatePicker)
+            DatePickerSheetView(selectedDate: $viewModel.selectedDate, isPresented: $viewModel.showDatePicker)
         }
         .sheet(isPresented: $viewModel.showStartTimePicker) {
-            TimePickerSheet(selectedTime: $viewModel.startTime,
-                          isPresented: $viewModel.showStartTimePicker)
+            NavigationView {
+                VStack(spacing: 24) {
+                    Text("Select Time".localized)
+                        .font(.headline)
+                        .padding(.top)
+                    TimePickerRepresentable(selectedTime: $viewModel.startTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
+                        .frame(maxWidth: 350, maxHeight: 350)
+                        .padding()
+                    Spacer()
+                }
+                .navigationBarItems(trailing: Button("Done".localized) {
+                    viewModel.showStartTimePicker = false
+                })
+                .background(Color(.systemBackground))
+            }
         }
         .sheet(isPresented: $viewModel.showEndTimePicker) {
-            TimePickerSheet(selectedTime: $viewModel.endTime,
-                          isPresented: $viewModel.showEndTimePicker)
+            NavigationView {
+                VStack(spacing: 24) {
+                    Text("Select Time".localized)
+                        .font(.headline)
+                        .padding(.top)
+                    TimePickerRepresentable(selectedTime: $viewModel.endTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
+                        .frame(maxWidth: 350, maxHeight: 350)
+                        .padding()
+                    Spacer()
+                }
+                .navigationBarItems(trailing: Button("Done".localized) {
+                    viewModel.showEndTimePicker = false
+                })
+                .background(Color(.systemBackground))
+            }
         }
         .sheet(isPresented: $viewModel.isEditing) {
             NavigationView {
                 EditShiftView(shift: viewModel.shiftBeingEdited!,
                             onSave: { updatedShift in
                     Task {
-                        await viewModel.updateShift(updatedShift)
+                        viewModel.updateShift(updatedShift)
                         viewModel.isEditing = false
                     }
                 })
@@ -283,38 +319,45 @@ struct ShiftCard: View {
 struct DatePickerSheet: View {
     @Binding var selectedDate: Date
     @Binding var isPresented: Bool
+    @StateObject private var localizationManager = LocalizationManager.shared
     
     var body: some View {
         NavigationView {
-            DatePicker("Select Date".localized,
+            VStack {
+                DatePicker("Select Date".localized,
                       selection: $selectedDate,
                       displayedComponents: .date)
-                .datePickerStyle(.graphical)
-                .navigationBarItems(trailing: Button("Done".localized) {
-                    isPresented = false
-                })
-                .padding()
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    // Use a strong Hebrew locale when Hebrew is selected
+                    .environment(\.locale, Locale(identifier: localizationManager.currentLanguage))
+                    // Set calendar identifier based on current language
+                    .environment(\.calendar, Calendar(identifier: .gregorian))
+                    // Force direction based on language
+                    .environment(\.layoutDirection, localizationManager.currentLanguage == "he" ? .rightToLeft : .leftToRight)
+                
+                // Add explicit weekday labels for Hebrew
+                if localizationManager.currentLanguage == "he" {
+                    HStack(spacing: 20) {
+                        Text("א'").font(.caption).foregroundColor(.gray)
+                        Text("ב'").font(.caption).foregroundColor(.gray)
+                        Text("ג'").font(.caption).foregroundColor(.gray)
+                        Text("ד'").font(.caption).foregroundColor(.gray)
+                        Text("ה'").font(.caption).foregroundColor(.gray)
+                        Text("ו'").font(.caption).foregroundColor(.gray)
+                        Text("ש'").font(.caption).foregroundColor(.gray)
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            .navigationBarItems(trailing: Button("Done".localized) {
+                isPresented = false
+            })
         }
     }
 }
 
-struct TimePickerSheet: View {
-    @Binding var selectedTime: Date
-    @Binding var isPresented: Bool
-    
-    var body: some View {
-        NavigationView {
-            DatePicker("Select Time".localized,
-                      selection: $selectedTime,
-                      displayedComponents: .hourAndMinute)
-                .datePickerStyle(.wheel)
-                .navigationBarItems(trailing: Button("Done".localized) {
-                    isPresented = false
-                })
-                .padding()
-        }
-    }
-}
+
 
 struct EditShiftView: View {
     let shift: ShiftModel
@@ -325,6 +368,16 @@ struct EditShiftView: View {
     @State private var editedEndTime: Date
     @State private var editedNotes: String
     @State private var isSpecialDay: Bool
+    @State private var showStartTimePicker = false
+    @State private var showEndTimePicker = false
+    
+    private let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        return formatter
+    }()
     
     init(shift: ShiftModel, onSave: @escaping (ShiftModel) -> Void) {
         self.shift = shift
@@ -338,10 +391,63 @@ struct EditShiftView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Shift Details".localized)) {
+            Section {
+
                 DatePicker("Date".localized, selection: $editedDate, displayedComponents: .date)
-                DatePicker("Start Time".localized, selection: $editedStartTime, displayedComponents: .hourAndMinute)
-                DatePicker("End Time".localized, selection: $editedEndTime, displayedComponents: .hourAndMinute)
+                Button(action: { showStartTimePicker = true }) {
+    HStack {
+        Text("Start Time: ")
+            .font(.headline)
+        Text(timeFormatter.string(from: editedStartTime))
+            .font(.title3)
+            .foregroundColor(.accentColor)
+        Spacer()
+    }
+}
+.sheet(isPresented: $showStartTimePicker) {
+    NavigationView {
+        VStack(spacing: 24) {
+            Text("Select Time".localized)
+                .font(.headline)
+                .padding(.top)
+            TimePickerRepresentable(selectedTime: $editedStartTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
+                .frame(maxWidth: 350, maxHeight: 350)
+                .padding()
+            Spacer()
+        }
+        .navigationBarItems(trailing: Button("Done".localized) {
+            showStartTimePicker = false
+        })
+        .background(Color(.systemBackground))
+    }
+}
+                Button(action: { showEndTimePicker = true }) {
+    HStack {
+        Text("End Time: ")
+            .font(.headline)
+        Text(timeFormatter.string(from: editedEndTime))
+            .font(.title3)
+            .foregroundColor(.accentColor)
+        Spacer()
+    }
+}
+.sheet(isPresented: $showEndTimePicker) {
+    NavigationView {
+        VStack(spacing: 24) {
+            Text("Select Time".localized)
+                .font(.headline)
+                .padding(.top)
+            TimePickerRepresentable(selectedTime: $editedEndTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
+                .frame(maxWidth: 350, maxHeight: 350)
+                .padding()
+            Spacer()
+        }
+        .navigationBarItems(trailing: Button("Done".localized) {
+            showEndTimePicker = false
+        })
+        .background(Color(.systemBackground))
+    }
+}
                 Toggle("Special Day".localized, isOn: $isSpecialDay)
                 TextField("Notes".localized, text: $editedNotes)
             }
@@ -367,15 +473,15 @@ struct EditShiftView: View {
                     let updatedShift = ShiftModel(
                         id: shift.id,
                         title: shift.title,
+                        category: shift.category,
                         startTime: updatedStartTime,
                         endTime: updatedEndTime,
                         notes: editedNotes,
                         isOvertime: shift.isOvertime,
                         isSpecialDay: isSpecialDay,
-                        category: shift.category,
-                        createdAt: shift.createdAt,
                         grossWage: shift.grossWage,
-                        netWage: shift.netWage
+                        netWage: shift.netWage,
+                        createdAt: shift.createdAt
                     )
                     
                     onSave(updatedShift)

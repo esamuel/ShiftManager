@@ -77,13 +77,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UINavigationBar.appearance().backItem?.backBarButtonItem = emptyBackButtonItem
         
         // Override back button text with an empty string for all languages
-        for language in ["en", "he", "ru", "es", "fr", "de"] {
+        for _ in ["en", "he", "ru", "es", "fr", "de"] {
             Bundle.main.localizedString(forKey: "Back", value: "", table: nil)
             Bundle.main.localizedString(forKey: "Previous", value: "", table: nil)
             Bundle.main.localizedString(forKey: "back", value: "", table: nil)
             Bundle.main.localizedString(forKey: "חזרה", value: "", table: nil)
             Bundle.main.localizedString(forKey: "חזור", value: "", table: nil)
-            Bundle.main.localizedString(forKey: "הקודם", value: "", table: nil)
         }
     }
     

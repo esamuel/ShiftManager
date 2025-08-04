@@ -88,7 +88,6 @@ struct OnboardingView: View {
                         }) {
                             HStack {
                                 Image(systemName: "arrow.left")
-                                Text("Previous".localized)
                             }
                             .foregroundColor(.purple)
                             .padding()

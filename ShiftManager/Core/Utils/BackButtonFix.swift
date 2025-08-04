@@ -5,32 +5,33 @@ import ObjectiveC
 // It uses a combination of approaches to ensure the text doesn't appear
 class BackButtonFix {
     static let shared = BackButtonFix()
+    private var isInitialized = false
     
     private init() {
-        // Initialize the fixes immediately
-        applyAllFixes()
+        // Defer initialization to improve app startup time
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.applyAllFixes()
+        }
     }
     
     func applyAllFixes() {
-        // Apply swizzling to UILabel to prevent displaying specific text
+        // Prevent multiple initializations
+        guard !isInitialized else { return }
+        isInitialized = true
+        
+        // Apply method swizzling (these are fast operations)
         swizzleUILabelText()
-        
-        // Apply swizzling to UINavigationItem's back button title setter
         swizzleNavigationItemBackButtonTitle()
-        
-        // Apply swizzling to UIBarButtonItem's setTitleTextAttributes method
         swizzleBarButtonItemSetTitleTextAttributes()
-        
-        // Apply swizzling to NSBundle's localizedString method
         swizzleNSBundleLocalizedString()
         
-        // Apply fixes to current UI
-        DispatchQueue.main.async { [weak self] in
+        // Delay the heavy UI operations to improve app startup time
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.clearExistingBackButtonText()
+            
+            // Start periodic checks with a longer interval
+            self?.startPeriodicChecks()
         }
-        
-        // Schedule periodic checks
-        startPeriodicChecks()
     }
     
     // MARK: - UILabel Text Swizzling
@@ -90,16 +91,21 @@ class BackButtonFix {
     // MARK: - Direct UI Manipulation
     // This function searches the entire UI hierarchy and clears any back button text
     private func clearExistingBackButtonText() {
-        // First check all navigation bars
-        if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
-            for scene in windowScenes {
-                for window in scene.windows {
-                    // Clear text in all navigation bars
-                    self.recursivelySearchForNavigationBars(in: window)
-                    
-                    // Clear text in view controllers
-                    if let rootVC = window.rootViewController {
-                        self.recursivelyFixViewControllers(rootVC)
+        // Always dispatch to main thread regardless of current thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // First check all navigation bars
+            if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
+                for scene in windowScenes {
+                    for window in scene.windows {
+                        // Clear text in all navigation bars
+                        self.recursivelySearchForNavigationBars(in: window)
+                        
+                        // Clear text in view controllers
+                        if let rootVC = window.rootViewController {
+                            self.recursivelyFixViewControllers(rootVC)
+                        }
                     }
                 }
             }
@@ -107,6 +113,14 @@ class BackButtonFix {
     }
     
     private func recursivelySearchForNavigationBars(in view: UIView) {
+        // Ensure this runs on the main thread
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.recursivelySearchForNavigationBars(in: view)
+            }
+            return
+        }
+        
         // If this is a navigation bar, clear all its text
         if let navBar = view as? UINavigationBar {
             clearNavigationBarText(navBar)
@@ -118,42 +132,67 @@ class BackButtonFix {
         }
         
         // Check all subviews
-        for subview in view.subviews {
+        let subviewsCopy = view.subviews // Capture on main thread
+        for subview in subviewsCopy {
             recursivelySearchForNavigationBars(in: subview)
         }
     }
     
     private func clearNavigationBarText(_ navBar: UINavigationBar) {
+        // Ensure this runs on the main thread
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.clearNavigationBarText(navBar)
+            }
+            return
+        }
+        
         // Clear back and top items
         navBar.backItem?.backButtonTitle = ""
         navBar.topItem?.backButtonTitle = ""
         
-        // Set custom empty back button for all items
-        for item in navBar.items ?? [] {
-            item.backButtonTitle = ""
-            let emptyBackButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-            emptyBackButton.setTitleTextAttributes([.foregroundColor: UIColor.clear], for: .normal)
-            item.backBarButtonItem = emptyBackButton
-        }
+        // Clear any existing back button items
+        navBar.backItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
-        // Check for labels in the navigation bar's view hierarchy
-        for subview in navBar.subviews {
-            recursivelySearchForLabels(in: subview)
-        }
+        // Remove back indicator images
+        navBar.backIndicatorImage = UIImage()
+        navBar.backIndicatorTransitionMaskImage = UIImage()
+        
+        // Search for any labels in the navigation bar
+        recursivelySearchForLabels(in: navBar)
     }
     
     private func recursivelySearchForLabels(in view: UIView) {
+        // Ensure this runs on the main thread
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.recursivelySearchForLabels(in: view)
+            }
+            return
+        }
+        
+        // Check if this view is a label
         if let label = view as? UILabel {
             clearLabelIfNeeded(label)
         }
         
-        for subview in view.subviews {
+        let subviewsCopy = view.subviews // Capture on main thread
+        for subview in subviewsCopy {
             recursivelySearchForLabels(in: subview)
         }
     }
     
     private func clearLabelIfNeeded(_ label: UILabel) {
-        let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back", "הקודם"]
+        // Ensure this runs on the main thread
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.clearLabelIfNeeded(label)
+            }
+            return
+        }
+        
+        let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back"]
         
         if let text = label.text {
             if backTexts.contains(text) || text.containsHebrewCharacters() || text.isBackButtonText() {
@@ -165,30 +204,37 @@ class BackButtonFix {
     }
     
     private func recursivelyFixViewControllers(_ viewController: UIViewController) {
-        // Fix this view controller's back button
-        viewController.navigationItem.backButtonTitle = ""
-        
-        // Create empty back button
-        let emptyBackButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        emptyBackButton.setTitleTextAttributes([.foregroundColor: UIColor.clear], for: .normal)
-        viewController.navigationItem.backBarButtonItem = emptyBackButton
-        
-        // Handle navigation controller
-        if let navController = viewController as? UINavigationController {
-            // Fix all view controllers in the stack
-            for childVC in navController.viewControllers {
-                recursivelyFixViewControllers(childVC)
+        // Always dispatch to main thread regardless of current thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Fix this view controller's back button
+            viewController.navigationItem.backButtonTitle = ""
+            
+            // Create empty back button
+            let emptyBackButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            emptyBackButton.setTitleTextAttributes([.foregroundColor: UIColor.clear], for: .normal)
+            viewController.navigationItem.backBarButtonItem = emptyBackButton
+            
+            // If it's a navigation controller, do the same for all view controllers
+            if let navController = viewController as? UINavigationController {
+                // Fix all view controllers in the stack
+                let viewControllersCopy = navController.viewControllers // Capture on main thread
+                for childVC in viewControllersCopy {
+                    self.recursivelyFixViewControllers(childVC)
+                }
             }
-        }
-        
-        // Handle child view controllers
-        for childVC in viewController.children {
-            recursivelyFixViewControllers(childVC)
-        }
-        
-        // Handle presented view controller
-        if let presentedVC = viewController.presentedViewController {
-            recursivelyFixViewControllers(presentedVC)
+            
+            // Handle child view controllers
+            let childrenCopy = viewController.children // Capture on main thread
+            for childVC in childrenCopy {
+                self.recursivelyFixViewControllers(childVC)
+            }
+            
+            // Handle presented view controller
+            if let presentedVC = viewController.presentedViewController {
+                self.recursivelyFixViewControllers(presentedVC)
+            }
         }
     }
     
@@ -196,29 +242,45 @@ class BackButtonFix {
     private var checkTimer: Timer?
     
     private func startPeriodicChecks() {
-        // Stop any existing timer
-        checkTimer?.invalidate()
-        
-        // Create a new timer that runs every 0.25 seconds
-        checkTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            self?.clearExistingBackButtonText()
-        }
-        
-        // Add to common run loops
-        if let timer = checkTimer {
-            RunLoop.main.add(timer, forMode: .common)
+        // Always dispatch to main thread regardless of current thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Stop any existing timer
+            self.checkTimer?.invalidate()
+            
+            // Create a new timer with a longer interval (1 second instead of 0.25)
+            // This significantly reduces CPU usage while still being responsive
+            self.checkTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+                // Use a lower priority queue for the timer callback
+                DispatchQueue.global(qos: .utility).async {
+                    DispatchQueue.main.async {
+                        self?.replaceBackButtonsWithCustom()
+                    }
+                }
+            }
+            
+            // Add to common run loops
+            if let timer = self.checkTimer {
+                RunLoop.main.add(timer, forMode: .common)
+            }
         }
     }
     
     // MARK: - Complete Back Button Replacement
     // This extreme technique replaces every back button in the app with a custom one
     func replaceBackButtonsWithCustom() {
-        // Find all navigation controllers
-        if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
-            for scene in windowScenes {
-                for window in scene.windows {
-                    if let rootVC = window.rootViewController {
-                        recursivelyReplaceBackButtons(in: rootVC)
+        // Always dispatch to main thread regardless of current thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Find all navigation controllers
+            if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
+                for scene in windowScenes {
+                    for window in scene.windows {
+                        if let rootVC = window.rootViewController {
+                            self.recursivelyReplaceBackButtons(in: rootVC)
+                        }
                     }
                 }
             }
@@ -226,44 +288,51 @@ class BackButtonFix {
     }
     
     private func recursivelyReplaceBackButtons(in viewController: UIViewController) {
-        // Create a custom back button using only an image
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-        let backImage = UIImage(systemName: "chevron.left", withConfiguration: symbolConfig)
-        
-        // Create a new back button without any text
-        let customBackButton = UIBarButtonItem(
-            image: backImage,
-            style: .plain,
-            target: nil,
-            action: nil
-        )
-        
-        // Set it as the back button
-        viewController.navigationItem.backBarButtonItem = customBackButton
-        viewController.navigationItem.backButtonTitle = ""
-        
-        // If it's a navigation controller, do the same for all view controllers
-        if let navController = viewController as? UINavigationController {
-            for childVC in navController.viewControllers {
-                recursivelyReplaceBackButtons(in: childVC)
+        // Always dispatch to main thread regardless of current thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Create a custom back button using only an image
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+            let backImage = UIImage(systemName: "chevron.left", withConfiguration: symbolConfig)
+            
+            // Create a new back button without any text
+            let customBackButton = UIBarButtonItem(
+                image: backImage,
+                style: .plain,
+                target: nil,
+                action: nil
+            )
+            
+            // Set it as the back button
+            viewController.navigationItem.backBarButtonItem = customBackButton
+            viewController.navigationItem.backButtonTitle = ""
+            
+            // If it's a navigation controller, do the same for all view controllers
+            if let navController = viewController as? UINavigationController {
+                let viewControllersCopy = navController.viewControllers // Capture on main thread
+                for childVC in viewControllersCopy {
+                    self.recursivelyReplaceBackButtons(in: childVC)
+                }
+                
+                // Force custom back button image in the nav bar
+                let standardAppearance = navController.navigationBar.standardAppearance.copy()
+                standardAppearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
+                navController.navigationBar.standardAppearance = standardAppearance
+                navController.navigationBar.scrollEdgeAppearance = standardAppearance
+                navController.navigationBar.compactAppearance = standardAppearance
             }
             
-            // Force custom back button image in the nav bar
-            let appearance = navController.navigationBar.standardAppearance
-            appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
-            navController.navigationBar.standardAppearance = appearance
-            navController.navigationBar.scrollEdgeAppearance = appearance
-            navController.navigationBar.compactAppearance = appearance
-        }
-        
-        // Process child view controllers
-        for childVC in viewController.children {
-            recursivelyReplaceBackButtons(in: childVC)
-        }
-        
-        // Process presented view controller
-        if let presentedVC = viewController.presentedViewController {
-            recursivelyReplaceBackButtons(in: presentedVC)
+            // Process child view controllers
+            let childrenCopy = viewController.children // Capture on main thread
+            for childVC in childrenCopy {
+                self.recursivelyReplaceBackButtons(in: childVC)
+            }
+            
+            // Process presented view controller
+            if let presentedVC = viewController.presentedViewController {
+                self.recursivelyReplaceBackButtons(in: presentedVC)
+            }
         }
     }
 }
@@ -320,7 +389,7 @@ extension UIBarButtonItem {
     
     @objc func swizzled_setTitle(_ title: String?) {
         // Detect if this is a back button text
-        let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back", "הקודם"]
+        let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back"]
         
         if let newTitle = title, backTexts.contains(newTitle) || newTitle.containsHebrewCharacters() {
             // For back buttons, set empty title
@@ -341,7 +410,7 @@ extension Bundle {
         // Comprehensive list of back button related keys in various languages
         let backButtonKeys = [
             "Back", "back", "Back-Button", "Previous", "previous",
-            "חזרה", "חזור", "הקודם",
+            "חזרה", "חזור",
             "Назад", // Russian
             "Atrás", "Volver", // Spanish
             "Retour", // French

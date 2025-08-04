@@ -2,6 +2,11 @@ import SwiftUI
 
 struct AboutView: View {
     @Environment(\.openURL) private var openURL
+    @StateObject private var localizationManager = LocalizationManager.shared
+    
+    init() {
+        print("Debug: Localized About title is \("About".localized) and current locale is \(Locale.current)")
+    }
     
     var body: some View {
         ScrollView {
@@ -30,29 +35,29 @@ struct AboutView: View {
                 
                 // App description
                 Group {
-                    Text("About Shift Manager")
+                    Text("About Shift Manager".localized)
                         .font(.headline)
                         .padding(.bottom, 5)
-                    
-                    Text("Shift Manager is a comprehensive tool designed to help you track your work hours, calculate earnings, and manage your work schedule efficiently.")
-                    
-                    Text("Key Features")
-                        .font(.headline)
-                        .padding(.top, 10)
-                        .padding(.bottom, 5)
-                    
-                    featureItem(icon: "clock", title: "Time Tracking", description: "Log your shifts with precise start and end times")
-                    featureItem(icon: "dollarsign.circle", title: "Earnings Calculator", description: "Calculate your wages with support for overtime and various tax rates")
-                    featureItem(icon: "calendar", title: "Schedule Management", description: "View your shifts in daily, weekly, or monthly formats")
-                    featureItem(icon: "bell", title: "Reminders", description: "Set notifications for upcoming shifts")
-                    featureItem(icon: "chart.bar", title: "Statistics", description: "Analyze your work patterns and earnings over time")
-                    
-                    Text("Developer Information")
+
+                    Text("About_Description".localized)
+
+                    Text("Key Features".localized)
                         .font(.headline)
                         .padding(.top, 10)
                         .padding(.bottom, 5)
-                    
-                    Text("Shift Manager is developed and maintained by a team passionate about creating tools that make work-life management easier.")
+
+                    // Removed "Time Tracking" as it was not part of the original translation batch
+                    featureItem(icon: "dollarsign.circle", title: "Earnings Calculator".localized, description: "Earnings Calculator Description".localized)
+                    featureItem(icon: "calendar", title: "Schedule Management".localized, description: "Schedule Management Description".localized)
+                    featureItem(icon: "bell", title: "Reminders".localized, description: "Reminders Description".localized)
+                    featureItem(icon: "chart.bar", title: "Statistics".localized, description: "Statistics Description".localized)
+
+                    Text("Developer Information".localized)
+                        .font(.headline)
+                        .padding(.top, 10)
+                        .padding(.bottom, 5)
+
+                    Text("Developer Description".localized)
                 }
                 
                 // Contact and support
@@ -60,7 +65,7 @@ struct AboutView: View {
                     Button {
                         openURL(URL(string: "mailto:support@shiftmanager.app")!)
                     } label: {
-                        Label("Contact Support", systemImage: "envelope")
+                        Label("Contact Support".localized, systemImage: "envelope")
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(Color.blue)
@@ -73,7 +78,8 @@ struct AboutView: View {
                     NavigationLink(destination: PrivacyPolicyView()) {
                         HStack {
                             Image(systemName: "lock.shield")
-                            Text("Privacy Policy")
+                            Text("Privacy Policy".localized)
+                                .environment(\.layoutDirection, .rightToLeft)  // For Hebrew RTL support
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
@@ -85,7 +91,8 @@ struct AboutView: View {
                     NavigationLink(destination: TermsOfUseView()) {
                         HStack {
                             Image(systemName: "doc.text")
-                            Text("Terms of Use")
+                            Text("Terms of Use".localized)
+                                .environment(\.layoutDirection, .rightToLeft)  // For Hebrew RTL support
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
@@ -99,7 +106,8 @@ struct AboutView: View {
             }
             .padding()
         }
-        .navigationTitle("About")
+        .id(localizationManager.refreshID)
+        .navigationTitle("About".localized)
         .navigationBarTitleDisplayMode(.inline)
     }
     

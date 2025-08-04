@@ -35,9 +35,29 @@
 "Shift Settings" = "Shift Settings";
 "App Settings" = "App Settings";
 "About" = "About";
+
+// About Section
+"About Shift Manager" = "About Shift Manager";
+"About_Description" = "Shift Manager is a comprehensive tool designed to help you track your work hours, calculate earnings, and manage your work schedule efficiently.";
+"Key Features" = "Key Features";
+"Earnings Calculator" = "Earnings Calculator";
+"Earnings Calculator Description" = "Calculate your wages with support for overtime and various tax rates";
+"Schedule Management" = "Schedule Management";
+"Schedule Management Description" = "View your shifts in daily, weekly, or monthly formats";
+"Reminders" = "Reminders";
+"Reminders Description" = "Set notifications for upcoming shifts";
+"Statistics" = "Statistics";
+"Statistics Description" = "Analyze your work patterns and earnings over time";
+"Developer Information" = "Developer Information";
+"Developer Description" = "Shift Manager is developed and maintained by a team passionate about creating tools that make work-life management easier.";
+"Contact Support" = "Contact Support";
 "Version" = "Version";
 "Country" = "Country";
 "Currency" = "Currency";
+
+// Legal Section
+"Privacy Policy" = "Privacy Policy";
+"Terms of Use" = "Terms of Use";
 
 // Shift Settings
 "Hourly Wage" = "Hourly Wage";
@@ -70,8 +90,16 @@
 "Regular Hours" = "Regular Hours";
 "Overtime Hours" = "Overtime Hours";
 "Earnings" = "Earnings";
-"Tax Deductions" = "Tax Deductions";
+"Enable Notifications" = "Enable Notifications";
+"Remind me before shift" = "Remind me before shift";
+"15 minutes" = "15 minutes";
+"30 minutes" = "30 minutes";
+"45 minutes" = "45 minutes";
+"1 hour" = "1 hour";
+"Upcoming Shift" = "Upcoming Shift";
+"Your shift starts at %@" = "Your shift starts at %@";
 "Net Earnings" = "Net Earnings";
+"Tax Deductions" = "Tax Deductions";
 "Select Period" = "Select Period";
 "Daily" = "Daily";
 "Weekly" = "Weekly";
@@ -88,7 +116,7 @@
 "Delete Shift" = "Delete Shift";
 "Start Time" = "Start Time";
 "End Time" = "End Time";
-"Date" = "Date";
+"Date" = "Date (Hebrew Calendar)";
 "Notes" = "Notes";
 "Save Shift" = "Save Shift";
 "Delete" = "Delete";
@@ -113,12 +141,14 @@
 
 // Additional UI Elements
 "Add New Shift" = "Add New Shift";
-"Select Date" = "Select Date";
-"Select Time" = "Select Time";
+// Date Selection (No save/cancel buttons needed)
+"Select Date" = "Select Date (Hebrew Calendar)";
+// Time selection disabled
+// "Select Time" = "Select Time";
 "Add Note" = "Add Note";
 "Existing Shifts" = "Existing Shifts";
-"Current Month" = "Current Month";
-"All Months" = "All Months";
+"Current Month" = "Current Month (Hebrew Calendar)";
+"All Months" = "All Months (Hebrew Calendar)";
 "Special Day" = "Special Day";
 "Long Shift Warning" = "Long Shift Warning";
 "Accept" = "Accept";
@@ -134,6 +164,7 @@
 "Calculations" = "Calculations";
 "Save Changes" = "Save Changes";
 "Title" = "Title";
+"Regular Shift" = "Regular Shift";
 "Overtime" = "Overtime";
 
 // Date and Time Format Strings
@@ -376,4 +407,4 @@
 "Submit Feedback" = "Submit Feedback";
 "Feedback Sent" = "Feedback Sent";
 "Thank you for your feedback! We'll use it to improve the app." = "Thank you for your feedback! We'll use it to improve the app.";
-"Tell Friends" = "Tell Friends"; 
+"Tell Friends" = "Tell Friends";

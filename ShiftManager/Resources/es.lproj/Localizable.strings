@@ -32,7 +32,27 @@
 "Shift Settings" = "Ajustes de turnos";
 "App Settings" = "Ajustes de la aplicación";
 "About" = "Acerca de";
+
+// About Section
+"About Shift Manager" = "Acerca de Shift Manager";
+"About_Description" = "Shift Manager es una herramienta integral diseñada para ayudarte a registrar tus horas de trabajo, calcular tus ingresos y gestionar tu horario laboral de manera eficiente.";
+"Key Features" = "Características clave";
+"Earnings Calculator" = "Calculadora de ingresos";
+"Earnings Calculator Description" = "Calcula tus salarios con soporte para horas extras y varias tasas de impuestos";
+"Schedule Management" = "Gestión de horarios";
+"Schedule Management Description" = "Visualiza tus turnos en formatos diarios, semanales o mensuales";
+"Reminders" = "Recordatorios";
+"Reminders Description" = "Configura notificaciones para los turnos próximos";
+"Statistics" = "Estadísticas";
+"Statistics Description" = "Analiza tus patrones de trabajo e ingresos a lo largo del tiempo";
+"Developer Information" = "Información del desarrollador";
+"Developer Description" = "Shift Manager es desarrollado y mantenido por un equipo apasionado por crear herramientas que faciliten la gestión de la vida laboral.";
+"Contact Support" = "Contactar soporte";
 "Version" = "Versión";
+
+// Legal Section
+"Privacy Policy" = "Política de privacidad";
+"Terms of Use" = "Términos de uso";
 
 "Hourly Wage" = "Salario por hora";
 "Tax Deduction (%)" = "Deducción fiscal (%)";

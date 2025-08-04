@@ -16,9 +16,11 @@ public struct UpcomingShiftsView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if viewModel.upcomingShifts.isEmpty {
-                Text("No upcoming shifts".localized)
-                    .foregroundColor(.gray)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyStateView(
+                    title: "No Upcoming Shifts".localized,
+                    message: "You don't have any upcoming shifts scheduled.".localized
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 16) {
@@ -32,13 +34,23 @@ public struct UpcomingShiftsView: View {
                                     ForEach(shifts) { shift in
                                         HStack {
                                             VStack(alignment: .leading) {
-                                                Text(shift.title)
+                                                Text(shift.title.isEmpty ? "Regular Shift".localized : shift.title)
                                                     .font(.subheadline)
                                                     .foregroundColor(.primary)
                                                 
-                                                Text("\(viewModel.formatTime(shift.startTime)) - \(viewModel.formatTime(shift.endTime))")
-                                                    .font(.caption)
-                                                    .foregroundColor(.gray)
+                                                HStack(spacing: 4) {
+                                                    Text("\(viewModel.formatTime(shift.startTime)) - \(viewModel.formatTime(shift.endTime))")
+                                                        .font(.caption)
+                                                        .foregroundColor(.gray)
+                                                    
+                                                    Text("•")
+                                                        .font(.caption)
+                                                        .foregroundColor(.gray)
+                                                    
+                                                    Text(viewModel.calculateTotalHours(startTime: shift.startTime, endTime: shift.endTime))
+                                                        .font(.caption)
+                                                        .foregroundColor(.blue)
+                                                }
                                             }
                                             
                                             Spacer()

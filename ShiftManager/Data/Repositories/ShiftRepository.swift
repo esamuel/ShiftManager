@@ -114,15 +114,15 @@ public class ShiftRepository: ShiftRepositoryProtocol {
         return ShiftModel(
             id: entity.id ?? UUID(),
             title: entity.title ?? "",
+            category: entity.category ?? "",
             startTime: entity.startTime ?? Date(),
             endTime: entity.endTime ?? Date(),
             notes: entity.notes ?? "",
             isOvertime: entity.isOvertime,
             isSpecialDay: entity.isSpecialDay,
-            category: entity.category ?? "",
-            createdAt: entity.createdAt ?? Date(),
             grossWage: entity.grossWage,
-            netWage: entity.netWage
+            netWage: entity.netWage,
+            createdAt: entity.createdAt ?? Date()
         )
     }
     

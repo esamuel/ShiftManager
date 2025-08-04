@@ -277,31 +277,16 @@ public struct ShiftReportCard: View {
         self.shift = shift
     }
     
-    private var formattedDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE, MMMM d, yyyy"
-        dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
-        return dateFormatter.string(from: shift.startTime)
-    }
-    
-    private var timeRange: String {
-        let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
-        let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
-        return String(format: "%@ - %@".localized, startTime, endTime)
-    }
-    
-    private var formattedDuration: String {
-        return String(format: "%.2f", shift.duration / 3600)
-    }
-    
     public var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(formattedDate)
+                Text(shift.startTime, style: .date)
                     .font(.subheadline)
                     .fontWeight(.bold)
                 
-                Text(timeRange)
+                let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
+                let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
+                Text(String(format: "%@ - %@".localized, startTime, endTime))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -309,6 +294,7 @@ public struct ShiftReportCard: View {
             Spacer()
             
             VStack(alignment: .center, spacing: 4) {
+                let formattedDuration = String(format: "%.2f", shift.duration / 3600)
                 Text("\(formattedDuration)h")
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -374,6 +360,238 @@ public struct CustomDateView: View {
                 .font(.body)
                 .foregroundColor(.primary)
                 .multilineTextAlignment(LocalizationManager.shared.currentLanguage == "ar" ? .trailing : .leading)
+        }
+    }
+}
+
+public struct SearchShiftView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = ReportViewModel()
+    @State private var startDate = Date()
+    @State private var endDate = Date()
+    @State private var showResults = false
+    @State private var showingShareSheet = false
+    @State private var pdfData: Data?
+    
+    private let exportService = ExportService()
+    
+    public init() {}
+    
+    private func exportToPDF() {
+        Task {
+            do {
+                let username = UserDefaults.standard.string(forKey: "username") ?? "User"
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+                dateFormatter.formattingContext = .standalone
+                
+                let periodString = "\(dateFormatter.string(from: startDate)) - \(dateFormatter.string(from: endDate))"
+                pdfData = try await exportService.generateSearchReport(
+                    shifts: viewModel.shifts,
+                    username: username,
+                    periodString: periodString,
+                    summary: (
+                        totalDays: viewModel.totalWorkingDays,
+                        totalHours: viewModel.totalHours,
+                        grossWage: viewModel.grossWage,
+                        netWage: viewModel.netWage
+                    )
+                )
+                showingShareSheet = true
+            } catch {
+                print("Error generating PDF: \(error)")
+            }
+        }
+    }
+    
+    public var body: some View {
+        NavigationView {
+            VStack(spacing: 8) {
+                // Date Selection
+                Form {
+                    Section(header: Text("Search Period".localized)) {
+                        VStack(spacing: 0) {
+                            // Start Date Selector
+                            HStack {
+                                Text("Start Date:".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                
+                                Button(action: {
+                                    // Show a proper date picker sheet on tap
+                                    viewModel.showingStartDatePicker = true
+                                }) {
+                                    CustomDateView(date: startDate)
+                                        .frame(height: 44)
+                                        .frame(maxWidth: .infinity, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(.systemGray5))
+                                        .cornerRadius(8)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                            
+                            // End Date Selector
+                            HStack {
+                                Text("End Date:".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                
+                                Button(action: {
+                                    // Show a proper date picker sheet on tap
+                                    viewModel.showingEndDatePicker = true
+                                }) {
+                                    CustomDateView(date: endDate)
+                                        .frame(height: 44)
+                                        .frame(maxWidth: .infinity, alignment: LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(.systemGray5))
+                                        .cornerRadius(8)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                        }
+                    }
+                }
+                .frame(height: 140) // Reduced height to accommodate the button outside the form
+                
+                // Search button moved outside the form for better styling control
+                Button {
+                    Task {
+                        await viewModel.loadShiftsForDateRange(start: startDate, end: endDate)
+                        showResults = true
+                    }
+                } label: {
+                    if LocalizationManager.shared.currentLanguage == "he" {
+                        // Use explicit layout for Hebrew to ensure text appears correctly
+                        HStack {
+                            Text("חיפוש")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.horizontal, 20)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Color.purple)
+                        .cornerRadius(10)
+                        .shadow(color: .purple.opacity(0.4), radius: 5, x: 0, y: 3)
+                        .environment(\.layoutDirection, .rightToLeft)
+                    } else {
+                        // For all other languages, use localization
+                        Text("Search".localized)
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(Color.purple)
+                            .cornerRadius(10)
+                            .shadow(color: .purple.opacity(0.4), radius: 5, x: 0, y: 3)
+                            .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "ar" ? .rightToLeft : .leftToRight)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                
+                if showResults {
+                    if viewModel.shifts.isEmpty {
+                        EmptyStateView(
+                            title: "No Shifts Found".localized,
+                            message: "No shifts found for the selected period. Try adjusting your search criteria.".localized
+                        )
+                        .padding(.vertical, 40)
+                        .padding(.horizontal, 24)
+                        .frame(minHeight: 400) // Ensure minimum height for content
+                    } else {
+                        VStack(spacing: 4) {
+                            // Export to PDF Button
+                            Button(action: exportToPDF) {
+                                HStack {
+                                    Image(systemName: "doc.text")
+                                    Text("Export to PDF".localized)
+                                }
+                                .foregroundColor(.blue)
+                                .padding(.vertical, 4)
+                            }
+                            
+                            // Results Section
+                            ScrollView {
+                                LazyVStack(spacing: 8) {
+                                    ForEach(viewModel.shifts) { shift in
+                                        ShiftReportCard(shift: shift)
+                                            .padding(.horizontal, 12)
+                                    }
+                                }
+                                .padding(.vertical, 8)
+                            }
+                            
+                            // Summary Section
+                            VStack(spacing: 4) {
+                                Divider()
+                                
+                                Group {
+                                    HStack {
+                                        Text("Total Working Days:".localized)
+                                        Spacer()
+                                        Text("\(viewModel.totalWorkingDays)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Total Hours:".localized)
+                                        Spacer()
+                                        Text(String(format: "%.2f", viewModel.totalHours))
+                                    }
+                                    
+                                    HStack {
+                                        Text("Gross Wage:".localized)
+                                        Spacer()
+                                        Text(viewModel.grossWage.asCurrency)
+                                    }
+                                    
+                                    HStack {
+                                        Text("Net Wage:".localized)
+                                        Spacer()
+                                        Text(viewModel.netWage.asCurrency)
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                                // Add a note about tax calculation estimates
+                                Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top, 1)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Search".localized)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingShareSheet, content: {
+                if let data = pdfData {
+                    ShareSheet(activityItems: [data])
+                }
+            })
+            // Add date picker sheets
+            .sheet(isPresented: $viewModel.showingStartDatePicker) {
+                DatePickerSheetView(selectedDate: $startDate, isPresented: $viewModel.showingStartDatePicker)
+            }
+            .sheet(isPresented: $viewModel.showingEndDatePicker) {
+                DatePickerSheetView(selectedDate: $endDate, isPresented: $viewModel.showingEndDatePicker)
+            }
         }
     }
 }

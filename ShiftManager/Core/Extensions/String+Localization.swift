@@ -6,16 +6,12 @@ extension String {
     }
     
     func asCurrency(value: Double) -> String {
-        let formattedValue = String(format: "%.2f", value)
-        let currencySymbol = LocalizationManager.shared.currencySymbol
-        return "\(currencySymbol)\(formattedValue)"
+        return LocalizationManager.shared.formatCurrency(value)
     }
 }
 
 extension Double {
     var asCurrency: String {
-        let formattedValue = String(format: "%.2f", self)
-        let currencySymbol = LocalizationManager.shared.currencySymbol
-        return "\(currencySymbol)\(formattedValue)"
+        return LocalizationManager.shared.formatCurrency(self)
     }
 } 

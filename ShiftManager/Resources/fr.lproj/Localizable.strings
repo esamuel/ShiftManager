@@ -32,7 +32,27 @@
 "Shift Settings" = "Paramètres des quarts";
 "App Settings" = "Paramètres de l'application";
 "About" = "À propos";
+
+// About Section
+"About Shift Manager" = "À propos de Shift Manager";
+"About_Description" = "Shift Manager est un outil complet conçu pour vous aider à suivre vos heures de travail, calculer vos gains et gérer efficacement votre emploi du temps.";
+"Key Features" = "Fonctionnalités clés";
+"Earnings Calculator" = "Calculateur de gains";
+"Earnings Calculator Description" = "Calculez vos salaires avec prise en charge des heures supplémentaires et de divers taux d'imposition";
+"Schedule Management" = "Gestion des horaires";
+"Schedule Management Description" = "Affichez vos quarts de travail en formats journalier, hebdomadaire ou mensuel";
+"Reminders" = "Rappels";
+"Reminders Description" = "Définissez des notifications pour les quarts à venir";
+"Statistics" = "Statistiques";
+"Statistics Description" = "Analysez vos habitudes de travail et vos gains au fil du temps";
+"Developer Information" = "Informations sur le développeur";
+"Developer Description" = "Shift Manager est développé et maintenu par une équipe passionnée par la création d'outils facilitant la gestion de la vie professionnelle.";
+"Contact Support" = "Contacter le support";
 "Version" = "Version";
+
+// Legal Section
+"Privacy Policy" = "Politique de confidentialité";
+"Terms of Use" = "Conditions d'utilisation";
 
 "Hourly Wage" = "Salaire horaire";
 "Tax Deduction (%)" = "Déduction fiscale (%)";

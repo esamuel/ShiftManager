@@ -12,15 +12,13 @@ let package = Package(
             targets: ["ShiftManager"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "10.19.0"))
+        // Firebase dependencies removed
     ],
     targets: [
         .target(
             name: "ShiftManager",
             dependencies: [
-                .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
-                .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
-                .product(name: "FirebaseAuth", package: "firebase-ios-sdk")
+                // Firebase products removed
             ]),
         .testTarget(
             name: "ShiftManagerTests",

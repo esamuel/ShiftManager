@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PrivacyPolicyView: View {
+    @StateObject private var localizationManager = LocalizationManager.shared
     
     private func sectionTitle(_ title: String) -> some View {
         Text(title)
@@ -76,7 +77,8 @@ struct PrivacyPolicyView: View {
             }
             .padding()
         }
-        .navigationTitle("Privacy Policy")
+        .navigationTitle("Privacy Policy".localized)
+        .id(localizationManager.refreshID)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

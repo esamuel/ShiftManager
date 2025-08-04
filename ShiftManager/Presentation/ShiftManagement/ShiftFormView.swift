@@ -104,28 +104,42 @@ class ShiftFormViewModel: ObservableObject {
             self.endTime = shift.endTime
             self.isOvertime = shift.isOvertime
             self.notes = shift.notes
+        } else {
+            // Set default times for new shifts
+            var calendar = Calendar.current
+            calendar.timeZone = TimeZone.current // Ensure using local time zone
+            var components = calendar.dateComponents([.year, .month, .day], from: Date())
+            components.hour = 8
+            components.minute = 0
+            self.startTime = calendar.date(from: components) ?? Date()
+            
+            components.hour = 17
+            components.minute = 0
+            self.endTime = calendar.date(from: components) ?? Date()
         }
     }
     
     @MainActor
     func save() async {
         do {
-            let shiftModel = ShiftModel(
-                id: shift?.id ?? UUID(),
+            let shift = ShiftModel(
+                id: UUID(),
                 title: title,
+                category: "",
                 startTime: startTime,
                 endTime: endTime,
                 notes: notes,
                 isOvertime: isOvertime,
                 isSpecialDay: false,
-                category: "",
-                createdAt: shift?.createdAt ?? Date()
+                grossWage: 0.0,
+                netWage: 0.0,
+                createdAt: Date()
             )
             
             if isEditing {
-                try await repository.updateShift(shiftModel)
+                try await repository.updateShift(shift)
             } else {
-                try await repository.createShift(shiftModel)
+                try await repository.createShift(shift)
             }
         } catch {
             self.error = error

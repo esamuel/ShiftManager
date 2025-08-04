@@ -12,29 +12,32 @@ public struct ShiftModel: Identifiable, Codable {
     public var createdAt: Date
     public var grossWage: Double
     public var netWage: Double
+    public var username: String
     
     public init(id: UUID = UUID(), 
-         title: String, 
-         startTime: Date, 
-         endTime: Date, 
-         notes: String = "", 
-         isOvertime: Bool = false,
-         isSpecialDay: Bool = false,
+         title: String = "", 
          category: String = "", 
+         startTime: Date = Date(), 
+         endTime: Date = Date(), 
+         notes: String = "", 
+         isOvertime: Bool = false, 
+         isSpecialDay: Bool = false, 
+         grossWage: Double = 0.0, 
+         netWage: Double = 0.0, 
          createdAt: Date = Date(),
-         grossWage: Double = 0.0,
-         netWage: Double = 0.0) {
+         username: String = "") {
         self.id = id
         self.title = title
+        self.category = category
         self.startTime = startTime
         self.endTime = endTime
         self.notes = notes
         self.isOvertime = isOvertime
         self.isSpecialDay = isSpecialDay
-        self.category = category
-        self.createdAt = createdAt
         self.grossWage = grossWage
         self.netWage = netWage
+        self.createdAt = createdAt
+        self.username = username
     }
     
     public var duration: TimeInterval {

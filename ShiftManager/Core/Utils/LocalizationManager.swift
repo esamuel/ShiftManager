@@ -38,14 +38,19 @@ class LocalizationManager: ObservableObject {
     private let isFirstLaunchKey = "isFirstLaunch"
     
     private init() {
-        // Check if it's the first launch
+        // Load language and country synchronously but defer UI updates
+        
+        // Check if it's the first launch - use a direct access without synchronize for speed
         if !UserDefaults.standard.bool(forKey: isFirstLaunchKey) {
             // First launch - use device language
             let deviceLanguage = Locale.current.language.languageCode?.identifier ?? "en"
             self.currentLanguage = deviceLanguage
-            UserDefaults.standard.set(true, forKey: isFirstLaunchKey)
-            UserDefaults.standard.set(deviceLanguage, forKey: "selectedLanguage")
-            UserDefaults.standard.synchronize()
+            
+            // Batch UserDefaults operations and defer synchronize
+            let defaults = UserDefaults.standard
+            defaults.set(true, forKey: isFirstLaunchKey)
+            defaults.set(deviceLanguage, forKey: "selectedLanguage")
+            // Don't synchronize here - will happen automatically
         } else {
             // Not first launch - use saved language or default to English
             self.currentLanguage = UserDefaults.standard.string(forKey: "selectedLanguage") ?? "en"
@@ -55,8 +60,10 @@ class LocalizationManager: ObservableObject {
         let countryString = UserDefaults.standard.string(forKey: "country") ?? "israel"
         self.currentCountry = Country(rawValue: countryString) ?? .israel
         
-        // Update UI direction for RTL languages
-        updateUIDirection()
+        // Defer UI direction update to the next run loop to speed up initial launch
+        DispatchQueue.main.async {
+            self.updateUIDirection()
+        }
     }
     
     private func updateUIDirection() {
@@ -235,7 +242,7 @@ class LocalizationManager: ObservableObject {
             
             // Check labels
             if let label = view as? UILabel {
-                if label.text == "חזרה" || label.text == "Back" || label.text == "Previous" || label.text == "Back" || label.text == "הקודם" {
+                if label.text == "חזרה" || label.text == "Back" || label.text == "Previous" || label.text == "Back" {
                     label.text = ""
                     label.isHidden = true
                     label.alpha = 0
@@ -244,7 +251,7 @@ class LocalizationManager: ObservableObject {
             
             // Check buttons
             if let button = view as? UIButton {
-                let titles = ["Back", "Previous", "Back", "חזרה", "חזור", "הקודם"]
+                let titles = ["Back", "Previous", "Back", "חזרה", "חזור"]
                 for state: UIControl.State in [.normal, .highlighted, .selected] {
                     if let title = button.title(for: state), titles.contains(title) {
                         button.setTitle("", for: state)
@@ -266,7 +273,7 @@ class LocalizationManager: ObservableObject {
     private func clearBackButtonTextRecursively(in view: UIView) {
         // Check labels
         if let label = view as? UILabel {
-            if label.text == "חזרה" || label.text == "Back" || label.text == "Previous" || label.text == "Back" || label.text == "הקודם" {
+            if label.text == "חזרה" || label.text == "Back" || label.text == "Previous" || label.text == "Back" {
                 label.text = ""
                 label.isHidden = true
                 label.alpha = 0
@@ -275,7 +282,7 @@ class LocalizationManager: ObservableObject {
         
         // Check buttons
         if let button = view as? UIButton {
-            let titles = ["Back", "Previous", "Back", "חזרה", "חזור", "הקודם"]
+            let titles = ["Back", "Previous", "Back", "חזרה", "חזור"]
             for state: UIControl.State in [.normal, .highlighted, .selected] {
                 if let title = button.title(for: state), titles.contains(title) {
                     button.setTitle("", for: state)

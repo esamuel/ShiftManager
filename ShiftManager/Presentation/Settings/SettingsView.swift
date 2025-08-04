@@ -10,268 +10,334 @@ public struct SettingsView: View {
     @State private var showingSpecialDayTooltip = false
     @State private var showingWorkWeekTooltip = false
     @State private var showingHelpSheet = false
+    @State private var searchText = ""
+    @State private var isSearching = false
+    
+    // Function to filter sections based on search
+    private func filteredSections() -> [SettingsSection] {
+        if searchText.isEmpty {
+            return SettingsSection.allSections
+        } else {
+            return SettingsSection.allSections.map { section in
+                var filtered = section
+                filtered.isVisible = section.name.localizedCaseInsensitiveContains(searchText) ||
+                    section.items.contains { $0.localizedCaseInsensitiveContains(searchText) }
+                return filtered
+            }
+        }
+    }
     
     public var body: some View {
         NavigationView {
-            Form {
-                // Setup Reminder (Only shows if needed)
-                if viewModel.showSetupReminder {
-                    Section {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack {
-                                Image(systemName: "exclamationmark.circle")
-                                    .foregroundColor(.orange)
-                                Text("Setup Recommended".localized)
-                                    .font(.headline)
-                                    .foregroundColor(.orange)
+            VStack(spacing: 0) {
+                // Search bar
+                if isSearching {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.secondary)
+                        
+                        TextField("Search settings".localized, text: $searchText)
+                            .disableAutocorrection(true)
+                        
+                        if !searchText.isEmpty {
+                            Button(action: {
+                                searchText = ""
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.secondary)
                             }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemBackground))
+                }
+                
+                Form {
+                    // Setup Reminder (Only shows if needed)
+                    if viewModel.showSetupReminder {
+                        Section {
+                            VStack(alignment: .leading, spacing: 10) {
+                                HStack {
+                                    Image(systemName: "exclamationmark.circle")
+                                        .foregroundColor(.orange)
+                                    Text("Setup Recommended".localized)
+                                        .font(.headline)
+                                        .foregroundColor(.orange)
+                                }
+                                
+                                Text("Please complete your basic profile settings to get the most out of the app.".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                
+                                Button(action: {
+                                    // Scroll to personal information section
+                                }) {
+                                    Text("Complete Setup".localized)
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 16)
+                                        .background(Color.orange)
+                                        .cornerRadius(8)
+                                }
+                                .padding(.top, 6)
+                            }
+                            .padding(.vertical, 8)
+                        }
+                    }
+                    
+                    // Personal Information Section
+                    Section {
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .foregroundColor(.blue)
+                                .frame(width: 25)
+                            Text("Username".localized)
+                            Spacer()
+                            TextField("Username", text: $viewModel.username)
+    .multilineTextAlignment(.trailing)
+    .submitLabel(.done)
+    .onSubmit {
+        viewModel.saveSettings()
+    }
+                        }
+                        HStack {
+    Image(systemName: "globe")
+        .foregroundColor(.purple)
+        .frame(width: 25)
+    Picker("Work Country", selection: $viewModel.selectedCountry) {
+        ForEach(Country.allCases) { country in
+            Text(country.displayName)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .tag(country)
+        }
+    }
+    .onChange(of: viewModel.selectedCountry) { viewModel.saveSettings() }
+    .pickerStyle(MenuPickerStyle())
+    .frame(maxWidth: .infinity)
+}
+                        .help("This controls wage, weekend, and holiday logic. Change this if you work in a different country than your device region.")
+                    } header: {
+                        SectionHeaderView(title: "Personal Information".localized, iconName: "person.crop.circle")
+                    }
+                    
+
+                    
+                    // Wage Settings Section
+                    Section {
+                        HStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .foregroundColor(.green)
+                                .frame(width: 25)
                             
-                            Text("Please complete your basic profile settings to get the most out of the app.".localized)
-                                .font(.subheadline)
+                            Text("Hourly Wage".localized)
+                            Spacer()
+                            TextField("0.00", value: $viewModel.hourlyWage, format: .number)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 120)
+                        }
+                        
+                        HStack {
+                            Image(systemName: "percent")
+                                .foregroundColor(.red)
+                                .frame(width: 25)
+                            
+                            HStack {
+                                Text("Tax Deduction (%)".localized)
+                                Button(action: { showingTaxTooltip.toggle() }) {
+                                    Image(systemName: "info.circle")
+                                        .font(.footnote)
+                                        .foregroundColor(.blue)
+                                }
+                                .popover(isPresented: $showingTaxTooltip) {
+                                    TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
+                                }
+                            }
+                            Spacer()
+                            TextField("0.00", value: $viewModel.taxDeduction, format: .number)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 100)
+                            Text("%")
+                        }
+                        
+                        // Tax calculation note with improved styling
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(.orange)
+                                .frame(width: 25)
+                            
+                            Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                                .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        .padding(.vertical, 8)
-                    }
-                }
-                
-                // Personal Information Section
-                Section(header: Text("Personal Information".localized)) {
-                    HStack {
-                        Text("Username".localized)
-                        Spacer()
-                        TextField("Username", text: $viewModel.username)
-                            .multilineTextAlignment(.trailing)
-                    }
-                }
-                
-                // Appearance Section
-                Section(header: Text("Appearance".localized)) {
-                    Picker("Theme".localized, selection: $viewModel.selectedTheme) {
-                        ForEach(Theme.allCases) { theme in
-                            HStack {
-                                Image(systemName: themeIcon(for: theme))
-                                    .foregroundColor(themeColor(for: theme))
-                                Text(theme.displayName)
-                            }
-                            .tag(theme)
-                        }
-                    }
-                    .onChange(of: viewModel.selectedTheme) { oldTheme, newTheme in
-                        themeManager.setTheme(newTheme)
-                    }
-                }
-                
-                // Wage Settings Section
-                Section(header: Text("Wage Settings".localized)) {
-                    HStack {
-                        Text("Hourly Wage".localized)
-                        Spacer()
-                        TextField("0.00", value: $viewModel.hourlyWage, format: .number)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    
-                    HStack {
-                        HStack {
-                            Text("Tax Deduction (%)".localized)
-                            Button(action: { showingTaxTooltip.toggle() }) {
-                                Image(systemName: "info.circle")
-                                    .font(.footnote)
-                                    .foregroundColor(.blue)
-                            }
-                            .popover(isPresented: $showingTaxTooltip) {
-                                TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
-                            }
-                        }
-                        Spacer()
-                        TextField("0.00", value: $viewModel.taxDeduction, format: .number)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                        Text("%")
-                    }
-                    
-                    // Add a note about tax calculation
-                    Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                         .padding(.top, 4)
-                }
-                
-                // Hours Settings Section
-                Section(header: Text("Hours Settings".localized)) {
-                    HStack {
+                    } header: {
+                        SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
+                    }
+                    
+                    // Hours Settings Section
+                    Section {
                         HStack {
-                            Text("Base Hours (Weekday)".localized)
-                            Button(action: { showingBaseHoursTooltip.toggle() }) {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(.blue)
+                                .frame(width: 25)
+                            
+                            HStack {
+                                Text("Base Hours (Weekday)".localized)
+                                Button(action: { showingBaseHoursTooltip.toggle() }) {
+                                    Image(systemName: "info.circle")
+                                        .font(.footnote)
+                                        .foregroundColor(.blue)
+                                }
+                                .popover(isPresented: $showingBaseHoursTooltip) {
+                                    TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
+                                }
+                            }
+                            Spacer()
+                            TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 60)
+                        }
+                        
+                        HStack {
+                            Image(systemName: "calendar.badge.clock")
+                                .foregroundColor(.purple)
+                                .frame(width: 25)
+                            
+                            HStack {
+                                Text("Base Hours (Special Day)".localized)
+                                Button(action: { showingSpecialDayTooltip.toggle() }) {
+                                    Image(systemName: "info.circle")
+                                        .font(.footnote)
+                                        .foregroundColor(.blue)
+                                }
+                                .popover(isPresented: $showingSpecialDayTooltip) {
+                                    TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
+                                }
+                            }
+                            Spacer()
+                            TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 60)
+                        }
+                    } header: {
+                        SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
+                    }
+                    
+                    // Work Week Settings
+                    Section {
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.orange)
+                                .frame(width: 25)
+                            
+                            Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
+                            Button(action: { showingWorkWeekTooltip.toggle() }) {
                                 Image(systemName: "info.circle")
                                     .font(.footnote)
                                     .foregroundColor(.blue)
                             }
-                            .popover(isPresented: $showingBaseHoursTooltip) {
-                                TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
+                            .popover(isPresented: $showingWorkWeekTooltip) {
+                                TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
                             }
                         }
-                        Spacer()
-                        TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
+                    } header: {
+                        SectionHeaderView(title: "Work Week".localized, iconName: "calendar.badge.clock")
                     }
                     
-                    HStack {
-                        HStack {
-                            Text("Base Hours (Special Day)".localized)
-                            Button(action: { showingSpecialDayTooltip.toggle() }) {
-                                Image(systemName: "info.circle")
-                                    .font(.footnote)
+                    // Language Settings
+                    Section {
+                        Button(action: {
+                            viewModel.showingLanguagePicker = true
+                        }) {
+                            HStack {
+                                Image(systemName: "globe")
                                     .foregroundColor(.blue)
+                                    .frame(width: 25)
+                                Text("App Language".localized)
+                                Spacer()
+                                Text(viewModel.selectedLanguage.displayName)
+                                    .foregroundColor(.gray)
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                                    .font(.system(size: 13))
                             }
-                            .popover(isPresented: $showingSpecialDayTooltip) {
-                                TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
+                        }
+                        .foregroundColor(.primary)
+                        .help("This controls the app's UI language. It does not affect wage or calendar logic.")
+                    } header: {
+                        SectionHeaderView(title: "Language".localized, iconName: "globe")
+                    }
+                    
+                    // Currency Settings
+                    Section {
+                        HStack {
+                            Image(systemName: "dollarsign.circle")
+                                .foregroundColor(.green)
+                                .frame(width: 25)
+                            Text("Currency".localized)
+                            Spacer()
+                            Text(viewModel.selectedCountry.currencySymbol)
+                                .foregroundColor(.gray)
+                        }
+                    } header: {
+                        SectionHeaderView(title: "Currency".localized, iconName: "banknote")
+                    }
+                    
+
+
+
+                    
+
+                    
+
+                    
+                    // Quick Action Buttons
+                    Section {
+                        HStack(spacing: 15) {
+                            Button(action: viewModel.saveSettings) {
+                                VStack(spacing: 5) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 20))
+                                    Text("Save".localized)
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.green)
+                                .frame(maxWidth: .infinity)
+                            }
+                            
+                            Button(action: { dismiss() }) {
+                                VStack(spacing: 5) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(.system(size: 20))
+                                    Text("Cancel".localized)
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity)
+                            }
+                            
+                            Button(action: {
+                                // Reset to defaults
+                                viewModel.resetToDefaults()
+                            }) {
+                                VStack(spacing: 5) {
+                                    Image(systemName: "arrow.clockwise.circle.fill")
+                                        .font(.system(size: 20))
+                                    Text("Reset".localized)
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.blue)
+                                .frame(maxWidth: .infinity)
                             }
                         }
-                        Spacer()
-                        TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                }
-                
-                // Work Week Settings
-                Section {
-                    HStack {
-                        Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
-                        Button(action: { showingWorkWeekTooltip.toggle() }) {
-                            Image(systemName: "info.circle")
-                                .font(.footnote)
-                                .foregroundColor(.blue)
-                        }
-                        .popover(isPresented: $showingWorkWeekTooltip) {
-                            TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
-                        }
-                    }
-                }
-                
-                // Language Settings
-                Section(header: Text("Language".localized)) {
-                    Button(action: {
-                        viewModel.showingLanguagePicker = true
-                    }) {
-                        HStack {
-                            Text("Language".localized)
-                            Spacer()
-                            Text(viewModel.selectedLanguage.displayName)
-                                .foregroundColor(.gray)
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
-                                .font(.system(size: 13))
-                        }
-                    }
-                    .foregroundColor(.primary)
-                }
-                
-                // Country Settings
-                Section(header: Text("Currency".localized)) {
-                    Picker("Country".localized, selection: $viewModel.selectedCountry) {
-                        ForEach(Country.allCases) { country in
-                            Text(country.displayName)
-                                .tag(country)
-                        }
-                    }
-                }
-                
-                // Help & FAQ Section
-                Section(header: Text("Help & FAQ".localized)) {
-                    Button(action: {
-                        showingHelpSheet = true
-                    }) {
-                        HStack {
-                            Image(systemName: "questionmark.circle")
-                                .foregroundColor(.blue)
-                            Text("Frequently Asked Questions".localized)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
-                                .font(.system(size: 13))
-                        }
-                    }
-                    
-                    NavigationLink(destination: GuideView()) {
-                        HStack {
-                            Image(systemName: "book")
-                                .foregroundColor(.blue)
-                            Text("User Guide".localized)
-                        }
-                    }
-                    
-                    NavigationLink(destination: FeedbackView()) {
-                        HStack {
-                            Image(systemName: "star")
-                                .foregroundColor(.blue)
-                            Text("Send Feedback".localized)
-                        }
-                    }
-                    
-                    NavigationLink(destination: ContactSupportView()) {
-                        HStack {
-                            Image(systemName: "envelope")
-                                .foregroundColor(.blue)
-                            Text("Contact Support".localized)
-                        }
-                    }
-                    
-                    Button(action: {
-                        viewModel.showingShareSheet = true
-                    }) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.blue)
-                            Text("Tell Friends".localized)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
-                                .font(.system(size: 13))
-                        }
-                    }
-                    .sheet(isPresented: $viewModel.showingShareSheet) {
-                        AppShareSheet(activityItems: ["Check out ShiftManager app! It helps track work hours, calculate wages, and manage overtime. Download it now!"])
-                    }
-                }
-                
-                // About Section with App Version
-                Section(header: Text("About".localized)) {
-                    HStack {
-                        Text("Version".localized)
-                        Spacer()
-                        Text(viewModel.appVersion)
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                // Legal Section
-                Section(header: Text("Legal".localized)) {
-                    NavigationLink(destination: PrivacyPolicyView()) {
-                        HStack {
-                            Image(systemName: "lock.shield")
-                                .foregroundColor(.blue)
-                            Text("Privacy Policy".localized)
-                        }
-                    }
-                    
-                    NavigationLink(destination: TermsOfUseView()) {
-                        HStack {
-                            Image(systemName: "doc.text")
-                                .foregroundColor(.blue)
-                            Text("Terms of Use".localized)
-                        }
-                    }
-                }
-                
-                // Save Button
-                Section {
-                    Button(action: viewModel.saveSettings) {
-                        Text("Save Settings".localized)
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(.purple)
+                        .padding(.vertical, 8)
                     }
                 }
             }
@@ -281,6 +347,23 @@ public struct SettingsView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        isSearching.toggle()
+                        if !isSearching {
+                            searchText = ""
+                        }
+                    }) {
+                        Image(systemName: isSearching ? "xmark" : "magnifyingglass")
+                    }
+                }
+                
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: viewModel.saveSettings) {
+                        Image(systemName: "checkmark")
                     }
                 }
             }
@@ -299,6 +382,12 @@ public struct SettingsView: View {
             .id(themeManager.refreshID) // Force refresh when theme changes
         }
         .withAppTheme() // Apply the selected theme
+        .onAppear {
+            DispatchQueue.main.async {
+                UINavigationBar.appearance().backItem?.backButtonTitle = ""
+                UINavigationBar.appearance().topItem?.backButtonTitle = ""
+            }
+        }
     }
     
     // Helper function to get icon for each theme
@@ -323,6 +412,45 @@ public struct SettingsView: View {
         case .dark:
             return .purple
         }
+    }
+}
+
+// New component for section headers
+struct SectionHeaderView: View {
+    let title: String
+    let iconName: String
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: iconName)
+                .foregroundColor(.purple)
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+        }
+    }
+}
+
+// Settings section model for search filtering
+struct SettingsSection: Identifiable {
+    var id = UUID()
+    var name: String
+    var items: [String]
+    var isVisible: Bool = true
+    
+    static var allSections: [SettingsSection] {
+        [
+            SettingsSection(name: "Personal Information".localized, items: ["Username".localized]),
+            SettingsSection(name: "Appearance".localized, items: ["Theme".localized]),
+            SettingsSection(name: "Wage Settings".localized, items: ["Hourly Wage".localized, "Tax Deduction".localized]),
+            SettingsSection(name: "Hours Settings".localized, items: ["Base Hours".localized, "Special Day".localized]),
+            SettingsSection(name: "Work Week".localized, items: ["Sunday".localized, "Monday".localized]),
+            SettingsSection(name: "Language".localized, items: ["English", "Hebrew", "Russian", "Spanish", "French", "German"]),
+            SettingsSection(name: "Currency".localized, items: ["USD", "EUR", "GBP", "ILS", "RUB"]),
+            SettingsSection(name: "Help & FAQ".localized, items: ["FAQ".localized, "Guide".localized, "Feedback".localized, "Support".localized]),
+            SettingsSection(name: "About".localized, items: ["Version".localized]),
+            SettingsSection(name: "Legal".localized, items: ["Privacy Policy".localized, "Terms of Use".localized])
+        ]
     }
 }
 

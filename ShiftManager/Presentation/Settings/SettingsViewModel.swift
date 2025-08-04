@@ -87,6 +87,23 @@ public enum Country: String, CaseIterable, Identifiable {
     }
 }
 
+public enum NotificationLeadTime: Int, CaseIterable, Identifiable {
+    case min15 = 15
+    case min30 = 30
+    case min45 = 45
+    case hour1 = 60
+    
+    public var id: Int { rawValue }
+    public var description: String {
+        switch self {
+        case .min15: return NSLocalizedString("15 minutes", comment: "")
+        case .min30: return NSLocalizedString("30 minutes", comment: "")
+        case .min45: return NSLocalizedString("45 minutes", comment: "")
+        case .hour1: return NSLocalizedString("1 hour", comment: "")
+        }
+    }
+}
+
 public class SettingsViewModel: ObservableObject {
     @Published var username: String
     @Published var hourlyWage: Double
@@ -105,7 +122,10 @@ public class SettingsViewModel: ObservableObject {
     @Published var showingLanguagePicker = false
     @Published var showSetupReminder = false
     @Published var showingShareSheet = false
-    
+    @Published var notificationLeadTime: NotificationLeadTime = {
+        let raw = UserDefaults.standard.integer(forKey: "notificationLeadTime")
+        return NotificationLeadTime(rawValue: raw) ?? .min15
+    }()
     // App version property
     var appVersion: String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
@@ -116,6 +136,8 @@ public class SettingsViewModel: ObservableObject {
     }
     
     public init() {
+        let raw = UserDefaults.standard.integer(forKey: "notificationLeadTime")
+        self.notificationLeadTime = NotificationLeadTime(rawValue: raw) ?? .min15
         // Load saved values or use defaults
         self.username = UserDefaults.standard.string(forKey: "username") ?? ""
         self.hourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
@@ -161,6 +183,7 @@ public class SettingsViewModel: ObservableObject {
     }
     
     func saveSettings() {
+        UserDefaults.standard.set(notificationLeadTime.rawValue, forKey: "notificationLeadTime")
         UserDefaults.standard.set(username, forKey: "username")
         UserDefaults.standard.set(hourlyWage, forKey: "hourlyWage")
         UserDefaults.standard.set(taxDeduction, forKey: "taxDeduction")
@@ -188,9 +211,133 @@ public class SettingsViewModel: ObservableObject {
         LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)
     }
     
+    // Reset settings to default values
+    func resetToDefaults() {
+        self.username = ""
+        self.hourlyWage = 40.04
+        self.taxDeduction = 11.78
+        self.baseHoursWeekday = 8
+        self.baseHoursSpecialDay = 8
+        self.startWorkOnSunday = true
+        
+        // Keep the language as is since it's a user preference
+        // But reset other settings
+        self.selectedCountry = .israel
+        self.selectedTheme = .system
+        
+        // Apply the changes
+        ThemeManager.shared.setTheme(.system)
+        LocalizationManager.shared.setCountry(selectedCountry)
+        
+        // Save the defaults
+        saveSettings()
+    }
+    
     func formatDuration(_ duration: Double) -> String {
         let hours = Int(duration) / 3600
         let minutes = Int(duration) / 60 % 60
         return String(format: "%dh %dm", hours, minutes)
     }
-} 
+    // MARK: - Export/Import Shifts
+    
+    // MARK: - Mapping helpers (copied from CoreDataManager)
+    func mapShiftToEntity(_ shift: ShiftModel, _ entity: NSManagedObject) {
+        entity.setValue(shift.id, forKey: "id")
+        entity.setValue(shift.title, forKey: "title")
+        entity.setValue(shift.category, forKey: "category")
+        entity.setValue(shift.startTime, forKey: "startTime")
+        entity.setValue(shift.endTime, forKey: "endTime")
+        entity.setValue(shift.notes, forKey: "notes")
+        entity.setValue(shift.isOvertime, forKey: "isOvertime")
+        entity.setValue(shift.isSpecialDay, forKey: "isSpecialDay")
+        entity.setValue(shift.grossWage, forKey: "grossWage")
+        entity.setValue(shift.netWage, forKey: "netWage")
+        entity.setValue(shift.createdAt, forKey: "createdAt")
+        entity.setValue(shift.username, forKey: "username")
+    }
+    
+    func mapEntityToShift(_ entity: NSManagedObject) -> ShiftModel {
+        return ShiftModel(
+            id: entity.value(forKey: "id") as? UUID ?? UUID(),
+            title: entity.value(forKey: "title") as? String ?? "",
+            category: entity.value(forKey: "category") as? String ?? "",
+            startTime: entity.value(forKey: "startTime") as? Date ?? Date(),
+            endTime: entity.value(forKey: "endTime") as? Date ?? Date(),
+            notes: entity.value(forKey: "notes") as? String ?? "",
+            isOvertime: entity.value(forKey: "isOvertime") as? Bool ?? false,
+            isSpecialDay: entity.value(forKey: "isSpecialDay") as? Bool ?? false,
+            grossWage: entity.value(forKey: "grossWage") as? Double ?? 0.0,
+            netWage: entity.value(forKey: "netWage") as? Double ?? 0.0,
+            createdAt: entity.value(forKey: "createdAt") as? Date ?? Date(),
+            username: entity.value(forKey: "username") as? String ?? ""
+        )
+    }
+    
+    // Keep a strong reference to the import delegate
+    private var importDelegate: ImportDelegate?
+
+    func exportShifts() {
+        let context = PersistenceController.shared.container.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Shift")
+        do {
+            let shifts = try context.fetch(fetchRequest)
+            let shiftModels = shifts.map { mapEntityToShift($0) }
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            let data = try encoder.encode(shiftModels)
+            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("ShiftsBackup.json")
+            try data.write(to: tempURL)
+            // Show share sheet
+            DispatchQueue.main.async {
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootVC = windowScene.windows.first?.rootViewController {
+                    let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+                    rootVC.present(activityVC, animated: true, completion: nil)
+                }
+            }
+        } catch {
+            print("Error exporting shifts: \(error)")
+        }
+    }
+    
+    func importShifts() {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: true)
+        picker.allowsMultipleSelection = false
+        let delegate = ImportDelegate(mapShiftToEntity: mapShiftToEntity)
+        picker.delegate = delegate
+        self.importDelegate = delegate // Keep strong reference
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            rootVC.present(picker, animated: true)
+        }
+    }
+}
+
+// MARK: - Helper for Importing
+
+import UniformTypeIdentifiers
+import CoreData
+
+private class ImportDelegate: NSObject, UIDocumentPickerDelegate {
+    let mapShiftToEntity: (ShiftModel, NSManagedObject) -> Void
+    init(mapShiftToEntity: @escaping (ShiftModel, NSManagedObject) -> Void) {
+        self.mapShiftToEntity = mapShiftToEntity
+    }
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let url = urls.first else { return }
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let shiftModels = try decoder.decode([ShiftModel].self, from: data)
+            let context = PersistenceController.shared.container.viewContext
+            for model in shiftModels {
+                let entity = NSEntityDescription.insertNewObject(forEntityName: "Shift", into: context)
+                mapShiftToEntity(model, entity)
+            }
+            try context.save()
+        } catch {
+            print("Error importing shifts: \(error)")
+        }
+    }
+}

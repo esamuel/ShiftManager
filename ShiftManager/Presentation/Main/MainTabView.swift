@@ -19,11 +19,20 @@ public struct MainTabView: View {
                     Text("Manager".localized)
                 }
             
-            ReportView()
-                .tabItem {
-                    Image(systemName: "chart.bar.fill")
-                    Text("Reports".localized)
-                }
+            NavigationView {
+                ReportView()
+            }
+            .tabItem {
+                Image(systemName: "chart.bar.fill")
+                Text("Reports".localized)
+            }
+            NavigationView {
+                GeneralSettingsView()
+            }
+            .tabItem {
+                Image(systemName: "gearshape.2")
+                Text("General".localized)
+            }
         }
         .refreshOnLanguageChange()
     }

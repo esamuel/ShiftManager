@@ -35,9 +35,29 @@
 "Shift Settings" = "Настройки смен";
 "App Settings" = "Настройки приложения";
 "About" = "О приложении";
+
+// About Section
+"About Shift Manager" = "О Shift Manager";
+"About_Description" = "Shift Manager — это комплексный инструмент, созданный для помощи в учёте рабочих часов, расчёте доходов и эффективном управлении рабочим графиком.";
+"Key Features" = "Ключевые функции";
+"Earnings Calculator" = "Калькулятор заработка";
+"Earnings Calculator Description" = "Рассчитывайте свою зарплату с поддержкой сверхурочных и различных налоговых ставок";
+"Schedule Management" = "Управление расписанием";
+"Schedule Management Description" = "Просматривайте свои смены в ежедневном, недельном или месячном формате";
+"Reminders" = "Напоминания";
+"Reminders Description" = "Устанавливайте уведомления о предстоящих сменах";
+"Statistics" = "Статистика";
+"Statistics Description" = "Анализируйте рабочие привычки и доходы с течением времени";
+"Developer Information" = "Информация о разработчике";
+"Developer Description" = "Shift Manager разрабатывается и поддерживается командой, увлечённой созданием инструментов для упрощения управления рабочей жизнью.";
+"Contact Support" = "Связаться с поддержкой";
 "Version" = "Версия";
 "Country" = "Страна";
 "Currency" = "Валюта";
+
+// Legal Section
+"Privacy Policy" = "Политика конфиденциальности";
+"Terms of Use" = "Условия использования";
 
 // Shift Settings
 "Hourly Wage" = "Почасовая оплата";
@@ -312,4 +332,4 @@
 "Tell us what you think about the app..." = "Расскажите нам, что вы думаете о приложении...";
 "Submit Feedback" = "Отправить отзыв";
 "Feedback Sent" = "Отзыв отправлен";
-"Thank you for your feedback! We'll use it to improve the app." = "Спасибо за ваш отзыв! Мы используем его для улучшения приложения."; 
+"Thank you for your feedback! We'll use it to improve the app." = "Спасибо за ваш отзыв! Мы используем его для улучшения приложения.";

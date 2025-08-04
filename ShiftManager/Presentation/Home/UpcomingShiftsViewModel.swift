@@ -16,28 +16,15 @@ public class UpcomingShiftsViewModel: ObservableObject {
         isLoading = true
         
         do {
-            // Get start work preference
-            let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
-            
             // Calculate date range
             let calendar = Calendar.current
-            var startDate: Date
-            let currentDate = Date() // Current date and time for filtering
+            let currentDate = Date()
             
-            if startWorkOnSunday {
-                // If starting on Sunday, find the most recent Sunday
-                let weekday = calendar.component(.weekday, from: Date())
-                let daysToSubtract = weekday - 1 // Sunday is 1 in iOS
-                startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: Date()) ?? Date()
-            } else {
-                // If starting on Monday, find the most recent Monday
-                let weekday = calendar.component(.weekday, from: Date())
-                let daysToSubtract = weekday - 2 // Monday is 2 in iOS
-                startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: Date()) ?? Date()
-            }
+            // Start from the beginning of current day
+            let startDate = calendar.startOfDay(for: currentDate)
             
-            // Set end date to 7 days from start
-            let endDate = calendar.date(byAdding: .day, value: 7, to: startDate) ?? Date()
+            // End date is 7 days after start (inclusive)
+            let endDate = calendar.date(byAdding: .day, value: 8, to: startDate)!
             
             // Fetch shifts
             let shifts = try await repository.fetchShiftsInDateRange(from: startDate, to: endDate)
@@ -53,22 +40,16 @@ public class UpcomingShiftsViewModel: ObservableObject {
                 }
             }
             
-            // Add shifts to their respective days, only if they haven't happened yet
+            // Add shifts to their respective days
             for shift in shifts {
-                // Only include shifts that haven't ended yet (end time is in the future)
-                if shift.endTime > currentDate {
-                    let dayStart = calendar.startOfDay(for: shift.startTime)
-                    groupedShifts[dayStart, default: []].append(shift)
-                }
+                let dayStart = calendar.startOfDay(for: shift.startTime)
+                groupedShifts[dayStart, default: []].append(shift)
             }
             
             // Sort shifts within each day by start time
             for (day, dayShifts) in groupedShifts {
                 groupedShifts[day] = dayShifts.sorted { $0.startTime < $1.startTime }
             }
-            
-            // Remove days with no shifts
-            groupedShifts = groupedShifts.filter { !$0.value.isEmpty }
             
             await MainActor.run {
                 self.upcomingShifts = groupedShifts
@@ -109,5 +90,13 @@ public class UpcomingShiftsViewModel: ObservableObject {
         formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    
+    func calculateTotalHours(startTime: Date, endTime: Date) -> String {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour, .minute], from: startTime, to: endTime)
+        
+        let totalHours = Double(components.hour ?? 0) + Double(components.minute ?? 0) / 60.0
+        return String(format: "%.1f hours", totalHours)
     }
 } 

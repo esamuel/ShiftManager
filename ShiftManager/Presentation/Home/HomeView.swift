@@ -95,13 +95,22 @@ public struct HomeView: View {
                 }
             }
             .onAppear {
-                // Clear back button text on appear
-                UINavigationBar.appearance().backItem?.backButtonTitle = ""
-                UINavigationBar.appearance().topItem?.backButtonTitle = ""
-                
-                // Apply fixes more aggressively
-                BackButtonFix.shared.replaceBackButtonsWithCustom()
-                LocalizationManager.shared.clearHebrewPreviousText()
+                // Defer non-critical UI operations to the next run loop
+                DispatchQueue.main.async {
+                    // Clear back button text on appear
+                    UINavigationBar.appearance().backItem?.backButtonTitle = ""
+                    UINavigationBar.appearance().topItem?.backButtonTitle = ""
+                    
+                    // Apply fixes more aggressively but in background
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        BackButtonFix.shared.replaceBackButtonsWithCustom()
+                        
+                        // Return to main thread for UI updates
+                        DispatchQueue.main.async {
+                            LocalizationManager.shared.clearHebrewPreviousText()
+                        }
+                    }
+                }
             }
         }
         .sheet(isPresented: $showingUpcomingShifts) {
@@ -136,31 +145,61 @@ public struct MenuButton: View {
     }
     
     public var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.white)
-                .frame(width: 32, height: 32)
-                .background(color)
-                .clipShape(Circle())
-            
-            Text(title)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-                .lineLimit(2)
-                .multilineTextAlignment(LocalizationManager.shared.currentLanguage == "he" ? .trailing : .leading)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
-                .environment(\.layoutDirection, LocalizationManager.shared.currentLanguage == "he" ? .rightToLeft : .leftToRight)
+        let isRTL = LocalizationManager.shared.currentLanguage == "he" || LocalizationManager.shared.currentLanguage == "ar"
+        
+        HStack(spacing: 12) {
+            if isRTL {
+                // For RTL: chevron on left, then spacer, then text, then icon
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14, weight: .semibold))
+                
+                Spacer(minLength: 8)
+                
+                Text(title)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.trailing)
+                    .padding(.vertical, 2)
+                
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(color)
+                    .clipShape(Circle())
+            } else {
+                // For LTR: icon, then text, then spacer, then chevron
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(color)
+                    .clipShape(Circle())
+                
+                Text(title)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
+                    .padding(.vertical, 2)
+                
+                Spacer(minLength: 8)
+                
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14, weight: .semibold))
+            }
         }
-        .padding()
+        .padding(16)
         .background(color.opacity(0.2))
         .cornerRadius(12)
+        .environment(\.layoutDirection, isRTL ? .rightToLeft : .leftToRight)
     }
 }
 

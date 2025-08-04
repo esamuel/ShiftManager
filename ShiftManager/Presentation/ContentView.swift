@@ -8,14 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var localizationManager = LocalizationManager.shared
-    @StateObject private var themeManager = ThemeManager.shared
+    // Use EnvironmentObject instead of StateObject to avoid duplicate initialization
+    // These objects are already created in ShiftManagerApp
+    @EnvironmentObject private var localizationManager: LocalizationManager
+    @EnvironmentObject private var themeManager: ThemeManager
     
     var body: some View {
-        MainTabView()
-            .refreshOnLanguageChange()
-            .id(themeManager.refreshID) // Force refresh on theme change
-            .withAppTheme() // Apply theme
+        // Use LazyView to defer creation of MainTabView until needed
+        LazyView {
+            MainTabView()
+                .id(themeManager.refreshID) // Force refresh on theme change
+                .withAppTheme() // Apply theme
+        }
+    }
+}
+
+// LazyView wrapper to defer view creation
+struct LazyView<Content: View>: View {
+    let build: () -> Content
+    
+    init(_ build: @escaping () -> Content) {
+        self.build = build
+    }
+    
+    var body: Content {
+        build()
     }
 }
 

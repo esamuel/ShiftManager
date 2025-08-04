@@ -12,6 +12,7 @@
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <entity name="OvertimeRule" representedClassName="OvertimeRule" syncable="YES" codeGenerationType="class">
         <attribute name="dailyThreshold" optional="YES" attributeType="Double" defaultValueString="8.0" usesScalarValueType="YES"/>

@@ -35,9 +35,29 @@
 "Shift Settings" = "Schichteinstellungen";
 "App Settings" = "App-Einstellungen";
 "About" = "Über";
+
+// About Section
+"About Shift Manager" = "Über Shift Manager";
+"About_Description" = "Shift Manager ist ein umfassendes Tool, das Ihnen hilft, Ihre Arbeitszeiten zu verfolgen, Einnahmen zu berechnen und Ihren Arbeitsplan effizient zu verwalten.";
+"Key Features" = "Hauptfunktionen";
+"Earnings Calculator" = "Verdienstrechner";
+"Earnings Calculator Description" = "Berechnen Sie Ihren Lohn mit Unterstützung für Überstunden und verschiedene Steuersätze";
+"Schedule Management" = "Schichtverwaltung";
+"Schedule Management Description" = "Sehen Sie Ihre Schichten im Tages-, Wochen- oder Monatsformat an";
+"Reminders" = "Erinnerungen";
+"Reminders Description" = "Legen Sie Benachrichtigungen für bevorstehende Schichten fest";
+"Statistics" = "Statistiken";
+"Statistics Description" = "Analysieren Sie Ihre Arbeitsmuster und Einnahmen im Laufe der Zeit";
+"Developer Information" = "Informationen zum Entwickler";
+"Developer Description" = "Shift Manager wird von einem Team entwickelt und gepflegt, das sich leidenschaftlich für Werkzeuge einsetzt, die das Arbeitsleben erleichtern.";
+"Contact Support" = "Support kontaktieren";
 "Version" = "Version";
 "Country" = "Land";
 "Currency" = "Währung";
+
+// Legal Section
+"Privacy Policy" = "Datenschutzerklärung";
+"Terms of Use" = "Nutzungsbedingungen";
 
 // Shift Settings
 "Hourly Wage" = "Stundenlohn";

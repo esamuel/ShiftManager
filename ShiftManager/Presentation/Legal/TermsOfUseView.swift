@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct TermsOfUseView: View {
+    @StateObject private var localizationManager = LocalizationManager.shared
     
     private func sectionTitle(_ title: String) -> some View {
         Text(title)
@@ -83,7 +84,8 @@ struct TermsOfUseView: View {
             }
             .padding()
         }
-        .navigationTitle("Terms of Use")
+        .navigationTitle("Terms of Use".localized)
+        .id(localizationManager.refreshID)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

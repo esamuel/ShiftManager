@@ -11,7 +11,7 @@ extension String {
         // List of common back button texts in various languages
         let backTexts = [
             "Back", "back", "Previous", "previous",
-            "חזרה", "חזור", "הקודם",
+            "חזרה", "חזור",
             "Назад", // Russian
             "Atrás", "Volver", // Spanish
             "Retour", // French

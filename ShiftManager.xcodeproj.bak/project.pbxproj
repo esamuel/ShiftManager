@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4003DA072DAA8BEC00E5A29B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4003DA062DAA8BEC00E5A29B /* FirebaseCore */; };
+		4003DA092DAA8BEC00E5A29B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4003DA082DAA8BEC00E5A29B /* FirebaseFirestore */; };
+		4003DA0B2DAA906700E5A29B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4003DA0A2DAA906700E5A29B /* GoogleService-Info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		40A3B1112DA928AA00C6EDE4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4003DA0A2DAA906700E5A29B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		40A3B1032DA928A700C6EDE4 /* ShiftManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiftManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A3B1102DA928AA00C6EDE4 /* ShiftManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiftManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A3B11A2DA928AA00C6EDE4 /* ShiftManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiftManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4003DA072DAA8BEC00E5A29B /* FirebaseCore in Frameworks */,
+				4003DA092DAA8BEC00E5A29B /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +84,7 @@
 		40A3B0FA2DA928A700C6EDE4 = {
 			isa = PBXGroup;
 			children = (
+				4003DA0A2DAA906700E5A29B /* GoogleService-Info.plist */,
 				40A3B1052DA928A700C6EDE4 /* ShiftManager */,
 				40A3B1132DA928AA00C6EDE4 /* ShiftManagerTests */,
 				40A3B11D2DA928AA00C6EDE4 /* ShiftManagerUITests */,
@@ -112,6 +122,8 @@
 			);
 			name = ShiftManager;
 			packageProductDependencies = (
+				4003DA062DAA8BEC00E5A29B /* FirebaseCore */,
+				4003DA082DAA8BEC00E5A29B /* FirebaseFirestore */,
 			);
 			productName = ShiftManager;
 			productReference = 40A3B1032DA928A700C6EDE4 /* ShiftManager.app */;
@@ -197,6 +209,7 @@
 			mainGroup = 40A3B0FA2DA928A700C6EDE4;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				4003DA052DAA8BEB00E5A29B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 40A3B1042DA928A700C6EDE4 /* Products */;
@@ -215,6 +228,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4003DA0B2DAA906700E5A29B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,10 +414,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ShiftManager/ShiftManager.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2X955T7VJ9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -430,10 +442,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ShiftManager/ShiftManager.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2X955T7VJ9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -567,6 +577,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4003DA052DAA8BEB00E5A29B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4003DA062DAA8BEC00E5A29B /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4003DA052DAA8BEB00E5A29B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		4003DA082DAA8BEC00E5A29B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4003DA052DAA8BEB00E5A29B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 40A3B0FB2DA928A700C6EDE4 /* Project object */;
 }

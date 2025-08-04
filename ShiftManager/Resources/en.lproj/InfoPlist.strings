@@ -1,0 +1,17 @@
+/* 
+  InfoPlist.strings
+  ShiftManager
+
+  Override system UI items for English localization
+*/
+
+/* Back button override for UIKit components */
+"Back" = "";
+"Previous" = "";
+"back" = "";
+"UIBarButtonBack" = "Back";
+"UIBarButtonItemBack" = "Back";
+"UIButtonBack" = "Back";
+"UINavigationItemBackBarButtonTitle" = "Back";
+"UIBarButtonSystemItemBack" = "Back";
+"NSBackBarButtonTitleKey" = "Back";

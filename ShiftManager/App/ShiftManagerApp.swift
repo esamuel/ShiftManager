@@ -2,11 +2,16 @@ import SwiftUI
 
 @main
 struct ShiftManagerApp: App {
+    // Use lazy StateObjects to defer initialization until needed
     @StateObject private var localizationManager = LocalizationManager.shared
     @StateObject private var themeManager = ThemeManager.shared
-    @StateObject private var authManager = AuthManager.shared
-    @StateObject private var shiftManager = ShiftManager.shared
-    @StateObject private var settingsManager = SettingsManager.shared
+    
+    // Defer these initializations until after app has launched
+    private var authManager: AuthManager { AuthManager.shared }
+    private var shiftManager: ShiftManager { ShiftManager.shared }
+    private var settingsManager: SettingsManager { SettingsManager.shared }
+    
+    // Cache this value instead of accessing UserDefaults on every render
     @State private var isFirstLaunch = UserDefaults.standard.object(forKey: "hasLaunchedBefore") == nil
     
     var body: some Scene {
