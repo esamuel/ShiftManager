@@ -1,5 +1,5 @@
 import SwiftUI
-import CoreData
+@preconcurrency import CoreData
 import Foundation
 import Combine
 import UserNotifications
@@ -13,8 +13,12 @@ public class ShiftManagerViewModel: ObservableObject {
     @Published public var notes: String = ""
     @Published public var showingDuplicateAlert = false
     @Published public var showingLongShiftAlert = false
+    @Published public var showingDailyLimitAlert = false
+    @Published public var showingShiftLimitAlert = false
     @Published public var showCurrentMonthOnly = false
     @Published var localizationManager = LocalizationManager.shared
+    
+    private let purchaseManager = PurchaseManager.shared
     
     // UI State
     @Published var showDatePicker = false
@@ -155,15 +159,28 @@ public class ShiftManagerViewModel: ObservableObject {
                                    second: 0,
                                    of: selectedDate) ?? selectedDate
         
-        // Check if shift already exists
-        return !shifts.contains { existingShift in
+        // Check for overlapping shifts (not just same day)
+        let hasOverlap = shifts.contains { existingShift in
             let existingStart = existingShift.startTime
             let existingEnd = existingShift.endTime
+            // Two shifts overlap if one starts before the other ends
             return calendar.isDate(existingStart, inSameDayAs: shiftStart) &&
-                   ((shiftStart >= existingStart && shiftStart < existingEnd) ||
-                    (shiftEnd > existingStart && shiftEnd <= existingEnd) ||
-                    (shiftStart <= existingStart && shiftEnd >= existingEnd))
+                   ((shiftStart < existingEnd && shiftEnd > existingStart))
         }
+        
+        if hasOverlap {
+            return false
+        }
+        
+        // Check if total daily hours would exceed 12 hours
+        let newShiftDuration = shiftEnd.timeIntervalSince(shiftStart) / 3600
+        let sameDayShifts = shifts.filter { existingShift in
+            calendar.isDate(existingShift.startTime, inSameDayAs: shiftStart)
+        }
+        let existingDailyHours = sameDayShifts.reduce(0.0) { $0 + ($1.duration / 3600) }
+        let totalDailyHours = existingDailyHours + newShiftDuration
+        
+        return totalDailyHours <= 12.0
     }
     
     var filteredShifts: [ShiftModel] {
@@ -183,6 +200,12 @@ public class ShiftManagerViewModel: ObservableObject {
     
     func addShift() {
         Task {
+            // Check shift limit first
+            if !purchaseManager.canAddShift(currentCount: shifts.count) {
+                showingShiftLimitAlert = true
+                return
+            }
+            
             let calendar = Calendar.current
             let startComponents = calendar.dateComponents([.hour, .minute], from: startTime)
             let endComponents = calendar.dateComponents([.hour, .minute], from: endTime)
@@ -197,13 +220,20 @@ public class ShiftManagerViewModel: ObservableObject {
                                        second: 0,
                                        of: selectedDate) ?? selectedDate
             
-            // Check for existing shift
-            if !canAddShift {
+            // Check for overlapping shifts
+            let hasOverlap = shifts.contains { existingShift in
+                let existingStart = existingShift.startTime
+                let existingEnd = existingShift.endTime
+                return calendar.isDate(existingStart, inSameDayAs: shiftStart) &&
+                       ((shiftStart < existingEnd && shiftEnd > existingStart))
+            }
+            
+            if hasOverlap {
                 showingDuplicateAlert = true
                 return
             }
             
-            // Check for shift duration
+            // Check for shift duration (single shift limit)
             let duration = shiftEnd.timeIntervalSince(shiftStart)
             let hours = duration / 3600
             
@@ -212,7 +242,23 @@ public class ShiftManagerViewModel: ObservableObject {
                 return
             }
             
+            // Check if total daily hours would exceed 12
+            let sameDayShifts = shifts.filter { existingShift in
+                calendar.isDate(existingShift.startTime, inSameDayAs: shiftStart)
+            }
+            let existingDailyHours = sameDayShifts.reduce(0.0) { $0 + ($1.duration / 3600) }
+            let totalDailyHours = existingDailyHours + hours
+            
+            if totalDailyHours > 12.0 {
+                showingDailyLimitAlert = true
+                return
+            }
+            
             await createShift(startTime: shiftStart, endTime: shiftEnd, notes: notes)
+            
+            // Recalculate wages for all shifts on the same day
+            await recalculateDailyWages(for: shiftStart)
+            
             await loadShifts()
         }
     }
@@ -272,6 +318,7 @@ public class ShiftManagerViewModel: ObservableObject {
     func deleteShift(_ shift: ShiftModel) {
         Task {
             do {
+                let shiftDate = shift.startTime
                 let request = NSFetchRequest<Shift>(entityName: "Shift")
                 request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
                 
@@ -286,6 +333,10 @@ public class ShiftManagerViewModel: ObservableObject {
                     try await context.perform {
                         try self.context.save()
                     }
+                    
+                    // Recalculate wages for remaining shifts on the same day
+                    await recalculateDailyWages(for: shiftDate)
+                    
                     await loadShifts()
                 }
             } catch {
@@ -362,32 +413,56 @@ public class ShiftManagerViewModel: ObservableObject {
                     entity.notes = shift.notes
                     entity.isSpecialDay = shift.isSpecialDay
                     
-                    // Recalculate wages
-                    if let calculation = try? await wageCalculationService.calculateWage(for: ShiftModel(
-                        id: entity.id ?? UUID(),
-                        title: entity.title ?? "",
-                        category: entity.category ?? "",
-                        startTime: entity.startTime ?? Date(),
-                        endTime: entity.endTime ?? Date(),
-                        notes: entity.notes ?? "",
-                        isOvertime: entity.isOvertime,
-                        isSpecialDay: entity.isSpecialDay,
-                        grossWage: entity.grossWage,
-                        netWage: entity.netWage,
-                        createdAt: entity.createdAt ?? Date()
-                    )) {
-                        entity.grossWage = calculation.grossWage
-                        entity.netWage = calculation.netWage
-                    }
-                    
                     try await context.perform {
                         try self.context.save()
                     }
+                    
+                    // Recalculate wages for all shifts on the same day
+                    await recalculateDailyWages(for: shift.startTime)
+                    
                     await loadShifts()
                 }
             } catch {
                 self.error = error
             }
+        }
+    }
+    
+    // MARK: - Daily Wage Recalculation
+    /// Recalculates wages for all shifts on the same day, accounting for daily overtime
+    func recalculateDailyWages(for date: Date) async {
+        do {
+            // Fetch all shifts on the same day
+            let sameDayShifts = try await wageCalculationService.fetchShiftsOnSameDay(as: date)
+            
+            guard !sameDayShifts.isEmpty else { return }
+            
+            // Calculate wages considering daily overtime
+            let wageCalculations = try await wageCalculationService.calculateDailyWagesForShifts(sameDayShifts)
+            
+            // Update each shift in Core Data
+            for shift in sameDayShifts {
+                guard let calculation = wageCalculations[shift.id] else { continue }
+                
+                let request = NSFetchRequest<Shift>(entityName: "Shift")
+                request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
+                
+                let results = try await context.perform {
+                    try self.context.fetch(request)
+                }
+                
+                if let entity = results.first {
+                    entity.grossWage = calculation.grossWage
+                    entity.netWage = calculation.netWage
+                    
+                    try await context.perform {
+                        try self.context.save()
+                    }
+                }
+            }
+        } catch {
+            print("Error recalculating daily wages: \(error)")
+            self.error = error
         }
     }
 } 

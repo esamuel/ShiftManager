@@ -72,6 +72,14 @@ struct OnboardingView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 30)
                                 .foregroundColor(.secondary)
+                            
+                            if index == 0 {
+                                VideoTutorialButton(
+                                    title: "Watch: App Overview".localized,
+                                    videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
+                                )
+                                .padding(.top, 10)
+                            }
                         }
                         .tag(index)
                     }

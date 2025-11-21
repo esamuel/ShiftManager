@@ -8,30 +8,27 @@ class BackButtonFix {
     private var isInitialized = false
     
     private init() {
-        // Defer initialization to improve app startup time
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.applyAllFixes()
-        }
-    }
-    
-    func applyAllFixes() {
-        // Prevent multiple initializations
-        guard !isInitialized else { return }
-        isInitialized = true
-        
-        // Apply method swizzling (these are fast operations)
+        // Apply swizzling immediately - these are lightweight operations
         swizzleUILabelText()
         swizzleNavigationItemBackButtonTitle()
         swizzleBarButtonItemSetTitleTextAttributes()
         swizzleNSBundleLocalizedString()
         
-        // Delay the heavy UI operations to improve app startup time
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        isInitialized = true
+        
+        // DEFER all heavy UI operations to well after app has launched
+        // This prevents blocking the app startup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.clearExistingBackButtonText()
-            
-            // Start periodic checks with a longer interval
-            self?.startPeriodicChecks()
         }
+        
+        // Periodic checks are disabled for performance
+        // The swizzling should handle most cases automatically
+    }
+    
+    func applyAllFixes() {
+        // This method is kept for compatibility but does nothing
+        // All fixes are applied in init
     }
     
     // MARK: - UILabel Text Swizzling
@@ -91,25 +88,7 @@ class BackButtonFix {
     // MARK: - Direct UI Manipulation
     // This function searches the entire UI hierarchy and clears any back button text
     private func clearExistingBackButtonText() {
-        // Always dispatch to main thread regardless of current thread
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            // First check all navigation bars
-            if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
-                for scene in windowScenes {
-                    for window in scene.windows {
-                        // Clear text in all navigation bars
-                        self.recursivelySearchForNavigationBars(in: window)
-                        
-                        // Clear text in view controllers
-                        if let rootVC = window.rootViewController {
-                            self.recursivelyFixViewControllers(rootVC)
-                        }
-                    }
-                }
-            }
-        }
+        // Disabled for performance reasons
     }
     
     private func recursivelySearchForNavigationBars(in view: UIView) {
@@ -242,49 +221,13 @@ class BackButtonFix {
     private var checkTimer: Timer?
     
     private func startPeriodicChecks() {
-        // Always dispatch to main thread regardless of current thread
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            // Stop any existing timer
-            self.checkTimer?.invalidate()
-            
-            // Create a new timer with a longer interval (1 second instead of 0.25)
-            // This significantly reduces CPU usage while still being responsive
-            self.checkTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-                // Use a lower priority queue for the timer callback
-                DispatchQueue.global(qos: .utility).async {
-                    DispatchQueue.main.async {
-                        self?.replaceBackButtonsWithCustom()
-                    }
-                }
-            }
-            
-            // Add to common run loops
-            if let timer = self.checkTimer {
-                RunLoop.main.add(timer, forMode: .common)
-            }
-        }
+        // Disabled for performance reasons
     }
     
     // MARK: - Complete Back Button Replacement
     // This extreme technique replaces every back button in the app with a custom one
     func replaceBackButtonsWithCustom() {
-        // Always dispatch to main thread regardless of current thread
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            // Find all navigation controllers
-            if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
-                for scene in windowScenes {
-                    for window in scene.windows {
-                        if let rootVC = window.rootViewController {
-                            self.recursivelyReplaceBackButtons(in: rootVC)
-                        }
-                    }
-                }
-            }
-        }
+        // Disabled for performance reasons
     }
     
     private func recursivelyReplaceBackButtons(in viewController: UIViewController) {

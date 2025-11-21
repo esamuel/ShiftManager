@@ -106,6 +106,7 @@
 "Save Shift" = "Guardar turno";
 "Delete" = "Eliminar";
 "Are you sure you want to delete this shift?" = "¿Estás seguro de que quieres eliminar este turno?";
+"Are you sure you want to delete this shift? This action cannot be undone." = "¿Estás seguro de que quieres eliminar este turno? Esta acción no se puede deshacer.";
 "Shift Details" = "Detalles del turno";
 "Duration" = "Duración";
 "Regular Pay" = "Pago regular";
@@ -139,7 +140,10 @@
 "Wage Breakdown" = "Desglose salarial";
 "Total Working Days" = "Total días trabajados";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Estás intentando añadir un turno de más de 12 horas. ¿Estás seguro de que quieres continuar?";
+"Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Las horas diarias totales excederían las 12 horas. El máximo permitido es de 12 horas por día.";
+"Daily Hour Limit Exceeded" = "Límite de horas diarias excedido";
 "A shift already exists for this date and time period." = "Ya existe un turno para esta fecha y periodo de tiempo.";
+"Overlapping shifts are not allowed. Please choose a different time." = "No se permiten turnos superpuestos. Por favor, elige una hora diferente.";
 "Shift Already Exists" = "El turno ya existe";
 "Calculations" = "Cálculos";
 "Title" = "Título";
@@ -220,6 +224,48 @@
 "Start Date" = "Fecha de inicio";
 "End Date" = "Fecha de fin";
 "Export to PDF" = "Exportar a PDF";
+"Generating..." = "Generando...";
+"No data available to export" = "No hay datos disponibles para exportar";
+"Failed to generate PDF: No data returned" = "Error al generar PDF: no se devolvieron datos";
+"Error generating PDF: %@" = "Error al generar PDF: %@";
+
+// Premium Features
+"Upgrade to Premium" = "Actualizar a Premium";
+"Unlock Premium" = "Desbloquear Premium";
+"Premium Features" = "Características Premium";
+"Get unlimited access to all features" = "Obtén acceso ilimitado a todas las funciones";
+"Choose Your Plan" = "Elige tu plan";
+"Continue" = "Continuar";
+"Restore Purchases" = "Restaurar compras";
+"Success!" = "¡Éxito!";
+"You now have access to all premium features!" = "¡Ahora tienes acceso a todas las funciones premium!";
+"No previous purchases found" = "No se encontraron compras anteriores";
+"By purchasing, you agree to our Terms of Service and Privacy Policy" = "Al comprar, aceptas nuestros Términos de servicio y Política de privacidad";
+"Terms of Service" = "Términos de servicio";
+"Privacy Policy" = "Política de privacidad";
+"PDF Export" = "Exportar PDF";
+"Advanced Reports" = "Informes avanzados";
+"Split Shifts" = "Turnos divididos";
+"Unlimited Shifts" = "Turnos ilimitados";
+"All Languages" = "Todos los idiomas";
+"Data Backup & Restore" = "Copia de seguridad y restauración";
+"Unlimited History" = "Historial ilimitado";
+"Multiple Currencies" = "Múltiples monedas";
+"Premium Themes" = "Temas Premium";
+"Lifetime Access" = "Acceso de por vida";
+"Annual Subscription" = "Suscripción anual";
+"Monthly Subscription" = "Suscripción mensual";
+"One-time payment, lifetime access to all premium features" = "Pago único, acceso de por vida a todas las funciones premium";
+"All premium features, billed annually" = "Todas las funciones premium, facturación anual";
+"All premium features, billed monthly" = "Todas las funciones premium, facturación mensual";
+"Best Value" = "Mejor valor";
+"Popular" = "Popular";
+"Save %d%%" = "Ahorra %d%%";
+"Shift Limit Reached" = "Límite de turnos alcanzado";
+"You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!" = "Has alcanzado el límite gratuito de 50 turnos. ¡Actualiza a Premium para turnos ilimitados!";
+"Unlock all features & unlimited shifts" = "Desbloquea todas las funciones y turnos ilimitados";
+"Premium Active" = "Premium activo";
+"You have access to all features" = "Tienes acceso a todas las funciones";
 "Total Working Days:" = "Total días trabajados:";
 "Total Hours:" = "Horas totales:";
 "Gross Wage:" = "Salario bruto:";
@@ -388,3 +434,176 @@
 
 // Add new entry below:
 "Tell Friends" = "Compartir con Amigos";
+
+// Monthly Report
+"Monthly Report" = "Informe Mensual";
+"Select Month" = "Seleccionar Mes";
+"Generate Monthly Report" = "Generar Informe Mensual";
+"Month & Year" = "Mes y Año";
+"No data available for selected month" = "No hay datos disponibles para el mes seleccionado";
+"Report Summary" = "Resumen del Informe";
+"Month:" = "Mes:";
+"Year:" = "Año:";
+"Total Shifts:" = "Total de Turnos:";
+"Regular Shift Hours:" = "Horas de Turno Regular:";
+"Overtime Hours:" = "Horas Extras:";
+"Monthly Report Generated" = "Informe Mensual Generado";
+"Generated on" = "Generado el";
+
+// Legal Documents - Terms of Service (Spanish)
+"premium_terms_full_content" = "TÉRMINOS DE SERVICIO
+
+Última actualización: Noviembre 2025
+
+1. ACEPTACIÓN DE TÉRMINOS
+Al comprar ShiftManager Premium, aceptas estos Términos de Servicio. Si no estás de acuerdo, por favor no compres ni uses las funciones premium.
+
+2. SUSCRIPCIÓN PREMIUM
+ShiftManager ofrece tres opciones premium:
+• Acceso de por vida: Pago único para acceso permanente a todas las funciones premium
+• Suscripción anual: Facturación anual, se renueva automáticamente salvo cancelación
+• Suscripción mensual: Facturación mensual, se renueva automáticamente salvo cancelación
+
+Todas las compras se procesan a través de la App Store de Apple y están sujetas a los términos y condiciones de Apple.
+
+3. FUNCIONES PREMIUM
+Premium desbloquea:
+• Exportación PDF de informes
+• Análisis y gráficos avanzados
+• Gestión de turnos divididos
+• Historial de turnos ilimitado
+• Soporte para todos los idiomas
+• Copia de seguridad y restauración de datos
+• Soporte para múltiples monedas
+• Temas premium
+
+4. FACTURACIÓN Y CANCELACIÓN
+• Todas las compras se facturan a través de tu cuenta de Apple ID
+• Las suscripciones se renuevan automáticamente salvo cancelación al menos 24 horas antes del final del período actual
+• Puedes gestionar y cancelar suscripciones en la configuración de tu Apple ID
+• Las compras de por vida son únicas y no reembolsables después de la compra
+
+5. POLÍTICA DE REEMBOLSO
+Las solicitudes de reembolso están sujetas a la política estándar de reembolso de Apple. Contacta directamente con el Soporte de Apple para solicitudes de reembolso.
+
+6. CAMBIOS EN LAS FUNCIONES PREMIUM
+Nos reservamos el derecho de agregar, modificar o eliminar funciones premium con aviso razonable a los usuarios. Los suscriptores existentes no perderán el acceso a las funciones premium básicas que compraron.
+
+7. DISPONIBILIDAD DEL SERVICIO
+Buscamos una disponibilidad del 99,9% pero no podemos garantizar un servicio ininterrumpido. No somos responsables de interrupciones temporales del servicio.
+
+8. USO PROHIBIDO
+No puedes:
+• Compartir tu cuenta premium con otros
+• Realizar ingeniería inversa de la aplicación
+• Usar la aplicación para fines ilegales
+• Intentar eludir los sistemas de pago
+
+9. TERMINACIÓN
+Nos reservamos el derecho de terminar cuentas que violen estos términos.
+
+10. LIMITACIÓN DE RESPONSABILIDAD
+ShiftManager se proporciona \"tal cual\" sin garantías. No somos responsables de ningún daño derivado del uso de la aplicación.
+
+11. LEY APLICABLE
+Estos términos se rigen por las leyes de tu jurisdicción.
+
+12. CONTACTO
+Para preguntas sobre estos términos, por favor contáctanos a través de la sección de soporte de la aplicación.
+
+Al comprar Premium, reconoces que has leído, comprendido y aceptado estos Términos de Servicio.";
+
+"premium_terms_last_updated" = "Última actualización: 18 de noviembre de 2025";
+
+// Legal Documents - Privacy Policy (Spanish)
+"premium_privacy_key_principle" = "Nuestro Principio Fundamental de Privacidad";
+"premium_privacy_key_message" = "Tus datos de turnos permanecen en TU dispositivo. Nunca recopilamos, almacenamos ni compartimos tu información laboral personal.";
+
+"premium_privacy_full_content" = "POLÍTICA DE PRIVACIDAD
+
+Última actualización: Noviembre 2025
+
+1. NUESTRO COMPROMISO CON LA PRIVACIDAD
+ShiftManager está construido con la privacidad en su núcleo. Todos tus datos de turnos, ganancias e información laboral se almacenan localmente en tu dispositivo usando el framework Core Data de Apple. No recopilamos, transmitimos ni almacenamos ninguno de tus datos laborales personales en servidores externos.
+
+2. DATOS QUE NO RECOPILAMOS
+NO recopilamos:
+• Tus horarios de turnos
+• Horas de trabajo o ganancias
+• Información del empleador
+• Datos de ubicación
+• Información de identificación personal
+• Análisis de uso o datos de seguimiento
+
+3. DATOS ALMACENADOS LOCALMENTE
+Los siguientes datos se almacenan solo en tu dispositivo:
+• Horarios de turnos (horarios de inicio/fin, descansos)
+• Cálculos de salario
+• Informes y estadísticas
+• Preferencias y configuraciones del usuario
+
+Estos datos permanecen en tu dispositivo y se incluyen en tu copia de seguridad de iCloud si has habilitado iCloud para esta aplicación.
+
+4. COMPRAS PREMIUM
+Cuando compras Premium:
+• Apple procesa el pago a través de la App Store
+• Solo recibimos una validación de recibo de compra de Apple
+• No se comparte información financiera personal con nosotros
+• La política de privacidad de Apple se aplica a los datos de compra
+
+5. SINCRONIZACIÓN iCLOUD (OPCIONAL)
+Si habilitas la sincronización de iCloud:
+• Tus datos de turnos se sincronizan entre tus dispositivos usando iCloud de Apple
+• Los datos se cifran en tránsito y en reposo
+• Se aplica la política de privacidad de iCloud de Apple
+• Puedes deshabilitar la sincronización de iCloud en cualquier momento en la Configuración de iOS
+
+6. PERMISOS
+ShiftManager solo solicita permisos esenciales:
+• Notificaciones: Para recordarte turnos próximos (opcional)
+• Sin seguimiento de ubicación
+• Sin acceso a cámara o fotos
+• Sin acceso a contactos
+• Sin acceso al micrófono
+
+7. PRIVACIDAD INFANTIL
+Nuestra aplicación no recopila intencionalmente información de niños menores de 13 años. La aplicación está diseñada para adultos trabajadores.
+
+8. SEGURIDAD DE DATOS
+• Todos los datos se almacenan usando el framework Core Data seguro de Apple
+• Los datos locales están protegidos por las funciones de seguridad de tu dispositivo
+• Sin transmisión de datos a servidores externos
+• Tus datos son tan seguros como tu dispositivo
+
+9. TUS DERECHOS
+Tienes control total:
+• Exporta tus datos como informes PDF
+• Elimina todos los datos en cualquier momento a través de la Configuración
+• No se requiere creación de cuenta
+• Propiedad completa de los datos
+
+10. SERVICIOS DE TERCEROS
+Solo usamos frameworks nativos de Apple:
+• StoreKit para compras
+• Core Data para almacenamiento local
+• CloudKit para sincronización opcional de iCloud
+Todo sujeto a las políticas de privacidad de Apple.
+
+11. CAMBIOS EN LA POLÍTICA DE PRIVACIDAD
+Te notificaremos cambios significativos en la política de privacidad a través de un aviso de actualización de la aplicación.
+
+12. RETENCIÓN DE DATOS
+Tus datos permanecen en tu dispositivo hasta que elimines la aplicación o elimines manualmente los datos. No tenemos acceso ni control sobre tus datos locales.
+
+13. USUARIOS INTERNACIONALES
+Dado que los datos se almacenan localmente en tu dispositivo, no ocurre ninguna transferencia internacional de datos.
+
+14. CONTÁCTANOS
+¿Preguntas sobre privacidad? Contáctanos a través de la sección de soporte de la aplicación.
+
+RESUMEN:
+Tus datos de trabajo son tuyos. Permanecen en tu dispositivo. Nunca los vemos, recopilamos ni compartimos. Esa es nuestra promesa.";
+
+"premium_privacy_summary_title" = "Resumen de Privacidad";
+"premium_privacy_summary_content" = "✓ Todos los datos almacenados localmente en tu dispositivo\n✓ Sin recopilación de datos ni seguimiento\n✓ No se requiere registro de cuenta\n✓ Sincronización opcional de iCloud (cifrada)\n✓ Control y propiedad total de datos\n✓ Sin anuncios ni análisis de terceros\n✓ Privacidad completa garantizada";
+"premium_privacy_last_updated" = "Última actualización: 18 de noviembre de 2025";

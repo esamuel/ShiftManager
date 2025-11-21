@@ -68,6 +68,11 @@ public struct MonthlyCalendarView: View {
                             hasShifts: false,
                             isOtherMonth: true
                         )
+                        .onTapGesture {
+                            // Switch to the tapped adjacent month and select the date
+                            currentMonth = date
+                            viewModel.selectedDate = date
+                        }
                     }
                 }
             }

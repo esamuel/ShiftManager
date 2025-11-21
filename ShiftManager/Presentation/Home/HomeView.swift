@@ -8,123 +8,120 @@ public struct HomeView: View {
     public init() {}
     
     public var body: some View {
-        NavigationView {
-            VStack(spacing: 16) {
-                // Title with custom font size
-                HStack {
-                    Text("Shift Manager".localized)
-                        .font(.system(size: 32, weight: .bold))
-                    
-                    Spacer()
-                    
-                    // Help button
-                    Button(action: { 
-                        showingGuide = true
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                            .font(.title2)
-                            .foregroundColor(.purple)
-                            .padding(8)
-                            .background(Color.purple.opacity(0.1))
-                            .clipShape(Circle())
-                    }
-                    .accessibilityLabel("Help".localized)
-                    .help("Open User Guide".localized)
-                }
-                .padding(.top)
-                .padding(.horizontal)
-                
-                // Menu Buttons
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Home Button (Main Screen)
-                        Button(action: { showingUpcomingShifts = true }) {
-                            MenuButton(
-                                title: "Coming Shifts".localized,
-                                icon: "house.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        // Shift Manager Button
-                        NavigationLink(destination: ShiftManagerView()) {
-                            MenuButton(
-                                title: "Shift Manager".localized,
-                                icon: "briefcase.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        // Reports Button
-                        NavigationLink(destination: ReportView()) {
-                            MenuButton(
-                                title: "Reports".localized,
-                                icon: "chart.bar.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        // Guide Button
-                        NavigationLink(destination: GuideView()) {
-                            MenuButton(
-                                title: "Guide".localized,
-                                icon: "info.circle.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        // Overtime Rules Button
-                        NavigationLink(destination: OvertimeRulesView()) {
-                            MenuButton(
-                                title: "Overtime Rules".localized,
-                                icon: "clock.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        // Settings Button
-                        NavigationLink(destination: SettingsView()) {
-                            MenuButton(
-                                title: "Settings".localized,
-                                icon: "gearshape.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                    }
-                    .padding()
-                }
-            }
-            .onAppear {
-                // Defer non-critical UI operations to the next run loop
-                DispatchQueue.main.async {
-                    // Clear back button text on appear
-                    UINavigationBar.appearance().backItem?.backButtonTitle = ""
-                    UINavigationBar.appearance().topItem?.backButtonTitle = ""
-                    
-                    // Apply fixes more aggressively but in background
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        BackButtonFix.shared.replaceBackButtonsWithCustom()
-                        
-                        // Return to main thread for UI updates
-                        DispatchQueue.main.async {
-                            LocalizationManager.shared.clearHebrewPreviousText()
-                        }
-                    }
-                }
-            }
-        }
-        .sheet(isPresented: $showingUpcomingShifts) {
+        ZStack {
             NavigationView {
-                UpcomingShiftsView()
-                    .navigationTitle("Upcoming Shifts".localized)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Done".localized) {
-                                showingUpcomingShifts = false
+                VStack(spacing: 16) {
+                    // Title with custom font size
+                    HStack {
+                        Text("Shift Manager".localized)
+                            .font(.system(size: 32, weight: .bold))
+                        
+                        Spacer()
+                        
+                        // Help button
+                        Button(action: { 
+                            showingGuide = true
+                        }) {
+                            Image(systemName: "questionmark.circle")
+                                .font(.title2)
+                                .foregroundColor(.purple)
+                                .padding(8)
+                                .background(Color.purple.opacity(0.1))
+                                .clipShape(Circle())
+                        }
+                        .accessibilityLabel("Help".localized)
+                        .help("Open User Guide".localized)
+                    }
+                    .padding(.top)
+                    .padding(.horizontal)
+                    
+                    // Menu Buttons
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            // Home Button (Main Screen)
+                            Button(action: { showingUpcomingShifts = true }) {
+                                MenuButton(
+                                    title: "Coming Shifts".localized,
+                                    icon: "house.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            // Shift Manager Button
+                            NavigationLink(destination: ShiftManagerView()) {
+                                MenuButton(
+                                    title: "Shift Manager".localized,
+                                    icon: "briefcase.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            // Reports Button
+                            NavigationLink(destination: ReportView()) {
+                                MenuButton(
+                                    title: "Reports".localized,
+                                    icon: "chart.bar.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            // Guide Button
+                            NavigationLink(destination: GuideView()) {
+                                MenuButton(
+                                    title: "Guide".localized,
+                                    icon: "info.circle.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            // Overtime Rules Button
+                            NavigationLink(destination: OvertimeRulesView()) {
+                                MenuButton(
+                                    title: "Overtime Rules".localized,
+                                    icon: "clock.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            // Settings Button
+                            NavigationLink(destination: SettingsView()) {
+                                MenuButton(
+                                    title: "Settings".localized,
+                                    icon: "gearshape.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
                             }
                         }
+                        .padding()
                     }
+                }
+                .onAppear {
+                    // Defer non-critical UI operations to the next run loop
+                    DispatchQueue.main.async {
+                        // Clear back button text on appear
+                        UINavigationBar.appearance().backItem?.backButtonTitle = ""
+                        UINavigationBar.appearance().topItem?.backButtonTitle = ""
+                    }
+                }
+            }
+            
+            if showingUpcomingShifts {
+                NavigationView {
+                    UpcomingShiftsView()
+                        .navigationTitle("Upcoming Shifts".localized)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button("Done".localized) {
+                                    withAnimation {
+                                        showingUpcomingShifts = false
+                                    }
+                                }
+                            }
+                        }
+                }
+                .transition(.move(edge: .bottom))
+                .zIndex(100)
             }
         }
         .sheet(isPresented: $showingGuide) {

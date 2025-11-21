@@ -1,9 +1,12 @@
 import XCTest
 @testable import ShiftManager
 
+import CoreData
+
 final class WageCalculationTests: XCTestCase {
     var wageCalculationService: WageCalculationService!
     var context: NSManagedObjectContext!
+    let calendar = Calendar.current
     
     override func setUpWithError() throws {
         context = PersistenceController.shared.container.viewContext
@@ -34,12 +37,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "",
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -49,14 +52,16 @@ final class WageCalculationTests: XCTestCase {
         XCTAssertEqual(calculation.totalHours, 12.0)
         
         // Verify breakdown
-        let regularBreakdown = calculation.breakdowns.first { $0.type == .regular }
+        // Verify breakdown
+        let regularBreakdown = calculation.breakdowns.first { $0.type == WageBreakdown.WageType.regular }
         XCTAssertNotNil(regularBreakdown)
         XCTAssertEqual(regularBreakdown?.hours, 8.0)
         XCTAssertEqual(regularBreakdown?.rate, 1.0)
         XCTAssertEqual(regularBreakdown?.amount, 8.0 * 40.04)
         
         // Verify overtime breakdowns
-        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == .overtime }
+        // Verify overtime breakdowns
+        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == WageBreakdown.WageType.overtime }
         XCTAssertEqual(overtimeBreakdowns.count, 2)
         
         // First overtime tier (hours 9-10)
@@ -72,7 +77,11 @@ final class WageCalculationTests: XCTestCase {
         XCTAssertEqual(overtime2.amount, 2.0 * 40.04 * 1.5)
         
         // Verify total gross wage
-        let expectedGrossWage = (8.0 * 40.04) + (2.0 * 40.04 * 1.25) + (2.0 * 40.04 * 1.5)
+        // Verify total gross wage
+        let baseAmount = 8.0 * 40.04
+        let ot1Amount = 2.0 * 40.04 * 1.25
+        let ot2Amount = 2.0 * 40.04 * 1.5
+        let expectedGrossWage = baseAmount + ot1Amount + ot2Amount
         XCTAssertEqual(calculation.grossWage, expectedGrossWage)
         
         // Verify tax calculation
@@ -103,12 +112,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "",
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -133,11 +142,12 @@ final class WageCalculationTests: XCTestCase {
         XCTAssertEqual(calculation.netWage, expectedGrossWage * (1 - 11.78/100), accuracy: 0.01)
         
         // Verify the breakdowns
-        let regularHours = calculation.breakdowns.first { $0.type == .regular }
+        // Verify the breakdowns
+        let regularHours = calculation.breakdowns.first { $0.type == WageBreakdown.WageType.regular }
         XCTAssertEqual(regularHours?.hours, 8.0)
         XCTAssertEqual(regularHours?.rate, 1.0)
         
-        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == .overtime }
+        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == WageBreakdown.WageType.overtime }
         XCTAssertEqual(overtimeBreakdowns.count, 2)
         
         let overtime1 = overtimeBreakdowns[0]
@@ -165,12 +175,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "סייר משמרת בוקר", // Patrol morning shift
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -182,14 +192,16 @@ final class WageCalculationTests: XCTestCase {
         let hourlyWage = 46.04 // Special patrol rate
         
         // Verify breakdown
-        let regularBreakdown = calculation.breakdowns.first { $0.type == .regular }
+        // Verify breakdown
+        let regularBreakdown = calculation.breakdowns.first { $0.type == WageBreakdown.WageType.regular }
         XCTAssertNotNil(regularBreakdown)
         XCTAssertEqual(regularBreakdown?.hours, 8.0)
         XCTAssertEqual(regularBreakdown?.rate, 1.0)
         XCTAssertEqual(regularBreakdown?.amount, 8.0 * hourlyWage)
         
         // Verify overtime breakdowns
-        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == .overtime }
+        // Verify overtime breakdowns
+        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == WageBreakdown.WageType.overtime }
         XCTAssertEqual(overtimeBreakdowns.count, 2)
         
         // First overtime tier (hours 9-10)
@@ -220,12 +232,12 @@ final class WageCalculationTests: XCTestCase {
         let regularShift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "Regular shift",
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -248,12 +260,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "",
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -285,12 +297,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "",
             isOvertime: false,
             isSpecialDay: true, // Mark as special day
-            category: "",
             createdAt: Date()
         )
         
@@ -307,11 +319,12 @@ final class WageCalculationTests: XCTestCase {
         XCTAssertEqual(calculation.netWage, expectedGrossWage * (1 - 11.78/100), accuracy: 0.01)
         
         // Verify breakdowns
-        let specialBreakdown = calculation.breakdowns.first { $0.type == .special }
+        // Verify breakdowns
+        let specialBreakdown = calculation.breakdowns.first { $0.type == WageBreakdown.WageType.special }
         XCTAssertEqual(specialBreakdown?.hours, 8.0)
         XCTAssertEqual(specialBreakdown?.rate, 1.5)
         
-        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == .overtime }
+        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == WageBreakdown.WageType.overtime }
         XCTAssertEqual(overtimeBreakdowns.count, 2)
         
         let overtime1 = overtimeBreakdowns[0]
@@ -342,12 +355,12 @@ final class WageCalculationTests: XCTestCase {
         let shift = ShiftModel(
             id: UUID(),
             title: "Test Shift",
+            category: "",
             startTime: startTime,
             endTime: endTime,
             notes: "",
             isOvertime: false,
             isSpecialDay: false,
-            category: "",
             createdAt: Date()
         )
         
@@ -372,11 +385,12 @@ final class WageCalculationTests: XCTestCase {
         XCTAssertEqual(calculation.netWage, expectedGrossWage * (1 - 11.78/100), accuracy: 0.01)
         
         // Verify the breakdowns
-        let specialBreakdown = calculation.breakdowns.first { $0.type == .special }
+        // Verify the breakdowns
+        let specialBreakdown = calculation.breakdowns.first { $0.type == WageBreakdown.WageType.special }
         XCTAssertEqual(specialBreakdown?.hours, 8.0)
         XCTAssertEqual(specialBreakdown?.rate, 1.5)
         
-        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == .overtime }
+        let overtimeBreakdowns = calculation.breakdowns.filter { $0.type == WageBreakdown.WageType.overtime }
         XCTAssertEqual(overtimeBreakdowns.count, 2)
         
         let overtime1 = overtimeBreakdowns[0]

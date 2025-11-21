@@ -4,11 +4,55 @@ import SwiftUI
 
 public class UpcomingShiftsViewModel: ObservableObject {
     @Published var upcomingShifts: [Date: [ShiftModel]] = [:]
-    @Published var isLoading = false
+    @Published var isLoading = true
     private let repository: ShiftRepositoryProtocol
+    
+    // Cache formatters to improve performance
+    private let dayFormatter: DateFormatter
+    private let monthFormatter: DateFormatter
+    private let timeFormatter: DateFormatter
     
     public init(repository: ShiftRepositoryProtocol = ShiftRepository()) {
         self.repository = repository
+        
+        // Initialize formatters once
+        self.dayFormatter = DateFormatter()
+        self.dayFormatter.dateFormat = "EEEE"
+        
+        self.monthFormatter = DateFormatter()
+        self.monthFormatter.dateFormat = "MMM"
+        
+        self.timeFormatter = DateFormatter()
+        self.timeFormatter.timeStyle = .short
+        
+        // Listen for locale changes to update formatters
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(localeDidChange),
+            name: NSLocale.currentLocaleDidChangeNotification,
+            object: nil
+        )
+        
+        updateFormattersLocale()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func localeDidChange() {
+        updateFormattersLocale()
+        // Force UI update if needed, though Views usually handle this.
+        // Re-formatting displayed strings might be needed if they are cached, 
+        // but here we format on demand in the View, so just updating formatters is enough.
+        objectWillChange.send() 
+    }
+    
+    private func updateFormattersLocale() {
+        let locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        dayFormatter.locale = locale
+        monthFormatter.locale = locale
+        timeFormatter.locale = locale
     }
     
     @MainActor
@@ -29,18 +73,9 @@ public class UpcomingShiftsViewModel: ObservableObject {
             // Fetch shifts
             let shifts = try await repository.fetchShiftsInDateRange(from: startDate, to: endDate)
             
-            // Group shifts by day
+            // Group and sort shifts by day in one pass
             var groupedShifts: [Date: [ShiftModel]] = [:]
             
-            // Create entries for all 7 days, even if no shifts
-            for dayOffset in 0..<7 {
-                if let date = calendar.date(byAdding: .day, value: dayOffset, to: startDate) {
-                    let dayStart = calendar.startOfDay(for: date)
-                    groupedShifts[dayStart] = []
-                }
-            }
-            
-            // Add shifts to their respective days
             for shift in shifts {
                 let dayStart = calendar.startOfDay(for: shift.startTime)
                 groupedShifts[dayStart, default: []].append(shift)
@@ -51,10 +86,9 @@ public class UpcomingShiftsViewModel: ObservableObject {
                 groupedShifts[day] = dayShifts.sorted { $0.startTime < $1.startTime }
             }
             
-            await MainActor.run {
-                self.upcomingShifts = groupedShifts
-                self.isLoading = false
-            }
+            // Update UI - already on MainActor, no need for MainActor.run
+            self.upcomingShifts = groupedShifts
+            self.isLoading = false
         } catch {
             print("Error loading upcoming shifts: \(error)")
             self.isLoading = false
@@ -62,19 +96,7 @@ public class UpcomingShiftsViewModel: ObservableObject {
     }
     
     func formatDate(_ date: Date) -> String {
-        // Get current language locale
-        let locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
-        
-        // Get the localized day name
-        let dayFormatter = DateFormatter()
-        dayFormatter.locale = locale
-        dayFormatter.dateFormat = "EEEE"
         let dayName = dayFormatter.string(from: date)
-        
-        // Get the localized month name
-        let monthFormatter = DateFormatter()
-        monthFormatter.locale = locale
-        monthFormatter.dateFormat = "MMM"
         let monthName = monthFormatter.string(from: date)
         
         // Get the day number
@@ -86,10 +108,7 @@ public class UpcomingShiftsViewModel: ObservableObject {
     }
     
     func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return timeFormatter.string(from: date)
     }
     
     func calculateTotalHours(startTime: Date, endTime: Date) -> String {

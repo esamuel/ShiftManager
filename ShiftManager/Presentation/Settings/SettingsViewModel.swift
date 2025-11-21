@@ -126,6 +126,12 @@ public class SettingsViewModel: ObservableObject {
         let raw = UserDefaults.standard.integer(forKey: "notificationLeadTime")
         return NotificationLeadTime(rawValue: raw) ?? .min15
     }()
+    
+    @Published var notificationsEnabled: Bool {
+        didSet {
+            SettingsManager.shared.notificationsEnabled = notificationsEnabled
+        }
+    }
     // App version property
     var appVersion: String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
@@ -138,6 +144,7 @@ public class SettingsViewModel: ObservableObject {
     public init() {
         let raw = UserDefaults.standard.integer(forKey: "notificationLeadTime")
         self.notificationLeadTime = NotificationLeadTime(rawValue: raw) ?? .min15
+        self.notificationsEnabled = SettingsManager.shared.notificationsEnabled
         // Load saved values or use defaults
         self.username = UserDefaults.standard.string(forKey: "username") ?? ""
         self.hourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
@@ -197,9 +204,15 @@ public class SettingsViewModel: ObservableObject {
         // Mark that setup has been completed
         UserDefaults.standard.set(true, forKey: "hasCompletedSetup")
         
-        // Update LocalizationManager
-        LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)
-        LocalizationManager.shared.setCountry(selectedCountry)
+        // Only update LocalizationManager if language or country changed
+        // This prevents unnecessary root view reloads which reset navigation
+        if LocalizationManager.shared.currentLanguage != selectedLanguage.rawValue {
+            LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)
+        }
+        
+        if LocalizationManager.shared.currentCountry != selectedCountry {
+            LocalizationManager.shared.setCountry(selectedCountry)
+        }
         
         showingSaveConfirmation = true
     }
@@ -311,6 +324,7 @@ public class SettingsViewModel: ObservableObject {
             rootVC.present(picker, animated: true)
         }
     }
+    
 }
 
 // MARK: - Helper for Importing

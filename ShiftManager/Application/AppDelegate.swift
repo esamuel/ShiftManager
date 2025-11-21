@@ -3,49 +3,38 @@ import os.log
 import ObjectiveC  // Add this for method swizzling
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    private var appearanceTimer: Timer?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // Initialize the ForceInitializer
+        // OPTIMIZED: Only do essential initialization during app launch
+        
+        // Initialize swizzling (lightweight operation)
         _ = ForceInitializer.shared
-        
-        // Initialize our aggressive back button fix
         _ = BackButtonFix.shared
-        
-        // Add basic navigation bar appearance configuration
-        configureNavigationBarAppearance()
-        
-        // Keep LocalizationManager as it still exists
-        LocalizationManager.shared.configureEmptyBackButtonText()
-        
-        // Add this line to specifically clear Hebrew back button text
-        LocalizationManager.shared.clearHebrewPreviousText()
-        
-        // Replace all back buttons with custom ones
-        BackButtonFix.shared.replaceBackButtonsWithCustom()
-        
-        // Make sure swizzling is activated (uncomment this)
         let _ = UIBarButtonItem.swizzleTitle
         
-        // Set up a timer to periodically check and fix back buttons
-        appearanceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            self?.applyBackButtonFixes()
-            // Also call this periodically to catch any Hebrew text that appears dynamically
-            LocalizationManager.shared.clearHebrewPreviousText()
-            // Replace all back buttons with custom ones periodically
-            BackButtonFix.shared.replaceBackButtonsWithCustom()
-        }
-        RunLoop.main.add(appearanceTimer!, forMode: .common)
+        // Basic navigation bar appearance (lightweight)
+        configureNavigationBarAppearance()
         
-        // Register for application state changes
+        // DEFER heavy operations until after the app has fully launched
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.performDeferredInitialization()
+        }
+        
+        return true
+    }
+    
+    // Perform expensive operations AFTER app has launched
+    private func performDeferredInitialization() {
+        // Only apply fixes once, not continuously
+        LocalizationManager.shared.configureEmptyBackButtonText()
+        
+        // Register for state changes to reapply fixes when needed
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationStateChanged),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
-        
-        return true
     }
     
     // Add simple navigation bar configuration without the problematic swizzling
@@ -87,31 +76,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     @objc private func applicationStateChanged() {
-        // Apply fixes more aggressively when app state changes
+        // Apply fixes only once when app becomes active
         applyBackButtonFixes()
-        
-        // Replace all back buttons with custom ones
-        BackButtonFix.shared.replaceBackButtonsWithCustom()
-        
-        // Schedule additional fixes for when views may be reloading
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.applyBackButtonFixes()
-            LocalizationManager.shared.clearHebrewPreviousText()
-            BackButtonFix.shared.replaceBackButtonsWithCustom()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.applyBackButtonFixes()
-            LocalizationManager.shared.clearHebrewPreviousText()
-            BackButtonFix.shared.replaceBackButtonsWithCustom()
-        }
     }
     
     private func applyBackButtonFixes() {
-        // Apply fixes to remove back button text
+        // Clear back button text in all navigation controllers
         clearAllBackButtonText()
-        
-        // Also explicitly clear Hebrew text
-        LocalizationManager.shared.clearHebrewPreviousText()
     }
     
     private func clearAllBackButtonText() {
@@ -179,11 +150,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         // Called when the user discards a scene session.
-    }
-    
-    deinit {
-        appearanceTimer?.invalidate()
-        NotificationCenter.default.removeObserver(self)
     }
 }
 

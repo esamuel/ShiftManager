@@ -104,6 +104,7 @@
 "Save Shift" = "Enregistrer le quart";
 "Delete" = "Supprimer";
 "Are you sure you want to delete this shift?" = "Êtes-vous sûr de vouloir supprimer ce quart ?";
+"Are you sure you want to delete this shift? This action cannot be undone." = "Êtes-vous sûr de vouloir supprimer ce quart ? Cette action ne peut pas être annulée.";
 "Shift Details" = "Détails du quart";
 "Duration" = "Durée";
 "Regular Pay" = "Paiement normal";
@@ -137,7 +138,10 @@
 "Wage Breakdown" = "Détail du salaire";
 "Total Working Days" = "Total jours travaillés";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Vous essayez d'ajouter un quart de plus de 12 heures. Êtes-vous sûr de vouloir continuer ?";
+"Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Les heures quotidiennes totales dépasseraient 12 heures. Le maximum autorisé est de 12 heures par jour.";
+"Daily Hour Limit Exceeded" = "Limite d'heures quotidiennes dépassée";
 "A shift already exists for this date and time period." = "Un quart existe déjà pour cette date et cette période.";
+"Overlapping shifts are not allowed. Please choose a different time." = "Les quarts qui se chevauchent ne sont pas autorisés. Veuillez choisir une autre heure.";
 "Shift Already Exists" = "Le quart existe déjà";
 "Calculations" = "Calculs";
 "Save Changes" = "Enregistrer les modifications";
@@ -222,6 +226,48 @@
 "Start Date" = "Date de début";
 "End Date" = "Date de fin";
 "Export to PDF" = "Exporter en PDF";
+"Generating..." = "Génération...";
+"No data available to export" = "Aucune donnée disponible à exporter";
+"Failed to generate PDF: No data returned" = "Échec de la génération du PDF : aucune donnée renvoyée";
+"Error generating PDF: %@" = "Erreur lors de la génération du PDF : %@";
+
+// Premium Features
+"Upgrade to Premium" = "Passer à Premium";
+"Unlock Premium" = "Débloquer Premium";
+"Premium Features" = "Fonctionnalités Premium";
+"Get unlimited access to all features" = "Accédez à toutes les fonctionnalités sans limites";
+"Choose Your Plan" = "Choisissez votre plan";
+"Continue" = "Continuer";
+"Restore Purchases" = "Restaurer les achats";
+"Success!" = "Succès!";
+"You now have access to all premium features!" = "Vous avez maintenant accès à toutes les fonctionnalités premium!";
+"No previous purchases found" = "Aucun achat précédent trouvé";
+"By purchasing, you agree to our Terms of Service and Privacy Policy" = "En achetant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité";
+"Terms of Service" = "Conditions d'utilisation";
+"Privacy Policy" = "Politique de confidentialité";
+"PDF Export" = "Export PDF";
+"Advanced Reports" = "Rapports avancés";
+"Split Shifts" = "Quarts divisés";
+"Unlimited Shifts" = "Quarts illimités";
+"All Languages" = "Toutes les langues";
+"Data Backup & Restore" = "Sauvegarde et restauration";
+"Unlimited History" = "Historique illimité";
+"Multiple Currencies" = "Devises multiples";
+"Premium Themes" = "Thèmes Premium";
+"Lifetime Access" = "Accès à vie";
+"Annual Subscription" = "Abonnement annuel";
+"Monthly Subscription" = "Abonnement mensuel";
+"One-time payment, lifetime access to all premium features" = "Paiement unique, accès à vie à toutes les fonctionnalités premium";
+"All premium features, billed annually" = "Toutes les fonctionnalités premium, facturation annuelle";
+"All premium features, billed monthly" = "Toutes les fonctionnalités premium, facturation mensuelle";
+"Best Value" = "Meilleure valeur";
+"Popular" = "Populaire";
+"Save %d%%" = "Économisez %d%%";
+"Shift Limit Reached" = "Limite de quarts atteinte";
+"You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!" = "Vous avez atteint la limite gratuite de 50 quarts. Passez à Premium pour des quarts illimités!";
+"Unlock all features & unlimited shifts" = "Débloquez toutes les fonctionnalités et quarts illimités";
+"Premium Active" = "Premium actif";
+"You have access to all features" = "Vous avez accès à toutes les fonctionnalités";
 "Total Working Days:" = "Total jours travaillés:";
 "Total Hours:" = "Heures totales:";
 "Gross Wage:" = "Salaire brut:";
@@ -326,4 +372,177 @@
 "Tell us what you think about the app..." = "Dites-nous ce que vous pensez de l'application...";
 "Submit Feedback" = "Soumettre les Commentaires";
 "Feedback Sent" = "Commentaires Envoyés";
-"Thank you for your feedback! We'll use it to improve the app." = "Merci pour vos commentaires ! Nous les utiliserons pour améliorer l'application."; 
+"Thank you for your feedback! We'll use it to improve the app." = "Merci pour vos commentaires ! Nous les utiliserons pour améliorer l'application.";
+
+// Monthly Report
+"Monthly Report" = "Rapport Mensuel";
+"Select Month" = "Sélectionner le Mois";
+"Generate Monthly Report" = "Générer le Rapport Mensuel";
+"Month & Year" = "Mois et Année";
+"No data available for selected month" = "Aucune donnée disponible pour le mois sélectionné";
+"Report Summary" = "Résumé du Rapport";
+"Month:" = "Mois:";
+"Year:" = "Année:";
+"Total Shifts:" = "Total de Quarts:";
+"Regular Shift Hours:" = "Heures de Quart Régulier:";
+"Overtime Hours:" = "Heures Supplémentaires:";
+"Monthly Report Generated" = "Rapport Mensuel Généré";
+"Generated on" = "Généré le";
+
+// Legal Documents - Terms of Service (French)
+"premium_terms_full_content" = "CONDITIONS D'UTILISATION
+
+Dernière mise à jour : Novembre 2025
+
+1. ACCEPTATION DES CONDITIONS
+En achetant ShiftManager Premium, vous acceptez ces Conditions d'Utilisation. Si vous n'acceptez pas, veuillez ne pas acheter ou utiliser les fonctionnalités premium.
+
+2. ABONNEMENT PREMIUM
+ShiftManager propose trois options premium :
+• Accès à vie : Paiement unique pour un accès permanent à toutes les fonctionnalités premium
+• Abonnement annuel : Facturation annuelle, renouvellement automatique sauf annulation
+• Abonnement mensuel : Facturation mensuelle, renouvellement automatique sauf annulation
+
+Tous les achats sont traités via l'App Store d'Apple et sont soumis aux termes et conditions d'Apple.
+
+3. FONCTIONNALITÉS PREMIUM
+Premium déverrouille :
+• Exportation PDF des rapports
+• Analyses et graphiques avancés
+• Gestion des quarts fractionnés
+• Historique de quarts illimité
+• Support de toutes les langues
+• Sauvegarde et restauration des données
+• Support de plusieurs devises
+• Thèmes premium
+
+4. FACTURATION ET ANNULATION
+• Tous les achats sont facturés via votre compte Apple ID
+• Les abonnements se renouvellent automatiquement sauf annulation au moins 24 heures avant la fin de la période en cours
+• Vous pouvez gérer et annuler les abonnements dans vos paramètres Apple ID
+• Les achats à vie sont uniques et non remboursables après l'achat
+
+5. POLITIQUE DE REMBOURSEMENT
+Les demandes de remboursement sont soumises à la politique de remboursement standard d'Apple. Contactez directement l'assistance Apple pour les demandes de remboursement.
+
+6. MODIFICATIONS DES FONCTIONNALITÉS PREMIUM
+Nous nous réservons le droit d'ajouter, de modifier ou de supprimer des fonctionnalités premium avec un préavis raisonnable aux utilisateurs. Les abonnés existants ne perdront pas l'accès aux fonctionnalités premium de base qu'ils ont achetées.
+
+7. DISPONIBILITÉ DU SERVICE
+Nous visons une disponibilité de 99,9% mais ne pouvons garantir un service ininterrompu. Nous ne sommes pas responsables des interruptions de service temporaires.
+
+8. UTILISATION INTERDITE
+Vous ne pouvez pas :
+• Partager votre compte premium avec d'autres
+• Rétro-ingénierie de l'application
+• Utiliser l'application à des fins illégales
+• Tenter de contourner les systèmes de paiement
+
+9. RÉSILIATION
+Nous nous réservons le droit de résilier les comptes qui violent ces conditions.
+
+10. LIMITATION DE RESPONSABILITÉ
+ShiftManager est fourni \"tel quel\" sans garanties. Nous ne sommes pas responsables des dommages découlant de l'utilisation de l'application.
+
+11. LOI APPLICABLE
+Ces conditions sont régies par les lois de votre juridiction.
+
+12. CONTACT
+Pour toute question concernant ces conditions, veuillez nous contacter via la section support de l'application.
+
+En achetant Premium, vous reconnaissez avoir lu, compris et accepté ces Conditions d'Utilisation.";
+
+"premium_terms_last_updated" = "Dernière mise à jour : 18 novembre 2025";
+
+// Legal Documents - Privacy Policy (French)
+"premium_privacy_key_principle" = "Notre Principe de Confidentialité Fondamental";
+"premium_privacy_key_message" = "Vos données de quarts restent sur VOTRE appareil. Nous ne collectons, ne stockons ni ne partageons jamais vos informations de travail personnelles.";
+
+"premium_privacy_full_content" = "POLITIQUE DE CONFIDENTIALITÉ
+
+Dernière mise à jour : Novembre 2025
+
+1. NOTRE ENGAGEMENT EN MATIÈRE DE CONFIDENTIALITÉ
+ShiftManager est conçu avec la confidentialité au cœur. Toutes vos données de quarts, revenus et informations de travail sont stockées localement sur votre appareil à l'aide du framework Core Data d'Apple. Nous ne collectons, ne transmettons ni ne stockons aucune de vos données de travail personnelles sur des serveurs externes.
+
+2. DONNÉES QUE NOUS NE COLLECTONS PAS
+Nous ne collectons PAS :
+• Vos horaires de quarts
+• Heures de travail ou revenus
+• Informations sur l'employeur
+• Données de localisation
+• Informations d'identification personnelle
+• Analyses d'utilisation ou données de suivi
+
+3. DONNÉES STOCKÉES LOCALEMENT
+Les données suivantes sont stockées uniquement sur votre appareil :
+• Horaires de quarts (heures de début/fin, pauses)
+• Calculs de salaire
+• Rapports et statistiques
+• Préférences et paramètres utilisateur
+
+Ces données restent sur votre appareil et sont incluses dans votre sauvegarde iCloud si vous avez activé iCloud pour cette application.
+
+4. ACHATS PREMIUM
+Lorsque vous achetez Premium :
+• Apple traite le paiement via l'App Store
+• Nous recevons uniquement une validation de reçu d'achat d'Apple
+• Aucune information financière personnelle n'est partagée avec nous
+• La politique de confidentialité d'Apple s'applique aux données d'achat
+
+5. SYNCHRONISATION iCLOUD (OPTIONNELLE)
+Si vous activez la synchronisation iCloud :
+• Vos données de quarts se synchronisent entre vos appareils via iCloud d'Apple
+• Les données sont cryptées en transit et au repos
+• La politique de confidentialité iCloud d'Apple s'applique
+• Vous pouvez désactiver la synchronisation iCloud à tout moment dans les paramètres iOS
+
+6. PERMISSIONS
+ShiftManager demande uniquement les permissions essentielles :
+• Notifications : Pour vous rappeler les quarts à venir (optionnel)
+• Pas de suivi de localisation
+• Pas d'accès à la caméra ou aux photos
+• Pas d'accès aux contacts
+• Pas d'accès au microphone
+
+7. CONFIDENTIALITÉ DES ENFANTS
+Notre application ne collecte sciemment pas d'informations auprès d'enfants de moins de 13 ans. L'application est conçue pour les adultes qui travaillent.
+
+8. SÉCURITÉ DES DONNÉES
+• Toutes les données sont stockées à l'aide du framework Core Data sécurisé d'Apple
+• Les données locales sont protégées par les fonctionnalités de sécurité de votre appareil
+• Aucune transmission de données vers des serveurs externes
+• Vos données sont aussi sécurisées que votre appareil
+
+9. VOS DROITS
+Vous avez un contrôle total :
+• Exportez vos données sous forme de rapports PDF
+• Supprimez toutes les données à tout moment via les paramètres
+• Aucune création de compte requise
+• Propriété complète des données
+
+10. SERVICES TIERS
+Nous utilisons uniquement les frameworks natifs d'Apple :
+• StoreKit pour les achats
+• Core Data pour le stockage local
+• CloudKit pour la synchronisation iCloud optionnelle
+Tous soumis aux politiques de confidentialité d'Apple.
+
+11. MODIFICATIONS DE LA POLITIQUE DE CONFIDENTIALITÉ
+Nous vous informerons des modifications importantes de la politique de confidentialité par le biais d'une notification de mise à jour de l'application.
+
+12. CONSERVATION DES DONNÉES
+Vos données restent sur votre appareil jusqu'à ce que vous supprimiez l'application ou supprimiez manuellement les données. Nous n'avons pas accès à ou de contrôle sur vos données locales.
+
+13. UTILISATEURS INTERNATIONAUX
+Étant donné que les données sont stockées localement sur votre appareil, aucun transfert de données international n'a lieu.
+
+14. NOUS CONTACTER
+Des questions sur la confidentialité ? Contactez-nous via la section support de l'application.
+
+RÉSUMÉ :
+Vos données de travail vous appartiennent. Elles restent sur votre appareil. Nous ne les voyons, ne les collectons ni ne les partageons jamais. C'est notre promesse.";
+
+"premium_privacy_summary_title" = "Résumé de la Confidentialité";
+"premium_privacy_summary_content" = "✓ Toutes les données stockées localement sur votre appareil\n✓ Aucune collecte de données ou suivi\n✓ Aucune inscription de compte requise\n✓ Synchronisation iCloud optionnelle (cryptée)\n✓ Contrôle et propriété complète des données\n✓ Pas de publicités ou d'analyses tierces\n✓ Confidentialité complète garantie";
+"premium_privacy_last_updated" = "Dernière mise à jour : 18 novembre 2025";

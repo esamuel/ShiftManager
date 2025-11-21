@@ -69,24 +69,46 @@ struct WageChartView: View {
                 .padding(.bottom, 8)
             
             if totalWage > 0 {
-                Chart {
-                    ForEach(chartData) { item in
-                        SectorMark(
-                            angle: .value("Wage", item.amount),
-                            innerRadius: .ratio(0.5),
-                            angularInset: 1.5
-                        )
-                        .foregroundStyle(item.color)
-                        .annotation(position: .overlay) {
-                            Text(String(format: "%.1f%%", (item.amount / totalWage) * 100))
-                                .font(.caption)
-                                .foregroundColor(.white)
-                                .fontWeight(.bold)
+                if #available(iOS 17.0, *) {
+                    Chart {
+                        ForEach(chartData) { item in
+                            SectorMark(
+                                angle: .value("Wage", item.amount),
+                                innerRadius: .ratio(0.5),
+                                angularInset: 1.5
+                            )
+                            .foregroundStyle(item.color)
+                            .annotation(position: .overlay) {
+                                Text(String(format: "%.1f%%", (item.amount / totalWage) * 100))
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
                         }
                     }
+                    .frame(height: 200)
+                    .padding(.vertical)
+                } else {
+                    // Fallback for iOS 15-16 - Simple bars
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(chartData) { item in
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text(item.category)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(String(format: "%.1f%%", (item.amount / totalWage) * 100))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Rectangle()
+                                    .fill(item.color)
+                                    .frame(width: CGFloat((item.amount / totalWage)) * 300, height: 20)
+                            }
+                        }
+                    }
+                    .padding(.vertical)
                 }
-                .frame(height: 200)
-                .padding(.vertical)
                 
                 // Amount breakdown
                 VStack(spacing: 8) {

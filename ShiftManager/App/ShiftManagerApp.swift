@@ -25,14 +25,6 @@ struct ShiftManagerApp: App {
                     .environmentObject(shiftManager)
                     .environmentObject(settingsManager)
                     .refreshOnLanguageChange()
-                    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
-                        // Additional UI refresh when language changes
-                        refreshUI()
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ThemeChanged"))) { _ in
-                        // Additional UI refresh when theme changes
-                        refreshUI()
-                    }
                     .withAppTheme() // Apply app theme
                 
                 // Show onboarding view on first launch
@@ -45,20 +37,6 @@ struct ShiftManagerApp: App {
                         .transition(.opacity)
                         .withAppTheme() // Apply theme to onboarding as well
                 }
-            }
-        }
-    }
-    
-    // Helper function to refresh the UI
-    private func refreshUI() {
-        DispatchQueue.main.async {
-            if #available(iOS 15.0, *) {
-                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let window = windowScene.windows.first else { return }
-                window.rootViewController?.view.setNeedsLayout()
-            } else {
-                // Fallback for iOS < 15
-                UIApplication.shared.windows.first?.rootViewController?.view.setNeedsLayout()
             }
         }
     }

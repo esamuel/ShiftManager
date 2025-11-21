@@ -83,7 +83,7 @@ class WageCalculationService {
     }
 
     /// Returns true if the date is a special work day (weekend or holiday)
-    private func isSpecialWorkDay(_ date: Date) -> Bool {
+    func isSpecialWorkDay(_ date: Date) -> Bool {
         if isWeekend(date) { return true }
         if isJewishHoliday(date) { return true }
         if isGlobalHoliday(date) { return true }
@@ -250,6 +250,196 @@ class WageCalculationService {
         }
         
         return nil
+    }
+    
+    // MARK: - Daily Combined Wage Calculation
+    /// Calculates wages for all shifts on the same day, properly accounting for daily overtime
+    func calculateDailyWagesForShifts(_ shifts: [ShiftModel]) async throws -> [UUID: WageCalculation] {
+        guard !shifts.isEmpty else { return [:] }
+        
+        // Sort shifts by start time
+        let sortedShifts = shifts.sorted { $0.startTime < $1.startTime }
+        
+        // Calculate total daily hours
+        let totalDailyHours = sortedShifts.reduce(0.0) { $0 + ($1.duration / 3600) }
+        
+        // Get settings
+        let defaultHourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
+        let taxDeduction = UserDefaults.standard.double(forKey: "taxDeduction") / 100
+        
+        // Determine if this is a special day (use first shift's date)
+        let isSpecialDay = sortedShifts.first.map { isSpecialWorkDay($0.startTime) || $0.isSpecialDay } ?? false
+        
+        // Calculate cumulative wage based on total daily hours
+        var cumulativeWage = 0.0
+        var remainingHours = totalDailyHours
+        
+        if isSpecialDay {
+            // Special day: 0-8h @ 150%, 8-10h @ 175%, 10+h @ 200%
+            let baseHours = min(remainingHours, 8.0)
+            cumulativeWage += baseHours * defaultHourlyWage * 1.5
+            remainingHours -= baseHours
+            
+            if remainingHours > 0 {
+                let overtime1Hours = min(remainingHours, 2.0)
+                cumulativeWage += overtime1Hours * defaultHourlyWage * 1.75
+                remainingHours -= overtime1Hours
+            }
+            
+            if remainingHours > 0 {
+                cumulativeWage += remainingHours * defaultHourlyWage * 2.0
+            }
+        } else {
+            // Regular day: 0-8h @ 100%, 8-10h @ 125%, 10+h @ 150%
+            let baseHours = min(remainingHours, 8.0)
+            cumulativeWage += baseHours * defaultHourlyWage
+            remainingHours -= baseHours
+            
+            if remainingHours > 0 {
+                let overtime1Hours = min(remainingHours, 2.0)
+                cumulativeWage += overtime1Hours * defaultHourlyWage * 1.25
+                remainingHours -= overtime1Hours
+            }
+            
+            if remainingHours > 0 {
+                cumulativeWage += remainingHours * defaultHourlyWage * 1.5
+            }
+        }
+        
+        // Distribute wage proportionally to each shift based on its duration
+        var results: [UUID: WageCalculation] = [:]
+        
+        for shift in sortedShifts {
+            let shiftHours = shift.duration / 3600
+            let shiftProportion = shiftHours / totalDailyHours
+            let shiftGrossWage = cumulativeWage * shiftProportion
+            
+            // Check for patrol shift adjustment ("סייר")
+            let hourlyWage = shift.notes.contains("סייר") ? 46.04 : defaultHourlyWage
+            let wageAdjustment = (hourlyWage / defaultHourlyWage)
+            let adjustedGrossWage = shiftGrossWage * wageAdjustment
+            
+            let taxAmount = adjustedGrossWage * taxDeduction
+            let netWage = adjustedGrossWage - taxAmount
+            
+            // Create breakdown for this shift
+            var breakdowns: [WageBreakdown] = []
+            var shiftRemainingHours = shiftHours
+            var cumulativeHoursBefore = sortedShifts.filter { $0.startTime < shift.startTime }
+                .reduce(0.0) { $0 + ($1.duration / 3600) }
+            
+            // Calculate which tier(s) this shift falls into
+            if isSpecialDay {
+                if cumulativeHoursBefore < 8.0 {
+                    let hoursInBaseTier = min(shiftRemainingHours, 8.0 - cumulativeHoursBefore)
+                    breakdowns.append(WageBreakdown(
+                        hours: hoursInBaseTier,
+                        rate: 1.5,
+                        amount: hoursInBaseTier * hourlyWage * 1.5,
+                        type: .special
+                    ))
+                    shiftRemainingHours -= hoursInBaseTier
+                    cumulativeHoursBefore += hoursInBaseTier
+                }
+                
+                if shiftRemainingHours > 0 && cumulativeHoursBefore < 10.0 {
+                    let hoursInOT1Tier = min(shiftRemainingHours, 10.0 - cumulativeHoursBefore)
+                    breakdowns.append(WageBreakdown(
+                        hours: hoursInOT1Tier,
+                        rate: 1.75,
+                        amount: hoursInOT1Tier * hourlyWage * 1.75,
+                        type: .overtime
+                    ))
+                    shiftRemainingHours -= hoursInOT1Tier
+                    cumulativeHoursBefore += hoursInOT1Tier
+                }
+                
+                if shiftRemainingHours > 0 {
+                    breakdowns.append(WageBreakdown(
+                        hours: shiftRemainingHours,
+                        rate: 2.0,
+                        amount: shiftRemainingHours * hourlyWage * 2.0,
+                        type: .overtime
+                    ))
+                }
+            } else {
+                if cumulativeHoursBefore < 8.0 {
+                    let hoursInBaseTier = min(shiftRemainingHours, 8.0 - cumulativeHoursBefore)
+                    breakdowns.append(WageBreakdown(
+                        hours: hoursInBaseTier,
+                        rate: 1.0,
+                        amount: hoursInBaseTier * hourlyWage,
+                        type: .regular
+                    ))
+                    shiftRemainingHours -= hoursInBaseTier
+                    cumulativeHoursBefore += hoursInBaseTier
+                }
+                
+                if shiftRemainingHours > 0 && cumulativeHoursBefore < 10.0 {
+                    let hoursInOT1Tier = min(shiftRemainingHours, 10.0 - cumulativeHoursBefore)
+                    breakdowns.append(WageBreakdown(
+                        hours: hoursInOT1Tier,
+                        rate: 1.25,
+                        amount: hoursInOT1Tier * hourlyWage * 1.25,
+                        type: .overtime
+                    ))
+                    shiftRemainingHours -= hoursInOT1Tier
+                    cumulativeHoursBefore += hoursInOT1Tier
+                }
+                
+                if shiftRemainingHours > 0 {
+                    breakdowns.append(WageBreakdown(
+                        hours: shiftRemainingHours,
+                        rate: 1.5,
+                        amount: shiftRemainingHours * hourlyWage * 1.5,
+                        type: .overtime
+                    ))
+                }
+            }
+            
+            results[shift.id] = WageCalculation(
+                totalHours: shiftHours,
+                grossWage: adjustedGrossWage,
+                taxDeduction: taxAmount,
+                netWage: netWage,
+                breakdowns: breakdowns,
+                isSpecialDay: isSpecialDay,
+                isFestiveDay: false
+            )
+        }
+        
+        return results
+    }
+    
+    /// Fetches all shifts on the same day as the given date
+    func fetchShiftsOnSameDay(as date: Date) async throws -> [ShiftModel] {
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        
+        let request = NSFetchRequest<Shift>(entityName: "Shift")
+        request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", dayStart as NSDate, dayEnd as NSDate)
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
+        
+        let shifts = try await context.perform {
+            try self.context.fetch(request)
+        }
+        
+        return shifts.map { shift in
+            ShiftModel(
+                id: shift.id ?? UUID(),
+                title: shift.title ?? "",
+                category: shift.category ?? "",
+                startTime: shift.startTime ?? Date(),
+                endTime: shift.endTime ?? Date(),
+                notes: shift.notes ?? "",
+                isOvertime: shift.isOvertime,
+                isSpecialDay: shift.isSpecialDay,
+                grossWage: shift.grossWage,
+                netWage: shift.netWage,
+                createdAt: shift.createdAt ?? Date()
+            )
+        }
     }
 }
 

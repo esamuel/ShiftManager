@@ -36,7 +36,7 @@ struct LegalView: View {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         LegalView()
     }
 } 

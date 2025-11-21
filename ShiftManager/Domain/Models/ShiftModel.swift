@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ShiftModel: Identifiable, Codable {
+public struct ShiftModel: Identifiable, Codable, Sendable {
     public let id: UUID
     public var title: String
     public var startTime: Date

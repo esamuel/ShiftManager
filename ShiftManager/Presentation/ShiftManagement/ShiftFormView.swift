@@ -15,8 +15,8 @@ struct ShiftFormView: View {
                     
                     Toggle("Overtime".localized, isOn: $viewModel.isOvertime)
                     
-                    TextField("Notes".localized, text: $viewModel.notes, axis: .vertical)
-                        .lineLimit(3...6)
+                    TextEditor(text: $viewModel.notes)
+                        .frame(minHeight: 60, maxHeight: 120)
                 }
                 
                 Section(header: Text("Calculations".localized)) {
@@ -123,7 +123,7 @@ class ShiftFormViewModel: ObservableObject {
     func save() async {
         do {
             let shift = ShiftModel(
-                id: UUID(),
+                id: isEditing ? (self.shift?.id ?? UUID()) : UUID(),
                 title: title,
                 category: "",
                 startTime: startTime,
@@ -141,6 +141,9 @@ class ShiftFormViewModel: ObservableObject {
             } else {
                 try await repository.createShift(shift)
             }
+            
+            // Recalculate wages for all shifts on the same day
+            try await repository.recalculateDailyWages(for: shift.startTime)
         } catch {
             self.error = error
         }

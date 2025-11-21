@@ -12,6 +12,7 @@ public struct ReportView: View {
     @State private var selectedView: ReportViewType = .weekly
     @State private var showingSearchSheet = false
     @State private var showingPrintSheet = false
+    @State private var showingMonthlyReport = false
     
     public init() {}
     
@@ -260,8 +261,9 @@ public struct ReportView: View {
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                // No need for a manual back button as NavigationView provides one automatically
-                // when navigating from another view
+                NavigationLink(destination: MonthlyReportView()) {
+                    Image(systemName: "calendar")
+                }
             }
         }
         .sheet(isPresented: $showingSearchSheet) {

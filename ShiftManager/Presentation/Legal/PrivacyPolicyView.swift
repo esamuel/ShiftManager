@@ -84,7 +84,7 @@ struct PrivacyPolicyView: View {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         PrivacyPolicyView()
     }
 } 

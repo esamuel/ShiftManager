@@ -47,23 +47,41 @@ struct HoursChartView: View {
                 .font(.headline)
                 .padding(.bottom, 8)
             
-            Chart {
-                ForEach(chartData) { item in
-                    BarMark(
-                        x: .value("Hours", item.hours),
-                        y: .value("Category", item.category)
-                    )
-                    .foregroundStyle(item.color)
-                    .annotation(position: .trailing) {
-                        Text(String(format: "%.1f", item.hours))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+            if #available(iOS 16.0, *) {
+                Chart {
+                    ForEach(chartData) { item in
+                        BarMark(
+                            x: .value("Hours", item.hours),
+                            y: .value("Category", item.category)
+                        )
+                        .foregroundStyle(item.color)
+                        .annotation(position: .trailing) {
+                            Text(String(format: "%.1f", item.hours))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
-            }
-            .frame(height: CGFloat(chartData.count * 40))
-            .chartXAxis {
-                AxisMarks(position: .bottom)
+                .frame(height: CGFloat(chartData.count * 40))
+                .chartXAxis {
+                    AxisMarks(position: .bottom)
+                }
+            } else {
+                // Fallback for iOS 15 - Simple list view
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(chartData) { item in
+                        HStack {
+                            Rectangle()
+                                .fill(item.color)
+                                .frame(width: CGFloat(item.hours * 10), height: 20)
+                            Text(String(format: "%.1fh", item.hours))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(item.category)
+                            .font(.caption)
+                    }
+                }
             }
             
             // Legend

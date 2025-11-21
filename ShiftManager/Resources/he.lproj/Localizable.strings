@@ -110,6 +110,7 @@
 "Save Shift" = "שמור משמרת";
 "Delete" = "מחק";
 "Are you sure you want to delete this shift?" = "האם אתה בטוח שברצונך למחוק את המשמרת הזו?";
+"Are you sure you want to delete this shift? This action cannot be undone." = "האם אתה בטוח שברצונך למחוק את המשמרת הזו? פעולה זו אינה ניתנת לביטול.";
 "Shift Details" = "פרטי משמרת";
 "Duration" = "משך";
 "Regular Pay" = "שכר רגיל";
@@ -143,7 +144,10 @@
 "Wage Breakdown" = "פירוט שכר";
 "Total Working Days" = "סך ימי עבודה";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "אתה מנסה להוסיף משמרת ארוכה מ-12 שעות. האם להמשיך?";
+"Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "סך השעות היומיות יעלה על 12 שעות. המקסימום המותר הוא 12 שעות ביום.";
+"Daily Hour Limit Exceeded" = "חריגה ממגבלת שעות יומית";
 "A shift already exists for this date and time period." = "כבר קיימת משמרת בתאריך ובשעה זו.";
+"Overlapping shifts are not allowed. Please choose a different time." = "משמרות חופפות אינן מותרות. אנא בחר זמן אחר.";
 "Shift Already Exists" = "משמרת כבר קיימת";
 "Calculations" = "חישובים";
 "Save Changes" = "שמור שינויים";
@@ -230,6 +234,54 @@
 "Start Date" = "תאריך התחלה";
 "End Date" = "תאריך סיום";
 "Export to PDF" = "ייצא ל-PDF";
+"Generating..." = "מייצר...";
+"No data available to export" = "אין נתונים זמינים לייצוא";
+"Failed to generate PDF: No data returned" = "יצירת PDF נכשלה: לא הוחזרו נתונים";
+"Error generating PDF: %@" = "שגיאה ביצירת PDF: %@";
+
+// Premium Features
+"Upgrade to Premium" = "שדרג לפרימיום";
+"Unlock Premium" = "פתח פרימיום";
+"Premium Features" = "תכונות פרימיום";
+"Get unlimited access to all features" = "קבל גישה בלתי מוגבלת לכל התכונות";
+"Choose Your Plan" = "בחר את התוכנית שלך";
+"Continue" = "המשך";
+"Restore Purchases" = "שחזר רכישות";
+"Success!" = "הצלחה!";
+"You now have access to all premium features!" = "יש לך כעת גישה לכל תכונות הפרימיום!";
+"No previous purchases found" = "לא נמצאו רכישות קודמות";
+"By purchasing, you agree to our Terms of Service and Privacy Policy" = "ברכישה, אתה מסכים לתנאי השירות ולמדיניות הפרטיות שלנו";
+"Terms of Service" = "תנאי שירות";
+"Privacy Policy" = "מדיניות פרטיות";
+
+// Premium Feature Names
+"PDF Export" = "ייצוא PDF";
+"Advanced Reports" = "דוחות מתקדמים";
+"Split Shifts" = "משמרות מפוצלות";
+"Unlimited Shifts" = "משמרות ללא הגבלה";
+"All Languages" = "כל השפות";
+"Data Backup & Restore" = "גיבוי ושחזור נתונים";
+"Unlimited History" = "היסטוריה ללא הגבלה";
+"Multiple Currencies" = "מטבעות מרובים";
+"Premium Themes" = "ערכות נושא פרימיום";
+
+// Product Names
+"Lifetime Access" = "גישה לכל החיים";
+"Annual Subscription" = "מנוי שנתי";
+"Monthly Subscription" = "מנוי חודשי";
+"One-time payment, lifetime access to all premium features" = "תשלום חד-פעמי, גישה לכל החיים לכל תכונות הפרימיום";
+"All premium features, billed annually" = "כל תכונות הפרימיום, חיוב שנתי";
+"All premium features, billed monthly" = "כל תכונות הפרימיום, חיוב חודשי";
+"Best Value" = "הכי משתלם";
+"Popular" = "פופולרי";
+"Save %d%%" = "חסוך %d%%";
+
+// Alerts
+"Shift Limit Reached" = "הגעת למגבלת משמרות";
+"You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!" = "הגעת למגבלה החינמית של 50 משמרות. שדרג לפרימיום למשמרות ללא הגבלה!";
+"Unlock all features & unlimited shifts" = "פתח את כל התכונות ומשמרות ללא הגבלה";
+"Premium Active" = "פרימיום פעיל";
+"You have access to all features" = "יש לך גישה לכל התכונות";
 "No shifts found for the selected period" = "לא נמצאו משמרות לתקופה שנבחרה";
 "Make the most of ShiftManager:" = "הפק את המירב מ-ShiftManager:";
 "Use the search feature to find specific shifts" = "השתמש בחיפוש למציאת משמרות מסוימות";
@@ -299,6 +351,21 @@
 "Tell Friends" = "ספר לחברים";
 "Calendar" = "לוח שנה עברי";
 
+// Monthly Report
+"Monthly Report" = "דוח חודשי";
+"Select Month" = "בחר חודש";
+"Generate Monthly Report" = "צור דוח חודשי";
+"Month & Year" = "חודש ושנה";
+"No data available for selected month" = "אין נתונים זמינים לחודש שנבחר";
+"Report Summary" = "סיכום דוח";
+"Month:" = "חודש:";
+"Year:" = "שנה:";
+"Total Shifts:" = "סך כל המשמרות:";
+"Regular Shift Hours:" = "שעות משמרת רגילות:";
+"Overtime Hours:" = "שעות נוספות:";
+"Monthly Report Generated" = "דוח חודשי נוצר";
+"Generated on" = "נוצר בתאריך";
+
 "No Shifts Found" = "לא נמצאו משמרות";
 "No shifts found for the selected period. Try adjusting your search criteria." = "לא נמצאו משמרות לתקופה שנבחרה. נסה לשנות את קריטריוני החיפוש.";
 "You don't have any shifts scheduled. Add your first shift using the form above." = "אין לך משמרות מתוכננות. הוסף את המשמרת הראשונה שלך באמצעות הטופס למעלה.";
@@ -322,5 +389,171 @@
 "Shifts" = "משמרות";
 
 "Contact Support" = "צור קשר עם התמיכה";
-"Privacy Policy" = "מדיניות פרטיות";
-"Terms of Use" = "תנאי שימוש";
+// Tooltips
+"Help" = "עזרה";
+"This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations." = "אחוז זה ינוכה מההכנסה הכוללת שלך כדי לחשב הכנסה נטו. החישוב בפועל עשוי להשתנות לפי תקנות מקומיות.";
+"Standard work hours for a regular weekday before overtime calculation begins." = "שעות עבודה רגילות ליום חול לפני חישוב שעות נוספות.";
+"Standard work hours for special days (weekends, holidays) before overtime calculation begins." = "שעות עבודה רגילות לימים מיוחדים (סופ\"ש, חגים) לפני חישוב שעות נוספות.";
+"Sets the first day of your work week for reporting and calculations. Different countries use different standards." = "קובע את היום הראשון של שבוע העבודה לצורך דוחות וחישובים. מדינות שונות משתמשות בסטנדרטים שונים.";
+"The number of hours after which this overtime rate starts to apply." = "מספר השעות שלאחריהן מתחיל תעריף שעות נוספות זה.";
+"The multiplier applied to your hourly wage (e.g., 1.5 for time-and-a-half, 2.0 for double time)." = "המכפיל המוחל על השכר השעתי שלך (למשל, 1.5 עבור 150%, 2.0 עבור 200%).";
+"If enabled, this rule will apply to weekends and holidays. If disabled, it applies to regular weekdays." = "אם מופעל, כלל זה יחול על סופי שבוע וחגים. אם כבוי, הוא יחול על ימי חול רגילים.";
+"Note: Tax calculation is an estimate and may vary based on local regulations." = "הערה: חישוב המס הוא הערכה ועשוי להשתנות בהתאם לתקנות המקומיות.";
+
+// Legal Documents - Terms of Service (Hebrew)
+"premium_terms_full_content" = "תנאי שימוש
+
+עדכון אחרון: נובמבר 2025
+
+1. קבלת התנאים
+ברכישת ShiftManager Premium, אתה מסכים לתנאי שימוש אלה. אם אינך מסכים, אנא אל תרכוש או תשתמש בתכונות הפרימיום.
+
+2. מנוי פרימיום
+ShiftManager מציעה שלוש אפשרויות פרימיום:
+• גישה לכל החיים: תשלום חד-פעמי לגישה קבועה לכל תכונות הפרימיום
+• מנוי שנתי: חיוב שנתי, מתחדש אוטומטית אלא אם בוטל
+• מנוי חודשי: חיוב חודשי, מתחדש אוטומטית אלא אם בוטל
+
+כל הרכישות מעובדות דרך חנות האפליקציות של Apple וכפופות לתנאים והתנאות של Apple.
+
+3. תכונות פרימיום
+פרימיום פותח:
+• ייצוא PDF של דוחות
+• אנליטיקה וגרפים מתקדמים
+• ניהול משמרות מפוצלות
+• היסטוריית משמרות בלתי מוגבלת
+• תמיכה בכל השפות
+• גיבוי ושחזור נתונים
+• תמיכה במספר מטבעות
+• ערכות נושא פרימיום
+
+4. חיוב וביטול
+• כל הרכישות מחויבות דרך חשבון Apple ID שלך
+• מנויים מתחדשים אוטומטית אלא אם בוטלו לפחות 24 שעות לפני תום התקופה הנוכחית
+• ניתן לנהל ולבטל מנויים בהגדרות Apple ID שלך
+• רכישות לכל החיים הן חד-פעמיות ולא ניתנות להחזר לאחר הרכישה
+
+5. מדיניות החזרים
+בקשות החזר כפופות למדיניות ההחזר הסטנדרטית של Apple. פנה ישירות לתמיכת Apple לבקשות החזר.
+
+6. שינויים בתכונות פרימיום
+אנו שומרים לעצמנו את הזכות להוסיף, לשנות או להסיר תכונות פרימיום בהודעה סבירה למשתמשים. מנויים קיימים לא יאבדו גישה לתכונות הליבה של הפרימיום שרכשו.
+
+7. זמינות השירות
+אנו שואפים לזמינות של 99.9% אך אינם יכולים להבטיח שירות ללא הפרעות. איננו אחראים להפרעות זמניות בשירות.
+
+8. שימוש אסור
+אסור לך:
+• לשתף את חשבון הפרימיום שלך עם אחרים
+• לבצע הנדסה לאחור של האפליקציה
+• להשתמש באפליקציה למטרות בלתי חוקיות
+• לנסות לעקוף את מערכות התשלום
+
+9. הפסקת שירות
+אנו שומרים לעצמנו את הזכות להפסיק חשבונות המפרים תנאים אלה.
+
+10. הגבלת אחריות
+ShiftManager מסופקת \"כמות שהיא\" ללא אחריות. איננו אחראים לכל נזק הנובע מהשימוש באפליקציה.
+
+11. חוק החל
+תנאים אלה כפופים לחוקים של תחום השיפוט שלך.
+
+12. יצירת קשר
+לשאלות לגבי תנאים אלה, אנא צור קשר דרך מדור התמיכה באפליקציה.
+
+ברכישת פרימיום, אתה מאשר שקראת, הבנת והסכמת לתנאי שימוש אלה.";
+
+"premium_terms_last_updated" = "עדכון אחרון: 18 בנובמבר 2025";
+
+// Legal Documents - Privacy Policy (Hebrew)
+"premium_privacy_key_principle" = "עקרון הפרטיות המרכזי שלנו";
+"premium_privacy_key_message" = "נתוני המשמרות שלך נשארים במכשיר שלך. אנחנו לעולם לא אוספים, מאחסנים או משתפים את פרטי העבודה האישיים שלך.";
+
+"premium_privacy_full_content" = "מדיניות פרטיות
+
+עדכון אחרון: נובמבר 2025
+
+1. התחייבות הפרטיות שלנו
+ShiftManager נבנה עם פרטיות בליבו. כל נתוני המשמרות, השכר ומידע העבודה שלך מאוחסנים מקומית במכשיר שלך באמצעות מסגרת Core Data של Apple. אנחנו לא אוספים, משדרים או מאחסנים שום נתוני עבודה אישיים שלך בשרתים חיצוניים.
+
+2. נתונים שאנחנו לא אוספים
+אנחנו לא אוספים:
+• לוחות המשמרות שלך
+• שעות עבודה או שכר
+• מידע על מעסיק
+• נתוני מיקום
+• מידע זיהוי אישי
+• אנליטיקה או מעקב שימוש
+
+3. נתונים שנשמרים מקומית
+הנתונים הבאים נשמרים רק במכשיר שלך:
+• לוחות משמרות (זמני התחלה/סיום, הפסקות)
+• חישובי שכר
+• דוחות וסטטיסטיקות
+• העדפות והגדרות משתמש
+
+נתונים אלה נשארים במכשיר שלך וכלולים בגיבוי iCloud שלך אם הפעלת iCloud עבור אפליקציה זו.
+
+4. רכישות פרימיום
+כאשר אתה רוכש פרימיום:
+• Apple מעבדת את התשלום דרך App Store
+• אנו מקבלים רק אימות קבלה מ-Apple
+• אין מידע פיננסי אישי שמשותף איתנו
+• מדיניות הפרטיות של Apple חלה על נתוני רכישה
+
+5. סנכרון iCloud (אופציונלי)
+אם תפעיל סנכרון iCloud:
+• נתוני המשמרות שלך מסתנכרנים בין המכשירים שלך באמצעות iCloud של Apple
+• הנתונים מוצפנים במעבר ובמנוחה
+• מדיניות הפרטיות של iCloud של Apple חלה
+• תוכל להשבית סנכרון iCloud בכל עת בהגדרות iOS
+
+6. הרשאות
+ShiftManager מבקשת רק הרשאות חיוניות:
+• התראות: כדי להזכיר לך על משמרות קרובות (אופציונלי)
+• אין מעקב מיקום
+• אין גישה למצלמה או לתמונות
+• אין גישה לאנשי קשר
+• אין גישה למיקרופון
+
+7. פרטיות ילדים
+האפליקציה שלנו לא אוספת במודע מידע מילדים מתחת לגיל 13. האפליקציה מיועדת למבוגרים עובדים.
+
+8. אבטחת נתונים
+• כל הנתונים מאוחסנים באמצעות מסגרת Core Data המאובטחת של Apple
+• נתונים מקומיים מוגנים על ידי תכונות האבטחה של המכשיר שלך
+• אין העברת נתונים לשרתים חיצוניים
+• הנתונים שלך מאובטחים כמו המכשיר שלך
+
+9. הזכויות שלך
+יש לך שליטה מלאה:
+• ייצוא הנתונים שלך כדוחות PDF
+• מחיקת כל הנתונים בכל עת דרך הגדרות
+• אין צורך ביצירת חשבון
+• בעלות מלאה על הנתונים
+
+10. שירותי צד שלישי
+אנו משתמשים רק במסגרות מקוריות של Apple:
+• StoreKit לרכישות
+• Core Data לאחסון מקומי
+• CloudKit לסנכרון iCloud אופציונלי
+הכל כפוף למדיניות הפרטיות של Apple.
+
+11. שינויים במדיניות פרטיות
+נודיע לך על שינויים משמעותיים במדיניות הפרטיות דרך הודעת עדכון אפליקציה.
+
+12. שמירת נתונים
+הנתונים שלך נשארים במכשיר שלך עד שתמחק את האפליקציה או תמחק ידנית את הנתונים. אין לנו גישה או שליטה על הנתונים המקומיים שלך.
+
+13. משתמשים בינלאומיים
+מכיוון שהנתונים מאוחסנים מקומית במכשיר שלך, לא מתרחשת העברת נתונים בינלאומית.
+
+14. צור קשר
+שאלות לגבי פרטיות? צור קשר דרך מדור התמיכה באפליקציה.
+
+סיכום:
+נתוני העבודה שלך הם שלך. הם נשארים במכשיר שלך. אנחנו לעולם לא רואים, אוספים או משתפים אותם. זו ההבטחה שלנו.";
+
+"premium_privacy_summary_title" = "סיכום פרטיות";
+"premium_privacy_summary_content" = "✓ כל הנתונים מאוחסנים מקומית במכשיר שלך\n✓ אין איסוף נתונים או מעקב\n✓ אין צורך ברישום חשבון\n✓ סנכרון iCloud אופציונלי (מוצפן)\n✓ שליטה ובעלות מלאה על הנתונים\n✓ אין פרסומות או אנליטיקה של צד שלישי\n✓ פרטיות מלאה מובטחת";
+"premium_privacy_last_updated" = "עדכון אחרון: 18 בנובמבר 2025";

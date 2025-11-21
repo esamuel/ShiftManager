@@ -4,12 +4,14 @@ public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @StateObject private var localizationManager = LocalizationManager.shared
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var purchaseManager = PurchaseManager.shared
     @Environment(\.dismiss) private var dismiss
     @State private var showingTaxTooltip = false
     @State private var showingBaseHoursTooltip = false
     @State private var showingSpecialDayTooltip = false
     @State private var showingWorkWeekTooltip = false
     @State private var showingHelpSheet = false
+    @State private var showingDeductionCalculator = false
     @State private var searchText = ""
     @State private var isSearching = false
     
@@ -87,216 +89,518 @@ public struct SettingsView: View {
                         }
                     }
                     
-                    // Personal Information Section
-                    Section {
-                        HStack {
-                            Image(systemName: "person.fill")
-                                .foregroundColor(.blue)
-                                .frame(width: 25)
-                            Text("Username".localized)
-                            Spacer()
-                            TextField("Username", text: $viewModel.username)
-    .multilineTextAlignment(.trailing)
-    .submitLabel(.done)
-    .onSubmit {
-        viewModel.saveSettings()
-    }
+                    // Premium Section
+                    if !purchaseManager.isPremium {
+                        Section {
+                            Button(action: {
+                                purchaseManager.showPaywall = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "crown.fill")
+                                        .foregroundColor(.yellow)
+                                        .font(.title3)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Upgrade to Premium".localized)
+                                            .font(.headline)
+                                            .foregroundColor(.primary)
+                                        
+                                        Text("Unlock all features & unlimited shifts".localized)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.vertical, 8)
+                            }
                         }
-                        HStack {
-    Image(systemName: "globe")
-        .foregroundColor(.purple)
-        .frame(width: 25)
-    Picker("Work Country", selection: $viewModel.selectedCountry) {
-        ForEach(Country.allCases) { country in
-            Text(country.displayName)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .tag(country)
-        }
-    }
-    .onChange(of: viewModel.selectedCountry) { viewModel.saveSettings() }
-    .pickerStyle(MenuPickerStyle())
-    .frame(maxWidth: .infinity)
-}
-                        .help("This controls wage, weekend, and holiday logic. Change this if you work in a different country than your device region.")
-                    } header: {
-                        SectionHeaderView(title: "Personal Information".localized, iconName: "person.crop.circle")
+                    } else {
+                        Section {
+                            HStack {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .foregroundColor(.green)
+                                    .font(.title3)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Premium Active".localized)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("You have access to all features".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                            }
+                            .padding(.vertical, 8)
+                            
+                            #if DEBUG
+                            Button("Reset Purchases (Debug)") {
+                                purchaseManager.resetPurchases()
+                            }
+                            .foregroundColor(.red)
+                            #endif
+                        }
                     }
                     
-
+                    // Personal Information Section
+                    if shouldShowSection("Personal Information".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "person.fill")
+                                    .foregroundColor(.blue)
+                                    .frame(width: 25)
+                                Text("Username".localized)
+                                Spacer()
+                                TextField("Username", text: $viewModel.username)
+                                    .multilineTextAlignment(.trailing)
+                                    .submitLabel(.done)
+                                    .onSubmit {
+                                        viewModel.saveSettings()
+                                    }
+                            }
+                            HStack {
+                                Image(systemName: "globe")
+                                    .foregroundColor(.purple)
+                                    .frame(width: 25)
+                                Picker("Work Country", selection: $viewModel.selectedCountry) {
+                                    ForEach(Country.allCases) { country in
+                                        Text(country.displayName)
+                                            .lineLimit(1)
+                                            .minimumScaleFactor(0.7)
+                                            .tag(country)
+                                    }
+                                }
+                                .onChange(of: viewModel.selectedCountry) { _ in viewModel.saveSettings() }
+                                .pickerStyle(MenuPickerStyle())
+                                .frame(maxWidth: .infinity)
+                            }
+                            .help("This controls wage, weekend, and holiday logic. Change this if you work in a different country than your device region.")
+                        } header: {
+                            SectionHeaderView(title: "Personal Information".localized, iconName: "person.crop.circle")
+                        }
+                    }
+                    
+                    // Appearance Section
+                    if shouldShowSection("Appearance".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: themeIcon(for: themeManager.currentTheme))
+                                    .foregroundColor(themeColor(for: themeManager.currentTheme))
+                                    .frame(width: 25)
+                                Picker("Theme".localized, selection: $themeManager.currentTheme) {
+                                    Text("System".localized).tag(Theme.system)
+                                    Text("Light".localized).tag(Theme.light)
+                                    Text("Dark".localized).tag(Theme.dark)
+                                }
+                                .pickerStyle(SegmentedPickerStyle())
+                            }
+                        } header: {
+                            SectionHeaderView(title: "Appearance".localized, iconName: "paintbrush")
+                        }
+                    }
                     
                     // Wage Settings Section
-                    Section {
-                        HStack {
-                            Image(systemName: "dollarsign.circle.fill")
-                                .foregroundColor(.green)
-                                .frame(width: 25)
-                            
-                            Text("Hourly Wage".localized)
-                            Spacer()
-                            TextField("0.00", value: $viewModel.hourlyWage, format: .number)
-                                .keyboardType(.decimalPad)
-                                .multilineTextAlignment(.trailing)
-                                .frame(width: 120)
-                        }
-                        
-                        HStack {
-                            Image(systemName: "percent")
-                                .foregroundColor(.red)
-                                .frame(width: 25)
+                    if shouldShowSection("Wage Settings".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "dollarsign.circle.fill")
+                                    .foregroundColor(.green)
+                                    .frame(width: 25)
+                                
+                                Text("Hourly Wage".localized)
+                                Spacer()
+                                TextField("0.00", value: $viewModel.hourlyWage, format: .number)
+                                    .keyboardType(.decimalPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 120)
+                            }
                             
                             HStack {
-                                Text("Tax Deduction (%)".localized)
-                                Button(action: { showingTaxTooltip.toggle() }) {
-                                    Image(systemName: "info.circle")
-                                        .font(.footnote)
-                                        .foregroundColor(.blue)
+                                Image(systemName: "percent")
+                                    .foregroundColor(.red)
+                                    .frame(width: 25)
+                                
+                                HStack {
+                                    Text("Tax Deduction (%)".localized)
+                                    Button(action: { showingTaxTooltip.toggle() }) {
+                                        Image(systemName: "info.circle")
+                                            .font(.footnote)
+                                            .foregroundColor(.blue)
+                                    }
+                                    .popover(isPresented: $showingTaxTooltip) {
+                                        TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
+                                    }
                                 }
-                                .popover(isPresented: $showingTaxTooltip) {
-                                    TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
+                                Spacer()
+                                TextField("0.00", value: $viewModel.taxDeduction, format: .number)
+                                    .keyboardType(.decimalPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 100)
+                                Text("%")
+                            }
+                            
+                            // Tax calculation note with improved styling
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .foregroundColor(.orange)
+                                    .frame(width: 25)
+                                
+                                Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 4)
+
+                            
+                            Button(action: { showingDeductionCalculator = true }) {
+                                HStack {
+                                    Image(systemName: "function")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Deduction Calculator".localized)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
                                 }
                             }
-                            Spacer()
-                            TextField("0.00", value: $viewModel.taxDeduction, format: .number)
-                                .keyboardType(.decimalPad)
-                                .multilineTextAlignment(.trailing)
-                                .frame(width: 100)
-                            Text("%")
+                        } header: {
+                            SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
                         }
-                        
-                        // Tax calculation note with improved styling
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle")
-                                .foregroundColor(.orange)
-                                .frame(width: 25)
-                            
-                            Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.top, 4)
-                    } header: {
-                        SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
                     }
                     
                     // Hours Settings Section
-                    Section {
-                        HStack {
-                            Image(systemName: "clock.fill")
-                                .foregroundColor(.blue)
-                                .frame(width: 25)
+                    if shouldShowSection("Hours Settings".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                    .foregroundColor(.blue)
+                                    .frame(width: 25)
+                                
+                                HStack {
+                                    Text("Base Hours (Weekday)".localized)
+                                    Button(action: { showingBaseHoursTooltip.toggle() }) {
+                                        Image(systemName: "info.circle")
+                                            .font(.footnote)
+                                            .foregroundColor(.blue)
+                                    }
+                                    .popover(isPresented: $showingBaseHoursTooltip) {
+                                        TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
+                                    }
+                                }
+                                Spacer()
+                                TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 60)
+                            }
                             
                             HStack {
-                                Text("Base Hours (Weekday)".localized)
-                                Button(action: { showingBaseHoursTooltip.toggle() }) {
-                                    Image(systemName: "info.circle")
-                                        .font(.footnote)
-                                        .foregroundColor(.blue)
+                                Image(systemName: "calendar.badge.clock")
+                                    .foregroundColor(.purple)
+                                    .frame(width: 25)
+                                
+                                HStack {
+                                    Text("Base Hours (Special Day)".localized)
+                                    Button(action: { showingSpecialDayTooltip.toggle() }) {
+                                        Image(systemName: "info.circle")
+                                            .font(.footnote)
+                                            .foregroundColor(.blue)
+                                    }
+                                    .popover(isPresented: $showingSpecialDayTooltip) {
+                                        TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
+                                    }
                                 }
-                                .popover(isPresented: $showingBaseHoursTooltip) {
-                                    TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
-                                }
+                                Spacer()
+                                TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 60)
                             }
-                            Spacer()
-                            TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
-                                .keyboardType(.numberPad)
-                                .multilineTextAlignment(.trailing)
-                                .frame(width: 60)
+                        } header: {
+                            SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
                         }
-                        
-                        HStack {
-                            Image(systemName: "calendar.badge.clock")
-                                .foregroundColor(.purple)
-                                .frame(width: 25)
-                            
-                            HStack {
-                                Text("Base Hours (Special Day)".localized)
-                                Button(action: { showingSpecialDayTooltip.toggle() }) {
-                                    Image(systemName: "info.circle")
-                                        .font(.footnote)
-                                        .foregroundColor(.blue)
-                                }
-                                .popover(isPresented: $showingSpecialDayTooltip) {
-                                    TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
-                                }
-                            }
-                            Spacer()
-                            TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
-                                .keyboardType(.numberPad)
-                                .multilineTextAlignment(.trailing)
-                                .frame(width: 60)
-                        }
-                    } header: {
-                        SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
                     }
                     
                     // Work Week Settings
-                    Section {
-                        HStack {
-                            Image(systemName: "calendar")
-                                .foregroundColor(.orange)
-                                .frame(width: 25)
-                            
-                            Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
-                            Button(action: { showingWorkWeekTooltip.toggle() }) {
-                                Image(systemName: "info.circle")
-                                    .font(.footnote)
-                                    .foregroundColor(.blue)
+                    if shouldShowSection("Work Week".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "calendar")
+                                    .foregroundColor(.orange)
+                                    .frame(width: 25)
+                                
+                                Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
+                                Button(action: { showingWorkWeekTooltip.toggle() }) {
+                                    Image(systemName: "info.circle")
+                                        .font(.footnote)
+                                        .foregroundColor(.blue)
+                                }
+                                .popover(isPresented: $showingWorkWeekTooltip) {
+                                    TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
+                                }
                             }
-                            .popover(isPresented: $showingWorkWeekTooltip) {
-                                TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
-                            }
+                        } header: {
+                            SectionHeaderView(title: "Work Week".localized, iconName: "calendar.badge.clock")
                         }
-                    } header: {
-                        SectionHeaderView(title: "Work Week".localized, iconName: "calendar.badge.clock")
+                    }
+                    
+                    // Notifications Section
+                    if shouldShowSection("Notifications".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "bell.fill")
+                                    .foregroundColor(.red)
+                                    .frame(width: 25)
+                                Toggle(isOn: $viewModel.notificationsEnabled) {
+                                    Text("Enable Notifications".localized)
+                                }
+                            }
+                            if viewModel.notificationsEnabled {
+                                HStack {
+                                    Image(systemName: "timer")
+                                        .foregroundColor(.orange)
+                                        .frame(width: 25)
+                                    Picker("Remind me before shift".localized, selection: $viewModel.notificationLeadTime) {
+                                        ForEach(NotificationLeadTime.allCases) { leadTime in
+                                            Text(leadTime.description).tag(leadTime)
+                                        }
+                                    }
+                                    .pickerStyle(MenuPickerStyle())
+                                }
+                            }
+                        } header: {
+                            SectionHeaderView(title: "Notifications".localized, iconName: "bell")
+                        }
                     }
                     
                     // Language Settings
-                    Section {
-                        Button(action: {
-                            viewModel.showingLanguagePicker = true
-                        }) {
-                            HStack {
-                                Image(systemName: "globe")
-                                    .foregroundColor(.blue)
-                                    .frame(width: 25)
-                                Text("App Language".localized)
-                                Spacer()
-                                Text(viewModel.selectedLanguage.displayName)
-                                    .foregroundColor(.gray)
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
-                                    .font(.system(size: 13))
+                    if shouldShowSection("Language".localized) {
+                        Section {
+                            Button(action: {
+                                viewModel.showingLanguagePicker = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "globe")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("App Language".localized)
+                                    Spacer()
+                                    Text(viewModel.selectedLanguage.displayName)
+                                        .foregroundColor(.gray)
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
+                                }
                             }
+                            .foregroundColor(.primary)
+                            .help("This controls the app's UI language. It does not affect wage or calendar logic.")
+                        } header: {
+                            SectionHeaderView(title: "Language".localized, iconName: "globe")
                         }
-                        .foregroundColor(.primary)
-                        .help("This controls the app's UI language. It does not affect wage or calendar logic.")
-                    } header: {
-                        SectionHeaderView(title: "Language".localized, iconName: "globe")
                     }
                     
                     // Currency Settings
-                    Section {
-                        HStack {
-                            Image(systemName: "dollarsign.circle")
-                                .foregroundColor(.green)
-                                .frame(width: 25)
-                            Text("Currency".localized)
-                            Spacer()
-                            Text(viewModel.selectedCountry.currencySymbol)
-                                .foregroundColor(.gray)
+                    if shouldShowSection("Currency".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "dollarsign.circle")
+                                    .foregroundColor(.green)
+                                    .frame(width: 25)
+                                Text("Currency".localized)
+                                Spacer()
+                                Text(viewModel.selectedCountry.currencySymbol)
+                                    .foregroundColor(.gray)
+                            }
+                        } header: {
+                            SectionHeaderView(title: "Currency".localized, iconName: "banknote")
                         }
-                    } header: {
-                        SectionHeaderView(title: "Currency".localized, iconName: "banknote")
                     }
                     
+                    // Backup & Restore Section
+                    if shouldShowSection("Backup & Restore".localized) {
+                        Section {
+                            VStack(alignment: .leading, spacing: 20) {
+                                // Export
+                                Text("Export Data to Computer".localized)
+                                    .font(.headline)
+                                    .bold()
+                                Text("Save a backup file of your shifts to your computer. You can later restore your data by importing this file.".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Button(action: {
+                                    viewModel.exportShifts()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "square.and.arrow.up")
+                                            .foregroundColor(.blue)
+                                        Text("Export Shifts Backup".localized)
+                                    }
+                                }
+                                .padding(.vertical, 4)
 
+                                Divider()
 
+                                // Import
+                                Text("Import Data from Computer".localized)
+                                    .font(.headline)
+                                    .bold()
+                                Text("Upload a previously exported backup file from your computer to restore your shifts data.".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Button(action: {
+                                    viewModel.importShifts()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "square.and.arrow.down")
+                                            .foregroundColor(.green)
+                                        Text("Import Shifts Backup".localized)
+                                    }
+                                }
+                                .padding(.vertical, 4)
 
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                    .font(.title2)
+                                    .padding(.top, 2)
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text("Important: Data Loss Warning".localized)
+                                        .font(.headline)
+                                        .foregroundColor(.orange)
+                                    Text("Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app.".localized)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 8)
+                        } header: {
+                            SectionHeaderView(title: "Backup & Restore".localized, iconName: "externaldrive")
+                        }
+                    }
                     
-
+                    // Help & FAQ Section
+                    if shouldShowSection("Help & FAQ".localized) {
+                        Section {
+                            Button(action: { showingHelpSheet = true }) {
+                                HStack {
+                                    Image(systemName: "questionmark.circle")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Frequently Asked Questions".localized)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
+                                }
+                            }
+                            .foregroundColor(.primary)
+                            
+                            Link(destination: URL(string: "https://www.youtube.com/channel/placeholder_channel")!) {
+                                HStack {
+                                    Image(systemName: "play.rectangle")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Video Tutorials".localized)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
+                                }
+                            }
+                            
+                            NavigationLink(destination: GuideView()) {
+                                HStack {
+                                    Image(systemName: "book")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("User Guide".localized)
+                                }
+                            }
+                            
+                            NavigationLink(destination: FeedbackView()) {
+                                HStack {
+                                    Image(systemName: "star")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Send Feedback".localized)
+                                }
+                            }
+                            
+                            NavigationLink(destination: ContactSupportView()) {
+                                HStack {
+                                    Image(systemName: "envelope")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Contact Support".localized)
+                                }
+                            }
+                            
+                            Button(action: {
+                                viewModel.showingShareSheet = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Tell Friends".localized)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
+                                }
+                            }
+                            .foregroundColor(.primary)
+                        } header: {
+                            SectionHeaderView(title: "Help & FAQ".localized, iconName: "questionmark.circle")
+                        }
+                    }
                     
-
+                    // About Section
+                    if shouldShowSection("About".localized) {
+                        Section {
+                            HStack {
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.blue)
+                                    .frame(width: 25)
+                                Text("Version".localized)
+                                Spacer()
+                                Text(viewModel.appVersion)
+                                    .foregroundColor(.secondary)
+                            }
+                        } header: {
+                            SectionHeaderView(title: "About".localized, iconName: "info.circle")
+                        }
+                    }
+                    
+                    // Legal Section
+                    if shouldShowSection("Legal".localized) {
+                        Section {
+                            NavigationLink(destination: PrivacyPolicyView()) {
+                                HStack {
+                                    Image(systemName: "lock.shield")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Privacy Policy".localized)
+                                }
+                            }
+                            NavigationLink(destination: TermsOfUseView()) {
+                                HStack {
+                                    Image(systemName: "doc.text")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("Terms of Use".localized)
+                                }
+                            }
+                        } header: {
+                            SectionHeaderView(title: "Legal".localized, iconName: "doc.text")
+                        }
+                    }
                     
                     // Quick Action Buttons
                     Section {
@@ -378,6 +682,22 @@ public struct SettingsView: View {
             .sheet(isPresented: $showingHelpSheet) {
                 FAQView()
             }
+            .sheet(isPresented: $purchaseManager.showPaywall) {
+                PaywallView()
+            }
+            .sheet(isPresented: $showingDeductionCalculator) {
+                DeductionCalculatorView(taxDeduction: $viewModel.taxDeduction)
+            }
+            .sheet(isPresented: $viewModel.showingShareSheet) {
+                // Share sheet implementation would go here
+                // For now we can use a simple ActivityViewController wrapper or similar
+                Text("Share Sheet Placeholder")
+            }
+            .onChange(of: viewModel.hourlyWage) { _ in viewModel.saveSettings() }
+            .onChange(of: viewModel.taxDeduction) { _ in viewModel.saveSettings() }
+            .onChange(of: viewModel.baseHoursWeekday) { _ in viewModel.saveSettings() }
+            .onChange(of: viewModel.baseHoursSpecialDay) { _ in viewModel.saveSettings() }
+            // Username is saved on submit, not on change to prevent navigation issues
             .refreshOnLanguageChange()
             .id(themeManager.refreshID) // Force refresh when theme changes
         }
@@ -388,6 +708,13 @@ public struct SettingsView: View {
                 UINavigationBar.appearance().topItem?.backButtonTitle = ""
             }
         }
+    }
+    
+    private func shouldShowSection(_ sectionName: String) -> Bool {
+        if searchText.isEmpty {
+            return true
+        }
+        return filteredSections().contains { $0.name == sectionName && $0.isVisible }
     }
     
     // Helper function to get icon for each theme
@@ -440,14 +767,16 @@ struct SettingsSection: Identifiable {
     
     static var allSections: [SettingsSection] {
         [
-            SettingsSection(name: "Personal Information".localized, items: ["Username".localized]),
+            SettingsSection(name: "Personal Information".localized, items: ["Username".localized, "Work Country".localized]),
             SettingsSection(name: "Appearance".localized, items: ["Theme".localized]),
-            SettingsSection(name: "Wage Settings".localized, items: ["Hourly Wage".localized, "Tax Deduction".localized]),
-            SettingsSection(name: "Hours Settings".localized, items: ["Base Hours".localized, "Special Day".localized]),
-            SettingsSection(name: "Work Week".localized, items: ["Sunday".localized, "Monday".localized]),
-            SettingsSection(name: "Language".localized, items: ["English", "Hebrew", "Russian", "Spanish", "French", "German"]),
-            SettingsSection(name: "Currency".localized, items: ["USD", "EUR", "GBP", "ILS", "RUB"]),
-            SettingsSection(name: "Help & FAQ".localized, items: ["FAQ".localized, "Guide".localized, "Feedback".localized, "Support".localized]),
+            SettingsSection(name: "Wage Settings".localized, items: ["Hourly Wage".localized, "Tax Deduction".localized, "Deduction Calculator".localized]),
+            SettingsSection(name: "Hours Settings".localized, items: ["Base Hours (Weekday)".localized, "Base Hours (Special Day)".localized]),
+            SettingsSection(name: "Work Week".localized, items: ["Start work on Sunday".localized, "Start work on Monday".localized]),
+            SettingsSection(name: "Notifications".localized, items: ["Enable Notifications".localized, "Remind me before shift".localized]),
+            SettingsSection(name: "Language".localized, items: ["App Language".localized, "English", "Hebrew", "Russian", "Spanish", "French", "German"]),
+            SettingsSection(name: "Currency".localized, items: ["Currency".localized, "USD", "EUR", "GBP", "ILS", "RUB"]),
+            SettingsSection(name: "Backup & Restore".localized, items: ["Export Data to Computer".localized, "Import Data from Computer".localized]),
+            SettingsSection(name: "Help & FAQ".localized, items: ["Frequently Asked Questions".localized, "Video Tutorials".localized, "User Guide".localized, "Send Feedback".localized, "Contact Support".localized, "Tell Friends".localized]),
             SettingsSection(name: "About".localized, items: ["Version".localized]),
             SettingsSection(name: "Legal".localized, items: ["Privacy Policy".localized, "Terms of Use".localized])
         ]

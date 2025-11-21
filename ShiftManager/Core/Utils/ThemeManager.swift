@@ -8,7 +8,6 @@ class ThemeManager: ObservableObject {
     @Published var currentTheme: Theme {
         didSet {
             UserDefaults.standard.set(currentTheme.rawValue, forKey: "theme")
-            UserDefaults.standard.synchronize()
             // Generate a new ID to force view refreshes
             refreshID = UUID()
             NotificationCenter.default.post(name: NSNotification.Name("ThemeChanged"), object: nil)

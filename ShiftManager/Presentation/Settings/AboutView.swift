@@ -133,7 +133,7 @@ struct AboutView: View {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         AboutView()
     }
 } 

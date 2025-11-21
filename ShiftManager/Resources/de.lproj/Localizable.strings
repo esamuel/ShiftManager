@@ -113,6 +113,7 @@
 "Save Shift" = "Schicht speichern";
 "Delete" = "Löschen";
 "Are you sure you want to delete this shift?" = "Sind Sie sicher, dass Sie diese Schicht löschen möchten?";
+"Are you sure you want to delete this shift? This action cannot be undone." = "Sind Sie sicher, dass Sie diese Schicht löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.";
 "Shift Details" = "Schichtdetails";
 "Duration" = "Dauer";
 "Regular Pay" = "Regulärer Lohn";
@@ -148,7 +149,10 @@
 "Wage Breakdown" = "Lohnaufschlüsselung";
 "Total Working Days" = "Gesamte Arbeitstage";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Sie versuchen, eine Schicht von mehr als 12 Stunden hinzuzufügen. Sind Sie sicher, dass Sie fortfahren möchten?";
+"Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Die täglichen Gesamtstunden würden 12 Stunden überschreiten. Maximal erlaubt sind 12 Stunden pro Tag.";
+"Daily Hour Limit Exceeded" = "Tägliche Stundenbegrenzung überschritten";
 "A shift already exists for this date and time period." = "Für diesen Zeitraum existiert bereits eine Schicht.";
+"Overlapping shifts are not allowed. Please choose a different time." = "Überschneidende Schichten sind nicht erlaubt. Bitte wählen Sie eine andere Zeit.";
 "Shift Already Exists" = "Schicht existiert bereits";
 "Calculations" = "Berechnungen";
 "Title" = "Titel";
@@ -229,6 +233,48 @@
 "Start Date" = "Startdatum";
 "End Date" = "Enddatum";
 "Export to PDF" = "Als PDF exportieren";
+"Generating..." = "Erstellen...";
+"No data available to export" = "Keine Daten zum Exportieren verfügbar";
+"Failed to generate PDF: No data returned" = "PDF-Erstellung fehlgeschlagen: Keine Daten zurückgegeben";
+"Error generating PDF: %@" = "Fehler beim Erstellen der PDF: %@";
+
+// Premium Features
+"Upgrade to Premium" = "Auf Premium upgraden";
+"Unlock Premium" = "Premium freischalten";
+"Premium Features" = "Premium-Funktionen";
+"Get unlimited access to all features" = "Erhalten Sie unbegrenzten Zugriff auf alle Funktionen";
+"Choose Your Plan" = "Wählen Sie Ihren Plan";
+"Continue" = "Weiter";
+"Restore Purchases" = "Käufe wiederherstellen";
+"Success!" = "Erfolg!";
+"You now have access to all premium features!" = "Sie haben jetzt Zugriff auf alle Premium-Funktionen!";
+"No previous purchases found" = "Keine früheren Käufe gefunden";
+"By purchasing, you agree to our Terms of Service and Privacy Policy" = "Mit dem Kauf stimmen Sie unseren Nutzungsbedingungen und Datenschutzrichtlinien zu";
+"Terms of Service" = "Nutzungsbedingungen";
+"Privacy Policy" = "Datenschutzrichtlinie";
+"PDF Export" = "PDF-Export";
+"Advanced Reports" = "Erweiterte Berichte";
+"Split Shifts" = "Geteilte Schichten";
+"Unlimited Shifts" = "Unbegrenzte Schichten";
+"All Languages" = "Alle Sprachen";
+"Data Backup & Restore" = "Datensicherung & Wiederherstellung";
+"Unlimited History" = "Unbegrenzte Historie";
+"Multiple Currencies" = "Mehrere Währungen";
+"Premium Themes" = "Premium-Designs";
+"Lifetime Access" = "Lebenslanger Zugriff";
+"Annual Subscription" = "Jahresabonnement";
+"Monthly Subscription" = "Monatsabonnement";
+"One-time payment, lifetime access to all premium features" = "Einmalige Zahlung, lebenslanger Zugriff auf alle Premium-Funktionen";
+"All premium features, billed annually" = "Alle Premium-Funktionen, jährliche Abrechnung";
+"All premium features, billed monthly" = "Alle Premium-Funktionen, monatliche Abrechnung";
+"Best Value" = "Bester Wert";
+"Popular" = "Beliebt";
+"Save %d%%" = "Sparen Sie %d%%";
+"Shift Limit Reached" = "Schichtlimit erreicht";
+"You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!" = "Sie haben das kostenlose Limit von 50 Schichten erreicht. Upgraden Sie auf Premium für unbegrenzte Schichten!";
+"Unlock all features & unlimited shifts" = "Alle Funktionen & unbegrenzte Schichten freischalten";
+"Premium Active" = "Premium aktiv";
+"You have access to all features" = "Sie haben Zugriff auf alle Funktionen";
 "Total Working Days:" = "Gesamte Arbeitstage:";
 "Total Hours:" = "Gesamtstunden:";
 "Gross Wage:" = "Bruttolohn:";
@@ -356,4 +402,177 @@
 "Tell us what you think about the app..." = "Teilen Sie uns mit, was Sie über die App denken...";
 "Submit Feedback" = "Feedback abschicken";
 "Feedback Sent" = "Feedback gesendet";
-"Thank you for your feedback! We'll use it to improve the app." = "Vielen Dank für Ihr Feedback! Wir werden es nutzen, um die App zu verbessern."; 
+"Thank you for your feedback! We'll use it to improve the app." = "Vielen Dank für Ihr Feedback! Wir werden es nutzen, um die App zu verbessern.";
+
+// Monthly Report
+"Monthly Report" = "Monatsbericht";
+"Select Month" = "Monat auswählen";
+"Generate Monthly Report" = "Monatsbericht erstellen";
+"Month & Year" = "Monat & Jahr";
+"No data available for selected month" = "Keine Daten für den ausgewählten Monat verfügbar";
+"Report Summary" = "Berichtszusammenfassung";
+"Month:" = "Monat:";
+"Year:" = "Jahr:";
+"Total Shifts:" = "Gesamtschichten:";
+"Regular Shift Hours:" = "Reguläre Schichtstunden:";
+"Overtime Hours:" = "Überstunden:";
+"Monthly Report Generated" = "Monatsbericht erstellt";
+"Generated on" = "Erstellt am";
+
+// Legal Documents - Terms of Service (German)
+"premium_terms_full_content" = "NUTZUNGSBEDINGUNGEN
+
+Letzte Aktualisierung: November 2025
+
+1. ANNAHME DER BEDINGUNGEN
+Durch den Kauf von ShiftManager Premium stimmen Sie diesen Nutzungsbedingungen zu. Wenn Sie nicht zustimmen, kaufen oder nutzen Sie bitte nicht die Premium-Funktionen.
+
+2. PREMIUM-ABONNEMENT
+ShiftManager bietet drei Premium-Optionen:
+• Lebenslanger Zugriff: Einmalige Zahlung für dauerhaften Zugriff auf alle Premium-Funktionen
+• Jahresabonnement: Jährliche Abrechnung, verlängert sich automatisch, sofern nicht gekündigt
+• Monatsabonnement: Monatliche Abrechnung, verlängert sich automatisch, sofern nicht gekündigt
+
+Alle Käufe werden über den Apple App Store abgewickelt und unterliegen den Geschäftsbedingungen von Apple.
+
+3. PREMIUM-FUNKTIONEN
+Premium schaltet frei:
+• PDF-Export von Berichten
+• Erweiterte Analysen und Diagramme
+• Split-Schicht-Verwaltung
+• Unbegrenzte Schichtverlauf
+• Unterstützung für alle Sprachen
+• Datensicherung und Wiederherstellung
+• Unterstützung mehrerer Währungen
+• Premium-Designs
+
+4. ABRECHNUNG UND KÜNDIGUNG
+• Alle Käufe werden über Ihr Apple ID-Konto abgerechnet
+• Abonnements verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt werden
+• Sie können Abonnements in Ihren Apple ID-Einstellungen verwalten und kündigen
+• Lebenslange Käufe sind einmalig und nach dem Kauf nicht erstattungsfähig
+
+5. RÜCKERSTATTUNGSRICHTLINIE
+Rückerstattungsanfragen unterliegen der Standard-Rückerstattungsrichtlinie von Apple. Wenden Sie sich für Rückerstattungsanfragen direkt an den Apple Support.
+
+6. ÄNDERUNGEN AN PREMIUM-FUNKTIONEN
+Wir behalten uns das Recht vor, Premium-Funktionen mit angemessener Benachrichtigung hinzuzufügen, zu ändern oder zu entfernen. Bestehende Abonnenten verlieren nicht den Zugriff auf die Kern-Premium-Funktionen, die sie gekauft haben.
+
+7. VERFÜGBARKEIT DES DIENSTES
+Wir streben eine Verfügbarkeit von 99,9% an, können jedoch keinen unterbrechungsfreien Service garantieren. Wir haften nicht für vorübergehende Serviceunterbrechungen.
+
+8. VERBOTENE NUTZUNG
+Sie dürfen nicht:
+• Ihr Premium-Konto mit anderen teilen
+• Die App zurückentwickeln
+• Die App für illegale Zwecke verwenden
+• Versuchen, Zahlungssysteme zu umgehen
+
+9. KÜNDIGUNG
+Wir behalten uns das Recht vor, Konten zu kündigen, die gegen diese Bedingungen verstoßen.
+
+10. HAFTUNGSBESCHRÄNKUNG
+ShiftManager wird \"wie besehen\" ohne Gewährleistungen bereitgestellt. Wir haften nicht für Schäden, die aus der Nutzung der App entstehen.
+
+11. ANWENDBARES RECHT
+Diese Bedingungen unterliegen den Gesetzen Ihrer Gerichtsbarkeit.
+
+12. KONTAKT
+Für Fragen zu diesen Bedingungen kontaktieren Sie uns bitte über den Support-Bereich der App.
+
+Durch den Kauf von Premium bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen, verstanden und ihnen zugestimmt haben.";
+
+"premium_terms_last_updated" = "Letzte Aktualisierung: 18. November 2025";
+
+// Legal Documents - Privacy Policy (German)
+"premium_privacy_key_principle" = "Unser zentrales Datenschutzprinzip";
+"premium_privacy_key_message" = "Ihre Schichtdaten bleiben auf IHREM Gerät. Wir sammeln, speichern oder teilen niemals Ihre persönlichen Arbeitsinformationen.";
+
+"premium_privacy_full_content" = "DATENSCHUTZERKLÄRUNG
+
+Letzte Aktualisierung: November 2025
+
+1. UNSERE DATENSCHUTZVERPFLICHTUNG
+ShiftManager wurde mit Datenschutz im Kern entwickelt. Alle Ihre Schichtdaten, Einnahmen und Arbeitsinformationen werden lokal auf Ihrem Gerät mit Apples Core Data Framework gespeichert. Wir sammeln, übertragen oder speichern keine Ihrer persönlichen Arbeitsdaten auf externen Servern.
+
+2. DATEN, DIE WIR NICHT SAMMELN
+Wir sammeln NICHT:
+• Ihre Schichtpläne
+• Arbeitsstunden oder Einnahmen
+• Arbeitgeberinformationen
+• Standortdaten
+• Persönliche Identifikationsinformationen
+• Nutzungsanalysen oder Tracking-Daten
+
+3. LOKAL GESPEICHERTE DATEN
+Die folgenden Daten werden nur auf Ihrem Gerät gespeichert:
+• Schichtpläne (Start-/Endzeiten, Pausen)
+• Lohnberechnungen
+• Berichte und Statistiken
+• Benutzereinstellungen und -präferenzen
+
+Diese Daten verbleiben auf Ihrem Gerät und sind in Ihrem iCloud-Backup enthalten, wenn Sie iCloud für diese App aktiviert haben.
+
+4. PREMIUM-KÄUFE
+Wenn Sie Premium kaufen:
+• Apple verarbeitet die Zahlung über den App Store
+• Wir erhalten nur eine Kaufbelegerstellung von Apple
+• Keine persönlichen Finanzinformationen werden mit uns geteilt
+• Die Datenschutzrichtlinie von Apple gilt für Kaufdaten
+
+5. iCLOUD-SYNCHRONISIERUNG (OPTIONAL)
+Wenn Sie iCloud-Synchronisierung aktivieren:
+• Ihre Schichtdaten werden zwischen Ihren Geräten mit Apples iCloud synchronisiert
+• Daten werden während der Übertragung und im Ruhezustand verschlüsselt
+• Die iCloud-Datenschutzrichtlinie von Apple gilt
+• Sie können die iCloud-Synchronisierung jederzeit in den iOS-Einstellungen deaktivieren
+
+6. BERECHTIGUNGEN
+ShiftManager fordert nur wesentliche Berechtigungen an:
+• Benachrichtigungen: Um Sie an bevorstehende Schichten zu erinnern (optional)
+• Kein Standort-Tracking
+• Kein Kamera- oder Fotozugriff
+• Kein Kontaktzugriff
+• Kein Mikrofonzugriff
+
+7. DATENSCHUTZ FÜR KINDER
+Unsere App sammelt wissentlich keine Informationen von Kindern unter 13 Jahren. Die App ist für arbeitende Erwachsene konzipiert.
+
+8. DATENSICHERHEIT
+• Alle Daten werden mit Apples sicherem Core Data Framework gespeichert
+• Lokale Daten sind durch die Sicherheitsfunktionen Ihres Geräts geschützt
+• Keine Datenübertragung an externe Server
+• Ihre Daten sind so sicher wie Ihr Gerät
+
+9. IHRE RECHTE
+Sie haben die volle Kontrolle:
+• Exportieren Sie Ihre Daten als PDF-Berichte
+• Löschen Sie alle Daten jederzeit über die Einstellungen
+• Keine Kontoerstellung erforderlich
+• Vollständiges Dateneigentum
+
+10. DIENSTE VON DRITTANBIETERN
+Wir verwenden nur Apples native Frameworks:
+• StoreKit für Käufe
+• Core Data für lokale Speicherung
+• CloudKit für optionale iCloud-Synchronisierung
+Alle unterliegen Apples Datenschutzrichtlinien.
+
+11. ÄNDERUNGEN DER DATENSCHUTZRICHTLINIE
+Wir werden Sie über wesentliche Änderungen der Datenschutzrichtlinie durch eine App-Update-Benachrichtigung informieren.
+
+12. DATENAUFBEWAHRUNG
+Ihre Daten verbleiben auf Ihrem Gerät, bis Sie die App löschen oder die Daten manuell löschen. Wir haben keinen Zugriff auf oder Kontrolle über Ihre lokalen Daten.
+
+13. INTERNATIONALE NUTZER
+Da Daten lokal auf Ihrem Gerät gespeichert werden, findet keine internationale Datenübertragung statt.
+
+14. KONTAKT
+Fragen zum Datenschutz? Kontaktieren Sie uns über den Support-Bereich der App.
+
+ZUSAMMENFASSUNG:
+Ihre Arbeitsdaten gehören Ihnen. Sie bleiben auf Ihrem Gerät. Wir sehen, sammeln oder teilen sie niemals. Das ist unser Versprechen.";
+
+"premium_privacy_summary_title" = "Datenschutz-Zusammenfassung";
+"premium_privacy_summary_content" = "✓ Alle Daten lokal auf Ihrem Gerät gespeichert\n✓ Keine Datensammlung oder Tracking\n✓ Keine Kontoregistrierung erforderlich\n✓ Optionale iCloud-Synchronisierung (verschlüsselt)\n✓ Volle Datenkontrolle und Eigentum\n✓ Keine Werbung oder Drittanbieter-Analysen\n✓ Vollständiger Datenschutz garantiert";
+"premium_privacy_last_updated" = "Letzte Aktualisierung: 18. November 2025";

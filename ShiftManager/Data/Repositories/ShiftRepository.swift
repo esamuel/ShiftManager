@@ -1,7 +1,7 @@
 import Foundation
-import CoreData
+@preconcurrency import CoreData
 
-public protocol ShiftRepositoryProtocol {
+public protocol ShiftRepositoryProtocol: Sendable {
     func fetchShifts() async throws -> [ShiftModel]
     func fetchShift(id: UUID) async throws -> ShiftModel?
     func createShift(_ shift: ShiftModel) async throws
@@ -10,10 +10,11 @@ public protocol ShiftRepositoryProtocol {
     func fetchShiftsInDateRange(from startDate: Date, to endDate: Date) async throws -> [ShiftModel]
     func fetchAllShifts() async throws -> [ShiftModel]
     func deleteAllShifts() async throws
+    func recalculateDailyWages(for date: Date) async throws
 }
 
-public class ShiftRepository: ShiftRepositoryProtocol {
-    private let context: NSManagedObjectContext
+public final class ShiftRepository: ShiftRepositoryProtocol, @unchecked Sendable {
+    private nonisolated(unsafe) let context: NSManagedObjectContext
     
     public init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.context = context
@@ -138,6 +139,37 @@ public class ShiftRepository: ShiftRepositoryProtocol {
         entity.createdAt = model.createdAt
         entity.grossWage = model.grossWage
         entity.netWage = model.netWage
+    }
+    
+    public func recalculateDailyWages(for date: Date) async throws {
+        let wageService = WageCalculationService(context: context)
+        
+        // Fetch all shifts on the same day
+        let sameDayShifts = try await wageService.fetchShiftsOnSameDay(as: date)
+        
+        guard !sameDayShifts.isEmpty else { return }
+        
+        // Calculate wages considering daily overtime
+        let wageCalculations = try await wageService.calculateDailyWagesForShifts(sameDayShifts)
+        
+        // Update each shift in Core Data
+        try await context.perform {
+            for shift in sameDayShifts {
+                guard let calculation = wageCalculations[shift.id] else { continue }
+                
+                let request = NSFetchRequest<Shift>(entityName: "Shift")
+                request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
+                
+                let results = try self.context.fetch(request)
+                
+                if let entity = results.first {
+                    entity.grossWage = calculation.grossWage
+                    entity.netWage = calculation.netWage
+                }
+            }
+            
+            try self.context.save()
+        }
     }
 }
 

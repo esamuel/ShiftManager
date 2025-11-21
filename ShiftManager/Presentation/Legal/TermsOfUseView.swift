@@ -91,7 +91,7 @@ struct TermsOfUseView: View {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         TermsOfUseView()
     }
 } 

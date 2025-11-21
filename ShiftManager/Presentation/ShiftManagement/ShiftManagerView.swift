@@ -200,7 +200,7 @@ struct ShiftManagerView: View {
         .alert("Shift Already Exists".localized, isPresented: $viewModel.showingDuplicateAlert) {
             Button("OK".localized, role: .cancel) { }
         } message: {
-            Text("A shift already exists for this date and time period.".localized)
+            Text("Overlapping shifts are not allowed. Please choose a different time.".localized)
         }
         .alert("Long Shift Warning".localized, isPresented: $viewModel.showingLongShiftAlert) {
             Button("Cancel".localized, role: .cancel) { }
@@ -226,6 +226,25 @@ struct ShiftManagerView: View {
         } message: {
             Text("You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?".localized)
         }
+        .alert("Daily Hour Limit Exceeded".localized, isPresented: $viewModel.showingDailyLimitAlert) {
+            Button("OK".localized, role: .cancel) { }
+        } message: {
+            Text("Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day.".localized)
+        }
+        .alert("Shift Limit Reached".localized, isPresented: $viewModel.showingShiftLimitAlert) {
+            Button("Cancel".localized, role: .cancel) { }
+            Button("Upgrade to Premium".localized) {
+                PurchaseManager.shared.showPaywall = true
+            }
+        } message: {
+            Text("You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!".localized)
+        }
+        .sheet(isPresented: Binding(
+            get: { PurchaseManager.shared.showPaywall },
+            set: { PurchaseManager.shared.showPaywall = $0 }
+        )) {
+            PaywallView(triggerFeature: .unlimitedShifts)
+        }
         .task {
             await viewModel.loadShifts()
         }
@@ -246,6 +265,8 @@ struct ShiftCard: View {
     let onEdit: () -> Void
     let onToggleSpecial: () async -> Void
     
+    @State private var showDeleteConfirmation = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Date and Actions
@@ -260,9 +281,7 @@ struct ShiftCard: View {
                 }
                 
                 Button {
-                    Task {
-                        await onDelete()
-                    }
+                    showDeleteConfirmation = true
                 } label: {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
@@ -313,6 +332,16 @@ struct ShiftCard: View {
         .background(Color(.systemBackground))
         .cornerRadius(10)
         .shadow(radius: 1)
+        .alert("Delete Shift".localized, isPresented: $showDeleteConfirmation) {
+            Button("Cancel".localized, role: .cancel) { }
+            Button("Delete".localized, role: .destructive) {
+                Task {
+                    await onDelete()
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this shift? This action cannot be undone.".localized)
+        }
     }
 }
 

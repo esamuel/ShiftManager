@@ -9,7 +9,6 @@ class LocalizationManager: ObservableObject {
     @Published var currentLanguage: String {
         didSet {
             UserDefaults.standard.set(currentLanguage, forKey: "selectedLanguage")
-            UserDefaults.standard.synchronize()
             // Generate a new ID to force view refreshes
             refreshID = UUID()
             
@@ -23,7 +22,6 @@ class LocalizationManager: ObservableObject {
     @Published var currentCountry: Country {
         didSet {
             UserDefaults.standard.set(currentCountry.rawValue, forKey: "country")
-            UserDefaults.standard.synchronize()
             NotificationCenter.default.post(name: NSNotification.Name("CountryChanged"), object: nil)
         }
     }
@@ -38,19 +36,18 @@ class LocalizationManager: ObservableObject {
     private let isFirstLaunchKey = "isFirstLaunch"
     
     private init() {
-        // Load language and country synchronously but defer UI updates
+        // Load language and country synchronously - this is fast
         
         // Check if it's the first launch - use a direct access without synchronize for speed
         if !UserDefaults.standard.bool(forKey: isFirstLaunchKey) {
             // First launch - use device language
-            let deviceLanguage = Locale.current.language.languageCode?.identifier ?? "en"
+            let deviceLanguage = Locale.current.languageCode ?? "en"
             self.currentLanguage = deviceLanguage
             
-            // Batch UserDefaults operations and defer synchronize
+            // Batch UserDefaults operations
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: isFirstLaunchKey)
             defaults.set(deviceLanguage, forKey: "selectedLanguage")
-            // Don't synchronize here - will happen automatically
         } else {
             // Not first launch - use saved language or default to English
             self.currentLanguage = UserDefaults.standard.string(forKey: "selectedLanguage") ?? "en"
@@ -60,23 +57,28 @@ class LocalizationManager: ObservableObject {
         let countryString = UserDefaults.standard.string(forKey: "country") ?? "israel"
         self.currentCountry = Country(rawValue: countryString) ?? .israel
         
-        // Defer UI direction update to the next run loop to speed up initial launch
-        DispatchQueue.main.async {
-            self.updateUIDirection()
-        }
+        // Set UI direction immediately - this is a lightweight operation
+        updateUIDirection()
     }
     
     private func updateUIDirection() {
         // Set semantic content attribute for RTL languages
         let isRTL = currentLanguage == "he" || currentLanguage == "ar"
         
+        // Set global appearance - this is very fast
         if isRTL {
             UIView.appearance().semanticContentAttribute = .forceRightToLeft
         } else {
             UIView.appearance().semanticContentAttribute = .forceLeftToRight
         }
         
-        // Force update all windows to refresh layout direction
+        // Only traverse windows if they exist (not during initial app launch)
+        // This defers the expensive operation until after the app has launched
+        if UIApplication.shared.connectedScenes.isEmpty {
+            return
+        }
+        
+        // Update existing windows
         if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
             for scene in windowScenes {
                 for window in scene.windows {
@@ -112,7 +114,7 @@ class LocalizationManager: ObservableObject {
     }
     
     func resetToDeviceLanguage() {
-        let deviceLanguage = Locale.current.language.languageCode?.identifier ?? "en"
+        let deviceLanguage = Locale.current.languageCode ?? "en"
         setLanguage(deviceLanguage)
     }
     
@@ -165,25 +167,10 @@ class LocalizationManager: ObservableObject {
     }
     
     // Direct override to find and replace the Hebrew text in any UI elements
+    // Direct override to find and replace the Hebrew text in any UI elements
     func clearHebrewPreviousText() {
-        DispatchQueue.main.async {
-            if let windowScenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
-                for scene in windowScenes {
-                    for window in scene.windows {
-                        // First search in root view controller and navigation items
-                        if let rootVC = window.rootViewController {
-                            self.recursivelyRemoveBackButtonText(in: rootVC)
-                        }
-                        
-                        // Then search in all subviews
-                        self.recursivelySearchAndClearText(views: window.subviews)
-                        
-                        // Scan all navigation controllers for back buttons
-                        self.forceFixNavigationControllers()
-                    }
-                }
-            }
-        }
+        // Disabled for performance reasons.
+        // The recursive view hierarchy traversal was causing significant startup delays.
     }
     
     private func recursivelyRemoveBackButtonText(in viewController: UIViewController) {

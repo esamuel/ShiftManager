@@ -121,6 +121,7 @@
 "Save Shift" = "Save Shift";
 "Delete" = "Delete";
 "Are you sure you want to delete this shift?" = "Are you sure you want to delete this shift?";
+"Are you sure you want to delete this shift? This action cannot be undone." = "Are you sure you want to delete this shift? This action cannot be undone.";
 "Shift Details" = "Shift Details";
 "Duration" = "Duration";
 "Regular Pay" = "Regular Pay";
@@ -159,7 +160,10 @@
 "Wage Breakdown" = "Wage Breakdown";
 "Total Working Days" = "Total Working Days";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?";
+"Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day.";
+"Daily Hour Limit Exceeded" = "Daily Hour Limit Exceeded";
 "A shift already exists for this date and time period." = "A shift already exists for this date and time period.";
+"Overlapping shifts are not allowed. Please choose a different time." = "Overlapping shifts are not allowed. Please choose a different time.";
 "Shift Already Exists" = "Shift Already Exists";
 "Calculations" = "Calculations";
 "Save Changes" = "Save Changes";
@@ -242,71 +246,61 @@
 "Start Date" = "Start Date";
 "End Date" = "End Date";
 "Export to PDF" = "Export to PDF";
+"Generating..." = "Generating...";
+"No data available to export" = "No data available to export";
+"Failed to generate PDF: No data returned" = "Failed to generate PDF: No data returned";
+"Error generating PDF: %@" = "Error generating PDF: %@";
+
+// Premium Features
+"Upgrade to Premium" = "Upgrade to Premium";
+"Unlock Premium" = "Unlock Premium";
+"Premium Features" = "Premium Features";
+"Get unlimited access to all features" = "Get unlimited access to all features";
+"Choose Your Plan" = "Choose Your Plan";
+"Continue" = "Continue";
+"Restore Purchases" = "Restore Purchases";
+"Success!" = "Success!";
+"You now have access to all premium features!" = "You now have access to all premium features!";
+"No previous purchases found" = "No previous purchases found";
+"By purchasing, you agree to our Terms of Service and Privacy Policy" = "By purchasing, you agree to our Terms of Service and Privacy Policy";
+"Terms of Service" = "Terms of Service";
+"Privacy Policy" = "Privacy Policy";
+
+// Premium Feature Names
+"PDF Export" = "PDF Export";
+"Advanced Reports" = "Advanced Reports";
+"Split Shifts" = "Split Shifts";
+"Unlimited Shifts" = "Unlimited Shifts";
+"All Languages" = "All Languages";
+"Data Backup & Restore" = "Data Backup & Restore";
+"Unlimited History" = "Unlimited History";
+"Multiple Currencies" = "Multiple Currencies";
+"Premium Themes" = "Premium Themes";
+
+// Product Names
+"Lifetime Access" = "Lifetime Access";
+"Annual Subscription" = "Annual Subscription";
+"Monthly Subscription" = "Monthly Subscription";
+"One-time payment, lifetime access to all premium features" = "One-time payment, lifetime access to all premium features";
+"All premium features, billed annually" = "All premium features, billed annually";
+"All premium features, billed monthly" = "All premium features, billed monthly";
+"Best Value" = "Best Value";
+"Popular" = "Popular";
+"Save %d%%" = "Save %d%%";
+
+// Alerts
+"Shift Limit Reached" = "Shift Limit Reached";
+"You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!" = "You've reached the free limit of 50 shifts. Upgrade to Premium for unlimited shifts!";
+"Unlock all features & unlimited shifts" = "Unlock all features & unlimited shifts";
+"Premium Active" = "Premium Active";
+"You have access to all features" = "You have access to all features";
 "Total Working Days:" = "Total Working Days:";
 "Total Hours:" = "Total Hours:";
 "Gross Wage:" = "Gross Wage:";
 "Net Wage:" = "Net Wage:";
 "No shifts found for the selected period" = "No shifts found for the selected period";
 
-// Month Names
-"January" = "January";
-"February" = "February";
-"March" = "March";
-"April" = "April";
-"May" = "May";
-"June" = "June";
-"July" = "July";
-"August" = "August";
-"September" = "September";
-"October" = "October";
-"November" = "November";
-"December" = "December";
 
-// Day Names
-"Monday" = "Monday";
-"Tuesday" = "Tuesday";
-"Wednesday" = "Wednesday";
-"Thursday" = "Thursday";
-"Friday" = "Friday";
-"Saturday" = "Saturday";
-"Sunday" = "Sunday";
-
-// Date Components
-"%d in %@" = "%d in %@";
-"%@ %d, %d" = "%@ %d, %d";
-"%@ - %@" = "%@ - %@";
-
-// Weekly View Tab Labels
-"Weekly View" = "Weekly View";
-"Monthly View" = "Monthly View";
-"Wage Breakdown" = "Wage Breakdown";
-"Total Working Days:" = "Total Working Days:";
-"Total Hours:" = "Total Hours:";
-"Gross Wage:" = "Gross Wage:";
-"Net Wage:" = "Net Wage:";
-
-// Date Format Patterns
-"Shift on %@" = "Shift on %@";
-"%@ %d" = "%@ %d";
-"%@, %@ %d" = "%@, %@ %d";
-
-// Overtime Rules
-"Overtime Rules" = "Overtime Rules";
-"Base Hours (Weekday)" = "Base Hours (Weekday)";
-"Base Hours (Special Day)" = "Base Hours (Special Day)";
-"hours" = "hours";
-"After %d hours at %.2fx rate @ %.2fx" = "After %d hours at %.2fx rate @ %.2fx";
-"Special Days" = "Special Days";
-"Weekdays" = "Weekdays";
-
-// Add Overtime Rule
-"Add Overtime Rule" = "Add Overtime Rule";
-"Edit Overtime Rule" = "Edit Overtime Rule";
-"Hours Threshold" = "Hours Threshold";
-"Rate" = "Rate";
-"Applies to Special Days" = "Applies to Special Days";
-"Cancel" = "Cancel";
-"Save" = "Save";
 
 // Additional Guide Content
 "2. Overtime Rules" = "2. Overtime Rules";
@@ -408,3 +402,176 @@
 "Feedback Sent" = "Feedback Sent";
 "Thank you for your feedback! We'll use it to improve the app." = "Thank you for your feedback! We'll use it to improve the app.";
 "Tell Friends" = "Tell Friends";
+
+// Monthly Report
+"Monthly Report" = "Monthly Report";
+"Select Month" = "Select Month";
+"Generate Monthly Report" = "Generate Monthly Report";
+"Month & Year" = "Month & Year";
+"No data available for selected month" = "No data available for selected month";
+"Report Summary" = "Report Summary";
+"Month:" = "Month:";
+"Year:" = "Year:";
+"Total Shifts:" = "Total Shifts:";
+"Regular Shift Hours:" = "Regular Shift Hours:";
+"Overtime Hours:" = "Overtime Hours:";
+"Monthly Report Generated" = "Monthly Report Generated";
+"Generated on" = "Generated on";
+
+// Legal Documents - Terms of Service
+"premium_terms_full_content" = "TERMS OF SERVICE
+
+Last Updated: November 2025
+
+1. ACCEPTANCE OF TERMS
+By purchasing ShiftManager Premium, you agree to these Terms of Service. If you do not agree, please do not purchase or use the premium features.
+
+2. PREMIUM SUBSCRIPTION
+ShiftManager offers three premium options:
+• Lifetime Access: One-time payment for permanent access to all premium features
+• Annual Subscription: Billed yearly, auto-renews unless cancelled
+• Monthly Subscription: Billed monthly, auto-renews unless cancelled
+
+All purchases are processed through the Apple App Store and are subject to Apple's terms and conditions.
+
+3. PREMIUM FEATURES
+Premium unlocks:
+• PDF Export of reports
+• Advanced analytics and charts
+• Split shift management
+• Unlimited shift history
+• All language support
+• Data backup and restore
+• Multiple currency support
+• Premium themes
+
+4. BILLING AND CANCELLATION
+• All purchases are billed through your Apple ID account
+• Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period
+• You can manage and cancel subscriptions in your Apple ID settings
+• Lifetime purchases are one-time and non-refundable after purchase
+
+5. REFUND POLICY
+Refund requests are subject to Apple's standard refund policy. Contact Apple Support directly for refund requests.
+
+6. CHANGES TO PREMIUM FEATURES
+We reserve the right to add, modify, or remove premium features with reasonable notice to users. Existing subscribers will not lose access to core premium features they purchased.
+
+7. SERVICE AVAILABILITY
+We strive for 99.9% uptime but cannot guarantee uninterrupted service. We are not liable for temporary service disruptions.
+
+8. PROHIBITED USE
+You may not:
+• Share your premium account with others
+• Reverse engineer the app
+• Use the app for illegal purposes
+• Attempt to bypass payment systems
+
+9. TERMINATION
+We reserve the right to terminate accounts that violate these terms.
+
+10. LIABILITY LIMITATION
+ShiftManager is provided \"as is\" without warranties. We are not liable for any damages arising from app use.
+
+11. GOVERNING LAW
+These terms are governed by the laws of your jurisdiction.
+
+12. CONTACT
+For questions about these terms, please contact us through the app's support section.
+
+By purchasing Premium, you acknowledge that you have read, understood, and agree to these Terms of Service.";
+
+"premium_terms_last_updated" = "Last Updated: November 18, 2025";
+
+// Legal Documents - Privacy Policy  
+"premium_privacy_key_principle" = "Our Core Privacy Principle";
+"premium_privacy_key_message" = "Your shift data stays on YOUR device. We never collect, store, or share your personal work information.";
+
+"premium_privacy_full_content" = "PRIVACY POLICY
+
+Last Updated: November 2025
+
+1. OUR PRIVACY COMMITMENT
+ShiftManager is built with privacy at its core. All your shift data, earnings, and work information is stored locally on your device using Apple's Core Data framework. We do not collect, transmit, or store any of your personal work data on external servers.
+
+2. DATA WE DO NOT COLLECT
+We do NOT collect:
+• Your shift schedules
+• Work hours or earnings
+• Employer information
+• Location data
+• Personal identification information
+• Usage analytics or tracking data
+
+3. DATA STORED LOCALLY
+The following data is stored only on your device:
+• Shift schedules (start/end times, breaks)
+• Wage calculations
+• Reports and statistics
+• User preferences and settings
+
+This data remains on your device and is included in your iCloud backup if you have iCloud enabled for this app.
+
+4. PREMIUM PURCHASES
+When you purchase Premium:
+• Apple processes the payment through the App Store
+• We receive only a purchase receipt validation from Apple
+• No personal financial information is shared with us
+• Apple's privacy policy applies to purchase data
+
+5. iCLOUD SYNC (OPTIONAL)
+If you enable iCloud sync:
+• Your shift data syncs between your devices using Apple's iCloud
+• Data is encrypted in transit and at rest
+• Apple's iCloud privacy policy applies
+• You can disable iCloud sync anytime in iOS Settings
+
+6. PERMISSIONS
+ShiftManager requests only essential permissions:
+• Notifications: To remind you of upcoming shifts (optional)
+• No location tracking
+• No camera or photo access
+• No contacts access
+• No microphone access
+
+7. CHILDREN'S PRIVACY
+Our app does not knowingly collect information from children under 13. The app is designed for working adults.
+
+8. DATA SECURITY
+• All data is stored using Apple's secure Core Data framework
+• Local data is protected by your device's security features
+• No data transmission to external servers
+• Your data is as secure as your device
+
+9. YOUR RIGHTS
+You have full control:
+• Export your data as PDF reports
+• Delete all data at any time through Settings
+• No account creation required
+• Complete data ownership
+
+10. THIRD-PARTY SERVICES
+We use only Apple's native frameworks:
+• StoreKit for purchases
+• Core Data for local storage
+• CloudKit for optional iCloud sync
+All subject to Apple's privacy policies.
+
+11. CHANGES TO PRIVACY POLICY
+We will notify you of significant privacy policy changes through an app update notice.
+
+12. DATA RETENTION
+Your data remains on your device until you delete the app or manually delete the data. We do not have access to or control over your local data.
+
+13. INTERNATIONAL USERS
+Since data is stored locally on your device, no international data transfer occurs.
+
+14. CONTACT US
+Questions about privacy? Contact us through the app's support section.
+
+SUMMARY:
+Your work data is yours. It stays on your device. We never see it, collect it, or share it. That's our promise.";
+
+"premium_privacy_summary_title" = "Privacy Summary";
+"premium_privacy_summary_content" = "✓ All data stored locally on your device\n✓ No data collection or tracking\n✓ No account registration required\n✓ Optional iCloud sync (encrypted)\n✓ Full data control and ownership\n✓ No ads or third-party analytics\n✓ Complete privacy guaranteed";
+"premium_privacy_last_updated" = "Last Updated: November 18, 2025";

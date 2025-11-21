@@ -12,8 +12,15 @@ public struct GuideView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     // Welcome Section
                     GuideSection(title: "Welcome to ShiftManager".localized, iconName: "hand.wave.fill") {
-                        Text("ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features.".localized)
-                            .padding(.bottom)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features.".localized)
+                            
+                            VideoTutorialButton(
+                                title: "Watch: App Overview".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
+                            )
+                        }
+                        .padding(.bottom)
                     }
                     
                     // Settings Section
@@ -21,6 +28,11 @@ public struct GuideView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Before you start, set up your basic information:".localized)
                                 .padding(.bottom, 4)
+                            
+                            VideoTutorialButton(
+                                title: "Watch: Initial Setup".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_setup")!
+                            )
                             
                             BulletPoint("Go to Settings → Personal Information and:".localized)
                             IndentedBulletPoint("Enter your username".localized)
@@ -39,6 +51,11 @@ public struct GuideView: View {
                             Text("Configure your overtime rules:".localized)
                                 .padding(.bottom, 4)
                             
+                            VideoTutorialButton(
+                                title: "Watch: Overtime Rules".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overtime")!
+                            )
+                            
                             BulletPoint("Set base hours for regular weekdays and special days".localized)
                             BulletPoint("Add overtime rules with:".localized)
                             IndentedBulletPoint("Hours threshold (when overtime starts)".localized)
@@ -53,6 +70,11 @@ public struct GuideView: View {
                             Text("Add and manage your shifts:".localized)
                                 .padding(.bottom, 4)
                             
+                            VideoTutorialButton(
+                                title: "Watch: Managing Shifts".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_shifts")!
+                            )
+                            
                             BulletPoint("Tap the '+' button to add a new shift".localized)
                             BulletPoint("Set start and end times".localized)
                             BulletPoint("Mark special days with the star icon".localized)
@@ -66,6 +88,11 @@ public struct GuideView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("View and export your work data:".localized)
                                 .padding(.bottom, 4)
+                            
+                            VideoTutorialButton(
+                                title: "Watch: Reports & Export".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_reports")!
+                            )
                             
                             BulletPoint("Switch between weekly and monthly views".localized)
                             BulletPoint("View total hours and wages".localized)

@@ -5,6 +5,11 @@ public struct UpcomingShiftsView: View {
     
     public init() {}
     
+    // Computed property to cache sorted dates
+    private var sortedDates: [Date] {
+        viewModel.upcomingShifts.keys.sorted()
+    }
+    
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Upcoming Shifts".localized)
@@ -24,7 +29,7 @@ public struct UpcomingShiftsView: View {
             } else {
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(Array(viewModel.upcomingShifts.keys.sorted()), id: \.self) { date in
+                        ForEach(sortedDates, id: \.self) { date in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(viewModel.formatDate(date))
                                     .font(.headline)
@@ -73,7 +78,7 @@ public struct UpcomingShiftsView: View {
                             }
                             .padding(.horizontal)
                             
-                            if date != viewModel.upcomingShifts.keys.sorted().last {
+                            if date != sortedDates.last {
                                 Divider()
                                     .padding(.horizontal)
                             }
