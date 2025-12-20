@@ -17,7 +17,7 @@ public struct GuideView: View {
                             
                             VideoTutorialButton(
                                 title: "Watch: App Overview".localized,
-                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
+                                videoURL: Tutorial.allTutorials[0].url
                             )
                         }
                         .padding(.bottom)
@@ -31,7 +31,7 @@ public struct GuideView: View {
                             
                             VideoTutorialButton(
                                 title: "Watch: Initial Setup".localized,
-                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_setup")!
+                                videoURL: Tutorial.allTutorials[1].url
                             )
                             
                             BulletPoint("Go to Settings → Personal Information and:".localized)
@@ -53,7 +53,7 @@ public struct GuideView: View {
                             
                             VideoTutorialButton(
                                 title: "Watch: Overtime Rules".localized,
-                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overtime")!
+                                videoURL: Tutorial.allTutorials[2].url
                             )
                             
                             BulletPoint("Set base hours for regular weekdays and special days".localized)
@@ -72,7 +72,7 @@ public struct GuideView: View {
                             
                             VideoTutorialButton(
                                 title: "Watch: Managing Shifts".localized,
-                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_shifts")!
+                                videoURL: Tutorial.allTutorials[3].url
                             )
                             
                             BulletPoint("Tap the '+' button to add a new shift".localized)
@@ -91,7 +91,7 @@ public struct GuideView: View {
                             
                             VideoTutorialButton(
                                 title: "Watch: Reports & Export".localized,
-                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_reports")!
+                                videoURL: Tutorial.allTutorials[4].url
                             )
                             
                             BulletPoint("Switch between weekly and monthly views".localized)

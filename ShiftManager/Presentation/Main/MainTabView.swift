@@ -31,15 +31,8 @@ public struct MainTabView: View {
                 Text("Reports".localized)
             }
             
-            DeferredView {
-                SettingsView()
-            }
-            .tabItem {
-                Image(systemName: "gearshape.fill")
-                Text("Settings".localized)
-            }
+
         }
-        .refreshOnLanguageChange()
     }
 }
 

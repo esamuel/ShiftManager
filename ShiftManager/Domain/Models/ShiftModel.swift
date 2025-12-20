@@ -50,9 +50,30 @@ public struct ShiftModel: Identifiable, Codable, Sendable {
         return endTime.timeIntervalSince(startTime)
     }
     
+    
     public var formattedDuration: String {
         let hours = Int(duration) / 3600
         let minutes = Int(duration) / 60 % 60
         return String(format: "%dh %dm", hours, minutes)
+    }
+    
+    /// Returns a localized display title for the shift
+    public var displayTitle: String {
+        // If title is not empty and doesn't look like a generated title, use it
+        // Otherwise, generate a new localized title
+        if !title.isEmpty && !title.contains("Shift on") && !title.contains("משמרת ב-") && 
+           !title.contains("Schicht am") && !title.contains("Turno el") && 
+           !title.contains("Quart du") && !title.contains("Смена на") {
+            return title
+        }
+        
+        // Generate localized title
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.formattingContext = .standalone
+        let dateString = dateFormatter.string(from: startTime)
+        return String(format: "Shift on %@".localized, dateString)
     }
 } 

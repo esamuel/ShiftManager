@@ -116,6 +116,6 @@ public class UpcomingShiftsViewModel: ObservableObject {
         let components = calendar.dateComponents([.hour, .minute], from: startTime, to: endTime)
         
         let totalHours = Double(components.hour ?? 0) + Double(components.minute ?? 0) / 60.0
-        return String(format: "%.1f hours", totalHours)
+        return String(format: "%.1f %@", totalHours, "hours".localized)
     }
 } 

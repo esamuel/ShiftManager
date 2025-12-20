@@ -22,8 +22,7 @@ public class ShiftManagerViewModel: ObservableObject {
     
     // UI State
     @Published var showDatePicker = false
-    @Published var showStartTimePicker = false
-    @Published var showEndTimePicker = false
+
     @Published var error: Error?
     
     @Published var isEditing = false

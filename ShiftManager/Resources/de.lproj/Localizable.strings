@@ -25,6 +25,8 @@
 
 // Settings
 "Personal Information" = "Persönliche Informationen";
+"Profile" = "Profil";
+"Regional" = "Regionale Einstellungen";
 "Username" = "Benutzername";
 "Save Changes" = "Änderungen speichern";
 "Appearance" = "Erscheinungsbild";
@@ -58,6 +60,64 @@
 // Legal Section
 "Privacy Policy" = "Datenschutzerklärung";
 "Terms of Use" = "Nutzungsbedingungen";
+
+// Deduction Calculator
+"Deduction Calculator" = "Abzugsrechner";
+"Combined Totals" = "Kombinierte Summen";
+"Individual Payslips" = "Einzelne Gehaltsabrechnungen";
+"Enter the summed deductions and gross (brutto) wages from the last three months." = "Geben Sie die summierten Abzüge und Bruttolöhne der letzten drei Monate ein.";
+"Add each monthly payslip separately so the calculator can sum the values for you." = "Fügen Sie jede monatliche Gehaltsabrechnung separat hinzu, damit der Rechner die Werte für Sie summieren kann.";
+"How this works" = "Wie es funktioniert";
+"Calculation Method" = "Berechnungsmethode";
+"Result" = "Ergebnis";
+"Deduction percentage" = "Abzugsprozentsatz";
+"Equals %.2f%% of your gross wages for that period." = "Entspricht %.2f%% Ihres Bruttolohns für diesen Zeitraum.";
+"Enter both totals to calculate the deduction percentage." = "Geben Sie beide Summen ein, um den Abzugsprozentsatz zu berechnen.";
+"Use this percentage in Settings" = "Diesen Prozentsatz in den Einstellungen verwenden";
+"Clear" = "Löschen";
+"Payslip %d" = "Gehaltsabrechnung %d";
+"Total deductions" = "Gesamtabzüge";
+"Total gross wage" = "Gesamtbruttolohn";
+"Tip: add up every deduction and gross value from the three most recent payslips before entering the totals." = "Tipp: Addieren Sie alle Abzüge und Bruttowerte aus den letzten drei Gehaltsabrechnungen, bevor Sie die Summen eingeben.";
+"Enter each payslip" = "Jede Gehaltsabrechnung eingeben";
+"Add another payslip" = "Weitere Gehaltsabrechnung hinzufügen";
+"Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically." = "Kopieren Sie die Brutto- und Gesamtabzugswerte direkt von jeder Gehaltsabrechnung (z. B. Grundsteuer, Sozialversicherung, Rente, Vorschüsse usw.). Der Rechner summiert alles automatisch.";
+"Payslip name" = "Name der Gehaltsabrechnung";
+"Gross wage" = "Bruttolohn";
+"Totals from the last 3 months" = "Summen der letzten 3 Monate";
+
+// Regional Settings
+"Work Country" = "Arbeitsland";
+"App Language" = "App-Sprache";
+"App Language Description" = "Dies steuert die Sprache der Benutzeroberfläche der App. Es hat keinen Einfluss auf die Lohn- oder Kalenderlogik.";
+"Tax Deduction" = "Steuerabzug";
+"English" = "Englisch";
+"Hebrew" = "Hebräisch";
+"Russian" = "Russisch";
+"Spanish" = "Spanisch";
+"French" = "Französisch";
+"German" = "Deutsch";
+"Video Tutorials" = "Video-Tutorials";
+"United States (USD)" = "Vereinigte Staaten (USD)";
+
+// Backup & Restore
+"Backup & Restore" = "Sicherung & Wiederherstellung";
+"Export Data to Computer" = "Daten auf Computer exportieren";
+"Import Data from Computer" = "Daten vom Computer importieren";
+"Export Shifts Backup" = "Schicht-Backup exportieren";
+"Import Shifts Backup" = "Schicht-Backup importieren";
+"Save a backup file of your shifts to your computer. You can later restore your data by importing this file." = "Speichern Sie eine Sicherungsdatei Ihrer Schichten auf Ihrem Computer. Sie können Ihre Daten später durch Importieren dieser Datei wiederherstellen.";
+"Upload a previously exported backup file from your computer to restore your shifts data." = "Laden Sie eine zuvor exportierte Sicherungsdatei von Ihrem Computer hoch, um Ihre Schichtdaten wiederherzustellen.";
+"Important: Data Loss Warning" = "Wichtig: Warnung vor Datenverlust";
+"Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app." = "Das Löschen dieser App löscht alle Ihre Daten, es sei denn, Sie haben mit iCloud synchronisiert oder eine Sicherungsdatei exportiert.\n\nUm Ihre Daten zu schützen, verwenden Sie die iCloud-Synchronisierung oder exportieren Sie eine Sicherungskopie, bevor Sie die App löschen.";
+"Import Result" = "Import-Ergebnis";
+"Error importing data: %@" = "Fehler beim Importieren der Daten: %@";
+"Imported %d shifts. Skipped %d duplicates." = "%d Schichten importiert. %d Duplikate übersprungen.";
+
+"United Kingdom (GBP)" = "Vereinigtes Königreich (GBP)";
+"European Union (EUR)" = "Europäische Union (EUR)";
+"Israel (ILS)" = "Israel (ILS)";
+"Russia (RUB)" = "Russland (RUB)";
 
 // Shift Settings
 "Hourly Wage" = "Stundenlohn";

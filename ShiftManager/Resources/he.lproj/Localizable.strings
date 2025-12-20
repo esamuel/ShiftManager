@@ -32,6 +32,8 @@
 "Overtime Rules" = "כללי שעות נוספות";
 
 "Personal Information" = "מידע אישי";
+"Profile" = "פרופיל";
+"Regional" = "הגדרות אזוריות";
 
 // --- MISSING KEYS BELOW ---
 "Username" = "שם משתמש";
@@ -226,6 +228,13 @@
 "Import Data from Computer" = "ייבא נתונים מהמחשב";
 "Export Shifts Backup" = "ייצא גיבוי משמרות";
 "Import Shifts Backup" = "ייבא גיבוי משמרות";
+"Save a backup file of your shifts to your computer. You can later restore your data by importing this file." = "שמור קובץ גיבוי של המשמרות שלך למחשב. תוכל לשחזר את הנתונים מאוחר יותר על ידי ייבוא הקובץ.";
+"Upload a previously exported backup file from your computer to restore your shifts data." = "העלה קובץ גיבוי שיוצא בעבר מהמחשב כדי לשחזר את נתוני המשמרות שלך.";
+"Important: Data Loss Warning" = "חשוב: אזהרת אובדן נתונים";
+"Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app." = "מחיקת האפליקציה תמחק את כל הנתונים שלך, אלא אם סנכרנת עם iCloud או ייצאת קובץ גיבוי.\n\nכדי להגן על הנתונים שלך, השתמש בסנכרון iCloud או ייצא גיבוי לפני מחיקת האפליקציה.";
+"Import Result" = "תוצאת ייבוא";
+"Error importing data: %@" = "שגיאה בייבוא נתונים: %@";
+"Imported %d shifts. Skipped %d duplicates." = "יובאו %d משמרות. דולגו %d כפילויות.";
 "Search shifts by date range" = "חפש משמרות לפי טווח תאריכים";
 "5. Tips & Tricks" = "5. טיפים וטריקים";
 
@@ -253,6 +262,50 @@
 "By purchasing, you agree to our Terms of Service and Privacy Policy" = "ברכישה, אתה מסכים לתנאי השירות ולמדיניות הפרטיות שלנו";
 "Terms of Service" = "תנאי שירות";
 "Privacy Policy" = "מדיניות פרטיות";
+"Terms of Use" = "תנאי שימוש";
+
+// Deduction Calculator
+"Deduction Calculator" = "מחשבון ניכויים";
+"Combined Totals" = "סיכום כולל";
+"Individual Payslips" = "תלושי שכר נפרדים";
+"Enter the summed deductions and gross (brutto) wages from the last three months." = "הזן את סך הניכויים והשכר ברוטו המצטבר משלושת החודשים האחרונים.";
+"Add each monthly payslip separately so the calculator can sum the values for you." = "הוסף כל תלוש שכר חודשי בנפרד כדי שהמחשבון יוכל לסכם את הערכים עבורך.";
+"How this works" = "איך זה עובד";
+"Calculation Method" = "שיטת חישוב";
+"Result" = "תוצאה";
+"Deduction percentage" = "אחוז ניכוי";
+"Equals %.2f%% of your gross wages for that period." = "שווה ל-%.2f%% מהשכר ברוטו שלך לאותה תקופה.";
+"Enter both totals to calculate the deduction percentage." = "הזן את שני הסיכומים כדי לחשב את אחוז הניכוי.";
+"Use this percentage in Settings" = "השתמש באחוז זה בהגדרות";
+"Clear" = "נקה";
+"Payslip %d" = "תלוש שכר %d";
+"Total deductions" = "סך הניכויים";
+"Total gross wage" = "סך שכר ברוטו";
+"Tip: add up every deduction and gross value from the three most recent payslips before entering the totals." = "טיפ: סכם כל ניכוי וערך ברוטו משלושת תלושי השכר האחרונים לפני הזנת הסיכומים.";
+"Enter each payslip" = "הזן כל תלוש שכר";
+"Add another payslip" = "הוסף תלוש שכר נוסף";
+"Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically." = "העתק את ערכי הברוטו וסך הניכויים ישירות מכל תלוש שכר (למשל, מס הכנסה, ביטוח לאומי, פנסיה, מקדמות וכו'). המחשבון מסכם הכל באופן אוטומטי.";
+"Payslip name" = "שם תלוש השכר";
+"Gross wage" = "שכר ברוטו";
+"Totals from the last 3 months" = "סיכומים משלושת החודשים האחרונים";
+
+// Regional Settings
+"Work Country" = "מדינת עבודה";
+"App Language" = "שפת אפליקציה";
+"App Language Description" = "זה שולט בשפת הממשק של האפליקציה. זה לא משפיע על חישובי השכר או על הלוגיקה של לוח השנה.";
+"Tax Deduction" = "ניכוי מס";
+"English" = "אנגלית";
+"Hebrew" = "עברית";
+"Russian" = "רוסית";
+"Spanish" = "ספרדית";
+"French" = "צרפתית";
+"German" = "גרמנית";
+"Video Tutorials" = "מדריכי וידאו";
+"United States (USD)" = "ארצות הברית (USD)";
+"United Kingdom (GBP)" = "בריטניה (GBP)";
+"European Union (EUR)" = "האיחוד האירופי (EUR)";
+"Israel (ILS)" = "ישראל (ILS)";
+"Russia (RUB)" = "רוסיה (RUB)";
 
 // Premium Feature Names
 "PDF Export" = "ייצוא PDF";

@@ -25,6 +25,8 @@
 
 // Settings
 "Personal Information" = "Личная информация";
+"Profile" = "Профиль";
+"Regional" = "Региональные настройки";
 "Username" = "Имя пользователя";
 "Save Changes" = "Сохранить изменения";
 "Appearance" = "Внешний вид";
@@ -58,6 +60,64 @@
 // Legal Section
 "Privacy Policy" = "Политика конфиденциальности";
 "Terms of Use" = "Условия использования";
+
+// Deduction Calculator
+"Deduction Calculator" = "Калькулятор вычетов";
+"Combined Totals" = "Общие суммы";
+"Individual Payslips" = "Отдельные расчетные листки";
+"Enter the summed deductions and gross (brutto) wages from the last three months." = "Введите суммарные вычеты и брутто-зарплату за последние три месяца.";
+"Add each monthly payslip separately so the calculator can sum the values for you." = "Добавьте каждый расчетный листок отдельно, чтобы калькулятор мог просуммировать значения за вас.";
+"How this works" = "Как это работает";
+"Calculation Method" = "Метод расчета";
+"Result" = "Результат";
+"Deduction percentage" = "Процент вычета";
+"Equals %.2f%% of your gross wages for that period." = "Равно %.2f%% от вашей валовой зарплаты за этот период.";
+"Enter both totals to calculate the deduction percentage." = "Введите обе суммы, чтобы рассчитать процент вычета.";
+"Use this percentage in Settings" = "Использовать этот процент в настройках";
+"Clear" = "Очистить";
+"Payslip %d" = "Расчетный листок %d";
+"Total deductions" = "Итого вычетов";
+"Total gross wage" = "Итого валовая зарплата";
+"Tip: add up every deduction and gross value from the three most recent payslips before entering the totals." = "Совет: сложите все вычеты и значения брутто из трех последних расчетных листков перед вводом итогов.";
+"Enter each payslip" = "Введите каждый расчетный листок";
+"Add another payslip" = "Добавить еще один расчетный листок";
+"Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically." = "Копируйте значения брутто и общих вычетов непосредственно из каждого расчетного листка (например, базовый налог, социальное обеспечение, пенсия, авансы и т. д.). Калькулятор суммирует все автоматически.";
+"Payslip name" = "Название расчетного листка";
+"Gross wage" = "Валовая зарплата";
+"Totals from the last 3 months" = "Итоги за последние 3 месяца";
+
+// Regional Settings
+"Work Country" = "Страна работы";
+"App Language" = "Язык приложения";
+"App Language Description" = "Это управляет языком интерфейса приложения. Это не влияет на расчет зарплаты или логику календаря.";
+"Tax Deduction" = "Налоговый вычет";
+"English" = "Английский";
+"Hebrew" = "Иврит";
+"Russian" = "Русский";
+"Spanish" = "Испанский";
+"French" = "Французский";
+"German" = "Немецкий";
+"Video Tutorials" = "Видеоуроки";
+"United States (USD)" = "США (USD)";
+
+// Backup & Restore
+"Backup & Restore" = "Резервное копирование и восстановление";
+"Export Data to Computer" = "Экспорт данных на компьютер";
+"Import Data from Computer" = "Импорт данных с компьютера";
+"Export Shifts Backup" = "Экспортировать резервную копию";
+"Import Shifts Backup" = "Импортировать резервную копию";
+"Save a backup file of your shifts to your computer. You can later restore your data by importing this file." = "Сохраните файл резервной копии ваших смен на компьютере. Позже вы сможете восстановить данные, импортировав этот файл.";
+"Upload a previously exported backup file from your computer to restore your shifts data." = "Загрузите ранее экспортированный файл резервной копии с вашего компьютера, чтобы восстановить данные о сменах.";
+"Important: Data Loss Warning" = "Важно: Предупреждение о потере данных";
+"Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app." = "Удаление этого приложения приведет к стиранию всех ваших данных, если вы не синхронизировали их с iCloud или не экспортировали файл резервной копии.\n\nЧтобы защитить свои данные, используйте синхронизацию iCloud или экспортируйте резервную копию перед удалением приложения.";
+"Import Result" = "Результат импорта";
+"Error importing data: %@" = "Ошибка при импорте данных: %@";
+"Imported %d shifts. Skipped %d duplicates." = "Импортировано %d смен. Пропущено %d дубликатов.";
+
+"United Kingdom (GBP)" = "Великобритания (GBP)";
+"European Union (EUR)" = "Европейский Союз (EUR)";
+"Israel (ILS)" = "Израиль (ILS)";
+"Russia (RUB)" = "Россия (RUB)";
 
 // Shift Settings
 "Hourly Wage" = "Почасовая оплата";

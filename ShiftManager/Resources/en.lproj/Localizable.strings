@@ -25,6 +25,8 @@
 
 // Settings
 "Personal Information" = "Personal Information";
+"Profile" = "Profile";
+"Regional" = "Regional Settings";
 "Username" = "Username";
 "Save Changes" = "Save Changes";
 "Appearance" = "Appearance";
@@ -55,9 +57,66 @@
 "Country" = "Country";
 "Currency" = "Currency";
 
-// Legal Section
 "Privacy Policy" = "Privacy Policy";
 "Terms of Use" = "Terms of Use";
+
+// Deduction Calculator
+"Deduction Calculator" = "Deduction Calculator";
+"Combined Totals" = "Combined Totals";
+"Individual Payslips" = "Individual Payslips";
+"Enter the summed deductions and gross (brutto) wages from the last three months." = "Enter the summed deductions and gross (brutto) wages from the last three months.";
+"Add each monthly payslip separately so the calculator can sum the values for you." = "Add each monthly payslip separately so the calculator can sum the values for you.";
+"How this works" = "How this works";
+"Calculation Method" = "Calculation Method";
+"Result" = "Result";
+"Deduction percentage" = "Deduction percentage";
+"Equals %.2f%% of your gross wages for that period." = "Equals %.2f%% of your gross wages for that period.";
+"Enter both totals to calculate the deduction percentage." = "Enter both totals to calculate the deduction percentage.";
+"Use this percentage in Settings" = "Use this percentage in Settings";
+"Clear" = "Clear";
+"Payslip %d" = "Payslip %d";
+"Total deductions" = "Total deductions";
+"Total gross wage" = "Total gross wage";
+"Tip: add up every deduction and gross value from the three most recent payslips before entering the totals." = "Tip: add up every deduction and gross value from the three most recent payslips before entering the totals.";
+"Enter each payslip" = "Enter each payslip";
+"Add another payslip" = "Add another payslip";
+"Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically." = "Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically.";
+"Payslip name" = "Payslip name";
+"Gross wage" = "Gross wage";
+"Totals from the last 3 months" = "Totals from the last 3 months";
+
+// Regional Settings
+"Work Country" = "Work Country";
+"App Language" = "App Language";
+"App Language Description" = "This controls the app's UI language. It does not affect wage or calendar logic.";
+"Tax Deduction" = "Tax Deduction";
+"English" = "English";
+"Hebrew" = "Hebrew";
+"Russian" = "Russian";
+"Spanish" = "Spanish";
+"French" = "French";
+"German" = "German";
+"Video Tutorials" = "Video Tutorials";
+"United States (USD)" = "United States (USD)";
+
+// Backup & Restore
+"Backup & Restore" = "Backup & Restore";
+"Export Data to Computer" = "Export Data to Computer";
+"Import Data from Computer" = "Import Data from Computer";
+"Export Shifts Backup" = "Export Shifts Backup";
+"Import Shifts Backup" = "Import Shifts Backup";
+"Save a backup file of your shifts to your computer. You can later restore your data by importing this file." = "Save a backup file of your shifts to your computer. You can later restore your data by importing this file.";
+"Upload a previously exported backup file from your computer to restore your shifts data." = "Upload a previously exported backup file from your computer to restore your shifts data.";
+"Important: Data Loss Warning" = "Important: Data Loss Warning";
+"Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app." = "Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app.";
+"Import Result" = "Import Result";
+"Error importing data: %@" = "Error importing data: %@";
+"Imported %d shifts. Skipped %d duplicates." = "Imported %d shifts. Skipped %d duplicates.";
+
+"United Kingdom (GBP)" = "United Kingdom (GBP)";
+"European Union (EUR)" = "European Union (EUR)";
+"Israel (ILS)" = "Israel (ILS)";
+"Russia (RUB)" = "Russia (RUB)";
 
 // Shift Settings
 "Hourly Wage" = "Hourly Wage";

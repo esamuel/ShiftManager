@@ -10,22 +10,11 @@ class SettingsManager: ObservableObject {
         }
     }
     
-    @Published var darkModeEnabled: Bool {
-        didSet {
-            UserDefaults.standard.set(darkModeEnabled, forKey: "darkModeEnabled")
-        }
-    }
-    
     private init() {
         self.notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
-        self.darkModeEnabled = UserDefaults.standard.bool(forKey: "darkModeEnabled")
     }
     
     func toggleNotifications() {
         notificationsEnabled.toggle()
-    }
-    
-    func toggleDarkMode() {
-        darkModeEnabled.toggle()
     }
 } 

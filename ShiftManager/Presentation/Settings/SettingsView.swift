@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
@@ -148,8 +149,8 @@ public struct SettingsView: View {
                         }
                     }
                     
-                    // Personal Information Section
-                    if shouldShowSection("Personal Information".localized) {
+                    // Profile Section
+                    if shouldShowSection("Profile".localized) {
                         Section {
                             HStack {
                                 Image(systemName: "person.fill")
@@ -164,11 +165,19 @@ public struct SettingsView: View {
                                         viewModel.saveSettings()
                                     }
                             }
+                        } header: {
+                            SectionHeaderView(title: "Profile".localized, iconName: "person.crop.circle")
+                        }
+                    }
+                    
+                    // Regional Settings
+                    if shouldShowSection("Regional".localized) {
+                        Section {
                             HStack {
                                 Image(systemName: "globe")
                                     .foregroundColor(.purple)
                                     .frame(width: 25)
-                                Picker("Work Country", selection: $viewModel.selectedCountry) {
+                                Picker("Work Country".localized, selection: $viewModel.selectedCountry) {
                                     ForEach(Country.allCases) { country in
                                         Text(country.displayName)
                                             .lineLimit(1)
@@ -180,9 +189,44 @@ public struct SettingsView: View {
                                 .pickerStyle(MenuPickerStyle())
                                 .frame(maxWidth: .infinity)
                             }
-                            .help("This controls wage, weekend, and holiday logic. Change this if you work in a different country than your device region.")
+                            
+                            HStack {
+                                Image(systemName: "dollarsign.circle")
+                                    .foregroundColor(.green)
+                                    .frame(width: 25)
+                                Text("Currency".localized)
+                                Spacer()
+                                Text(viewModel.selectedCountry.currencySymbol)
+                                    .foregroundColor(.gray)
+                            }
                         } header: {
-                            SectionHeaderView(title: "Personal Information".localized, iconName: "person.crop.circle")
+                            SectionHeaderView(title: "Regional".localized, iconName: "globe")
+                        }
+                    }
+                    
+                    // Language Settings
+                    if shouldShowSection("Language".localized) {
+                        Section {
+                            Button(action: {
+                                viewModel.showingLanguagePicker = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "globe")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("App Language".localized)
+                                    Spacer()
+                                    Text(viewModel.selectedLanguage.displayName)
+                                        .foregroundColor(.gray)
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 13))
+                                }
+                            }
+                            .foregroundColor(.primary)
+                            .help("App Language Description".localized)
+                        } header: {
+                            SectionHeaderView(title: "Language".localized, iconName: "character.bubble")
                         }
                     }
                     
@@ -323,14 +367,7 @@ public struct SettingsView: View {
                                     .multilineTextAlignment(.trailing)
                                     .frame(width: 60)
                             }
-                        } header: {
-                            SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
-                        }
-                    }
-                    
-                    // Work Week Settings
-                    if shouldShowSection("Work Week".localized) {
-                        Section {
+
                             HStack {
                                 Image(systemName: "calendar")
                                     .foregroundColor(.orange)
@@ -347,7 +384,7 @@ public struct SettingsView: View {
                                 }
                             }
                         } header: {
-                            SectionHeaderView(title: "Work Week".localized, iconName: "calendar.badge.clock")
+                            SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
                         }
                     }
                     
@@ -380,48 +417,9 @@ public struct SettingsView: View {
                         }
                     }
                     
-                    // Language Settings
-                    if shouldShowSection("Language".localized) {
-                        Section {
-                            Button(action: {
-                                viewModel.showingLanguagePicker = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "globe")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("App Language".localized)
-                                    Spacer()
-                                    Text(viewModel.selectedLanguage.displayName)
-                                        .foregroundColor(.gray)
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
-                                }
-                            }
-                            .foregroundColor(.primary)
-                            .help("This controls the app's UI language. It does not affect wage or calendar logic.")
-                        } header: {
-                            SectionHeaderView(title: "Language".localized, iconName: "globe")
-                        }
-                    }
+
                     
-                    // Currency Settings
-                    if shouldShowSection("Currency".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "dollarsign.circle")
-                                    .foregroundColor(.green)
-                                    .frame(width: 25)
-                                Text("Currency".localized)
-                                Spacer()
-                                Text(viewModel.selectedCountry.currencySymbol)
-                                    .foregroundColor(.gray)
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Currency".localized, iconName: "banknote")
-                        }
-                    }
+
                     
                     // Backup & Restore Section
                     if shouldShowSection("Backup & Restore".localized) {
@@ -435,7 +433,7 @@ public struct SettingsView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Button(action: {
-                                    viewModel.exportShifts()
+                                    viewModel.prepareBackupDocument()
                                 }) {
                                     HStack {
                                         Image(systemName: "square.and.arrow.up")
@@ -455,7 +453,7 @@ public struct SettingsView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Button(action: {
-                                    viewModel.importShifts()
+                                    viewModel.showingImporter = true
                                 }) {
                                     HStack {
                                         Image(systemName: "square.and.arrow.down")
@@ -501,16 +499,12 @@ public struct SettingsView: View {
                             }
                             .foregroundColor(.primary)
                             
-                            Link(destination: URL(string: "https://www.youtube.com/channel/placeholder_channel")!) {
+                            NavigationLink(destination: VideoTutorialsListView()) {
                                 HStack {
                                     Image(systemName: "play.rectangle")
                                         .foregroundColor(.blue)
                                         .frame(width: 25)
                                     Text("Video Tutorials".localized)
-                                    Spacer()
-                                    Image(systemName: "arrow.up.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
                                 }
                             }
                             
@@ -564,14 +558,16 @@ public struct SettingsView: View {
                     // About Section
                     if shouldShowSection("About".localized) {
                         Section {
-                            HStack {
-                                Image(systemName: "info.circle")
-                                    .foregroundColor(.blue)
-                                    .frame(width: 25)
-                                Text("Version".localized)
-                                Spacer()
-                                Text(viewModel.appVersion)
-                                    .foregroundColor(.secondary)
+                            NavigationLink(destination: AboutView()) {
+                                HStack {
+                                    Image(systemName: "info.circle")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 25)
+                                    Text("About Shift Manager".localized)
+                                    Spacer()
+                                    Text(viewModel.appVersion)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         } header: {
                             SectionHeaderView(title: "About".localized, iconName: "info.circle")
@@ -602,47 +598,7 @@ public struct SettingsView: View {
                         }
                     }
                     
-                    // Quick Action Buttons
-                    Section {
-                        HStack(spacing: 15) {
-                            Button(action: viewModel.saveSettings) {
-                                VStack(spacing: 5) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.system(size: 20))
-                                    Text("Save".localized)
-                                        .font(.caption)
-                                }
-                                .foregroundColor(.green)
-                                .frame(maxWidth: .infinity)
-                            }
-                            
-                            Button(action: { dismiss() }) {
-                                VStack(spacing: 5) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .font(.system(size: 20))
-                                    Text("Cancel".localized)
-                                        .font(.caption)
-                                }
-                                .foregroundColor(.red)
-                                .frame(maxWidth: .infinity)
-                            }
-                            
-                            Button(action: {
-                                // Reset to defaults
-                                viewModel.resetToDefaults()
-                            }) {
-                                VStack(spacing: 5) {
-                                    Image(systemName: "arrow.clockwise.circle.fill")
-                                        .font(.system(size: 20))
-                                    Text("Reset".localized)
-                                        .font(.caption)
-                                }
-                                .foregroundColor(.blue)
-                                .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .padding(.vertical, 8)
-                    }
+
                 }
             }
             .navigationTitle("Settings".localized)
@@ -708,6 +664,39 @@ public struct SettingsView: View {
                 UINavigationBar.appearance().topItem?.backButtonTitle = ""
             }
         }
+        .fileExporter(
+            isPresented: $viewModel.showingExporter,
+            document: viewModel.backupDocument,
+            contentType: .json,
+            defaultFilename: "ShiftManager_Backup"
+        ) { result in
+            if case .failure(let error) = result {
+                print("Export failed: \(error.localizedDescription)")
+            }
+        }
+        .fileImporter(
+            isPresented: $viewModel.showingImporter,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                if let url = urls.first {
+                    viewModel.restoreBackup(from: url)
+                }
+            case .failure(let error):
+                print("Import failed: \(error.localizedDescription)")
+            }
+        }
+        .alert("Import Result".localized, isPresented: $viewModel.showingImportAlert) {
+            Button("OK".localized, role: .cancel) { }
+        } message: {
+            if let error = viewModel.importError {
+                Text(String(format: "Error importing data: %@".localized, error.localizedDescription))
+            } else {
+                Text(viewModel.importMessage.localized)
+            }
+        }
     }
     
     private func shouldShowSection(_ sectionName: String) -> Bool {
@@ -767,17 +756,16 @@ struct SettingsSection: Identifiable {
     
     static var allSections: [SettingsSection] {
         [
-            SettingsSection(name: "Personal Information".localized, items: ["Username".localized, "Work Country".localized]),
+            SettingsSection(name: "Profile".localized, items: ["Username".localized]),
+            SettingsSection(name: "Regional".localized, items: ["Work Country".localized, "Currency".localized]),
+            SettingsSection(name: "Language".localized, items: ["App Language".localized, "English".localized, "Hebrew".localized, "Russian".localized, "Spanish".localized, "French".localized, "German".localized]),
             SettingsSection(name: "Appearance".localized, items: ["Theme".localized]),
             SettingsSection(name: "Wage Settings".localized, items: ["Hourly Wage".localized, "Tax Deduction".localized, "Deduction Calculator".localized]),
-            SettingsSection(name: "Hours Settings".localized, items: ["Base Hours (Weekday)".localized, "Base Hours (Special Day)".localized]),
-            SettingsSection(name: "Work Week".localized, items: ["Start work on Sunday".localized, "Start work on Monday".localized]),
+            SettingsSection(name: "Hours Settings".localized, items: ["Base Hours (Weekday)".localized, "Base Hours (Special Day)".localized, "Start work on Sunday".localized, "Start work on Monday".localized]),
             SettingsSection(name: "Notifications".localized, items: ["Enable Notifications".localized, "Remind me before shift".localized]),
-            SettingsSection(name: "Language".localized, items: ["App Language".localized, "English", "Hebrew", "Russian", "Spanish", "French", "German"]),
-            SettingsSection(name: "Currency".localized, items: ["Currency".localized, "USD", "EUR", "GBP", "ILS", "RUB"]),
             SettingsSection(name: "Backup & Restore".localized, items: ["Export Data to Computer".localized, "Import Data from Computer".localized]),
             SettingsSection(name: "Help & FAQ".localized, items: ["Frequently Asked Questions".localized, "Video Tutorials".localized, "User Guide".localized, "Send Feedback".localized, "Contact Support".localized, "Tell Friends".localized]),
-            SettingsSection(name: "About".localized, items: ["Version".localized]),
+            SettingsSection(name: "About".localized, items: ["About Shift Manager".localized, "Version".localized]),
             SettingsSection(name: "Legal".localized, items: ["Privacy Policy".localized, "Terms of Use".localized])
         ]
     }

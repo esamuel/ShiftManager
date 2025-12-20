@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import CoreData
 
 public enum Theme: String, CaseIterable, Identifiable {
     case system
@@ -58,11 +59,11 @@ public enum Country: String, CaseIterable, Identifiable {
     
     var displayName: String {
         switch self {
-        case .usa: return "United States (USD)"
-        case .uk: return "United Kingdom (GBP)"
-        case .eu: return "European Union (EUR)"
-        case .israel: return "Israel (ILS)"
-        case .russia: return "Russia (RUB)"
+        case .usa: return "United States (USD)".localized
+        case .uk: return "United Kingdom (GBP)".localized
+        case .eu: return "European Union (EUR)".localized
+        case .israel: return "Israel (ILS)".localized
+        case .russia: return "Russia (RUB)".localized
         }
     }
     
@@ -126,6 +127,14 @@ public class SettingsViewModel: ObservableObject {
         let raw = UserDefaults.standard.integer(forKey: "notificationLeadTime")
         return NotificationLeadTime(rawValue: raw) ?? .min15
     }()
+    
+    // File Export/Import State
+    @Published var showingExporter = false
+    @Published var showingImporter = false
+    @Published var backupDocument: ShiftBackupDocument?
+    @Published var importError: Error?
+    @Published var showingImportAlert = false
+    @Published var importMessage = ""
     
     @Published var notificationsEnabled: Bool {
         didSet {
@@ -253,6 +262,70 @@ public class SettingsViewModel: ObservableObject {
     }
     // MARK: - Export/Import Shifts
     
+    func prepareBackupDocument() {
+        let context = PersistenceController.shared.container.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Shift")
+        do {
+            let shifts = try context.fetch(fetchRequest)
+            let shiftModels = shifts.map { mapEntityToShift($0) }
+            self.backupDocument = ShiftBackupDocument(shifts: shiftModels)
+            self.showingExporter = true
+        } catch {
+            print("Error preparing backup: \(error)")
+        }
+    }
+    
+    func restoreBackup(from url: URL) {
+        guard url.startAccessingSecurityScopedResource() else {
+            self.importError = NSError(domain: "ShiftManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "Permission denied"])
+            self.showingImportAlert = true
+            return
+        }
+        
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let shiftModels = try decoder.decode([ShiftModel].self, from: data)
+            
+            let context = PersistenceController.shared.container.viewContext
+            
+            // Fetch existing IDs to prevent duplicates
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Shift")
+            let existingShifts = try context.fetch(fetchRequest)
+            let existingIDs = Set(existingShifts.compactMap { $0.value(forKey: "id") as? UUID })
+            
+            var importedCount = 0
+            var skippedCount = 0
+            
+            for model in shiftModels {
+                if !existingIDs.contains(model.id) {
+                    let entity = NSEntityDescription.insertNewObject(forEntityName: "Shift", into: context)
+                    mapShiftToEntity(model, entity)
+                    importedCount += 1
+                } else {
+                    skippedCount += 1
+                }
+            }
+            
+            if context.hasChanges {
+                try context.save()
+                // Notify that data has changed to reload shifts
+                NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
+            }
+            
+            self.importMessage = String(format: "Imported %d shifts. Skipped %d duplicates.".localized, importedCount, skippedCount)
+            self.showingImportAlert = true
+            
+        } catch {
+            print("Error importing shifts: \(error)")
+            self.importError = error
+            self.showingImportAlert = true
+        }
+    }
+    
     // MARK: - Mapping helpers (copied from CoreDataManager)
     func mapShiftToEntity(_ shift: ShiftModel, _ entity: NSManagedObject) {
         entity.setValue(shift.id, forKey: "id")
@@ -284,74 +357,5 @@ public class SettingsViewModel: ObservableObject {
             createdAt: entity.value(forKey: "createdAt") as? Date ?? Date(),
             username: entity.value(forKey: "username") as? String ?? ""
         )
-    }
-    
-    // Keep a strong reference to the import delegate
-    private var importDelegate: ImportDelegate?
-
-    func exportShifts() {
-        let context = PersistenceController.shared.container.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Shift")
-        do {
-            let shifts = try context.fetch(fetchRequest)
-            let shiftModels = shifts.map { mapEntityToShift($0) }
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            let data = try encoder.encode(shiftModels)
-            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("ShiftsBackup.json")
-            try data.write(to: tempURL)
-            // Show share sheet
-            DispatchQueue.main.async {
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let rootVC = windowScene.windows.first?.rootViewController {
-                    let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
-                    rootVC.present(activityVC, animated: true, completion: nil)
-                }
-            }
-        } catch {
-            print("Error exporting shifts: \(error)")
-        }
-    }
-    
-    func importShifts() {
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: true)
-        picker.allowsMultipleSelection = false
-        let delegate = ImportDelegate(mapShiftToEntity: mapShiftToEntity)
-        picker.delegate = delegate
-        self.importDelegate = delegate // Keep strong reference
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootVC = windowScene.windows.first?.rootViewController {
-            rootVC.present(picker, animated: true)
-        }
-    }
-    
-}
-
-// MARK: - Helper for Importing
-
-import UniformTypeIdentifiers
-import CoreData
-
-private class ImportDelegate: NSObject, UIDocumentPickerDelegate {
-    let mapShiftToEntity: (ShiftModel, NSManagedObject) -> Void
-    init(mapShiftToEntity: @escaping (ShiftModel, NSManagedObject) -> Void) {
-        self.mapShiftToEntity = mapShiftToEntity
-    }
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let url = urls.first else { return }
-        do {
-            let data = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            let shiftModels = try decoder.decode([ShiftModel].self, from: data)
-            let context = PersistenceController.shared.container.viewContext
-            for model in shiftModels {
-                let entity = NSEntityDescription.insertNewObject(forEntityName: "Shift", into: context)
-                mapShiftToEntity(model, entity)
-            }
-            try context.save()
-        } catch {
-            print("Error importing shifts: \(error)")
-        }
     }
 }

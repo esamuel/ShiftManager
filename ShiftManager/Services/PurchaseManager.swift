@@ -75,6 +75,7 @@ class PurchaseManager: ObservableObject {
     @Published private(set) var products: [Product] = []
     @Published private(set) var purchasedProductIDs: Set<String> = []
     @Published var showPaywall: Bool = false
+    @Published private(set) var isRedeemed: Bool = false
     
     // Free tier limits
     private let freeShiftLimit = 50
@@ -85,6 +86,7 @@ class PurchaseManager: ObservableObject {
     
     private init() {
         // Load cached purchase status
+        isRedeemed = UserDefaults.standard.bool(forKey: "isRedeemed")
         isPremium = UserDefaults.standard.bool(forKey: "isPremium")
         
         // Start listening for transaction updates
@@ -202,7 +204,7 @@ class PurchaseManager: ObservableObject {
         }
         
         self.purchasedProductIDs = purchasedIDs
-        self.isPremium = !purchasedIDs.isEmpty
+        self.isPremium = !purchasedIDs.isEmpty || isRedeemed
         
         // Cache the premium status
         UserDefaults.standard.set(isPremium, forKey: "isPremium")
@@ -244,8 +246,10 @@ class PurchaseManager: ObservableObject {
     
     func resetPurchases() {
         isPremium = false
+        isRedeemed = false
         purchasedProductIDs.removeAll()
         UserDefaults.standard.set(false, forKey: "isPremium")
+        UserDefaults.standard.set(false, forKey: "isRedeemed")
     }
     #endif
     // MARK: - Promo Code Redemption
@@ -256,7 +260,9 @@ class PurchaseManager: ObservableObject {
         
         if validCodes.contains(code.uppercased()) {
             isPremium = true
+            isRedeemed = true
             UserDefaults.standard.set(true, forKey: "isPremium")
+            UserDefaults.standard.set(true, forKey: "isRedeemed")
             return true
         }
         return false

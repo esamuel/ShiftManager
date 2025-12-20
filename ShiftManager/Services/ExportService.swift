@@ -101,7 +101,7 @@ class ExportService: ExportServiceProtocol {
             
             for shift in shifts {
                 let duration = shift.endTime.timeIntervalSince(shift.startTime) / 3600
-                let shiftText = "\(shift.title) - \(timeFormatter.string(from: shift.startTime)) to \(timeFormatter.string(from: shift.endTime)) (Duration: \(String(format: "%.1f", duration))h)"
+                let shiftText = "\(shift.displayTitle) - \(timeFormatter.string(from: shift.startTime)) to \(timeFormatter.string(from: shift.endTime)) (Duration: \(String(format: "%.1f", duration))h)"
                 let shiftStringSize = shiftText.size(withAttributes: shiftAttributes)
                 let shiftStringRect = CGRect(
                     x: 50,

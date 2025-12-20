@@ -24,7 +24,6 @@ struct ShiftManagerApp: App {
                     .environmentObject(authManager)
                     .environmentObject(shiftManager)
                     .environmentObject(settingsManager)
-                    .refreshOnLanguageChange()
                     .withAppTheme() // Apply app theme
                 
                 // Show onboarding view on first launch

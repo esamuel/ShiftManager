@@ -22,6 +22,8 @@
 "Overtime Rules" = "Reglas de horas extras";
 
 "Personal Information" = "Información personal";
+"Profile" = "Perfil";
+"Regional" = "Ajustes regionales";
 "Username" = "Nombre de usuario";
 "Save Changes" = "Guardar cambios";
 "Appearance" = "Apariencia";
@@ -54,7 +56,65 @@
 "Privacy Policy" = "Política de privacidad";
 "Terms of Use" = "Términos de uso";
 
-"Hourly Wage" = "Salario por hora";
+// Deduction Calculator
+"Deduction Calculator" = "Calculadora de deducciones";
+"Combined Totals" = "Totales combinados";
+"Individual Payslips" = "Nóminas individuales";
+"Enter the summed deductions and gross (brutto) wages from the last three months." = "Introduzca el total de deducciones y el salario bruto de los últimos tres meses.";
+"Add each monthly payslip separately so the calculator can sum the values for you." = "Añada cada nómina mensual por separado para que la calculadora sume los valores por usted.";
+"How this works" = "Cómo funciona";
+"Calculation Method" = "Método de cálculo";
+"Result" = "Resultado";
+"Deduction percentage" = "Porcentaje de deducción";
+"Equals %.2f%% of your gross wages for that period." = "Equivale al %.2f%% de su salario bruto para ese periodo.";
+"Enter both totals to calculate the deduction percentage." = "Introduzca ambos totales para calcular el porcentaje de deducción.";
+"Use this percentage in Settings" = "Usar este porcentaje en Ajustes";
+"Clear" = "Borrar";
+"Payslip %d" = "Nómina %d";
+"Total deductions" = "Total de deducciones";
+"Total gross wage" = "Salario bruto total";
+"Tip: add up every deduction and gross value from the three most recent payslips before entering the totals." = "Consejo: sume cada deducción y valor bruto de las tres nóminas más recientes antes de introducir los totales.";
+"Enter each payslip" = "Introducir cada nómina";
+"Add another payslip" = "Añadir otra nómina";
+"Copy the gross and total deduction values directly from each payslip (for example, base tax, social security, pension, advances, etc.). The calculator sums everything automatically." = "Copie los valores brutos y de deducción total directamente de cada nómina (por ejemplo, impuestos base, seguridad social, pensión, anticipos, etc.). La calculadora suma todo automáticamente.";
+"Payslip name" = "Nombre de la nómina";
+"Gross wage" = "Salario bruto";
+"Totals from the last 3 months" = "Totales de los últimos 3 meses";
+
+// Regional Settings
+"Work Country" = "País de trabajo";
+"App Language" = "Idioma de la aplicación";
+"App Language Description" = "Esto controla el idioma de la interfaz de la aplicación. No afecta a la lógica salarial ni del calendario.";
+"Tax Deduction" = "Deducción de impuestos";
+"English" = "Inglés";
+"Hebrew" = "Hebreo";
+"Russian" = "Ruso";
+"Spanish" = "Español";
+"French" = "Francés";
+"German" = "Alemán";
+"Video Tutorials" = "Videotutoriales";
+"United States (USD)" = "Estados Unidos (USD)";
+
+// Backup & Restore
+"Backup & Restore" = "Copia de seguridad y restauración";
+"Export Data to Computer" = "Exportar datos al ordenador";
+"Import Data from Computer" = "Importar datos del ordenador";
+"Export Shifts Backup" = "Exportar copia de seguridad";
+"Import Shifts Backup" = "Importar copia de seguridad";
+"Save a backup file of your shifts to your computer. You can later restore your data by importing this file." = "Guarde un archivo de copia de seguridad de sus turnos en su ordenador. Podrá restaurar sus datos más tarde importando este archivo.";
+"Upload a previously exported backup file from your computer to restore your shifts data." = "Suba un archivo de copia de seguridad exportado previamente desde su ordenador para restaurar sus datos de turnos.";
+"Important: Data Loss Warning" = "Importante: Advertencia de pérdida de datos";
+"Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app." = "Al eliminar esta aplicación se borrarán todos tus datos a menos que hayas sincronizado con iCloud o exportado un archivo de copia de seguridad.\n\nPara proteger tus datos, utiliza la sincronización de iCloud o exporta una copia de seguridad antes de eliminar la aplicación.";
+"Import Result" = "Resultado de la importación";
+"Error importing data: %@" = "Error al importar datos: %@";
+"Imported %d shifts. Skipped %d duplicates." = "Se importaron %d turnos. Se omitieron %d duplicados.";
+
+"United Kingdom (GBP)" = "Reino Unido (GBP)";
+"European Union (EUR)" = "Unión Europea (EUR)";
+"Israel (ILS)" = "Israel (ILS)";
+"Russia (RUB)" = "Rusia (RUB)";
+
+// Shift Settingse" = "Salario por hora";
 "Tax Deduction (%)" = "Deducción fiscal (%)";
 "Base Hours (Weekday)" = "Horas base (día laboral)";
 "Base Hours (Special Day)" = "Horas base (día especial)";

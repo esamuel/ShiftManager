@@ -39,7 +39,7 @@ public struct UpcomingShiftsView: View {
                                     ForEach(shifts) { shift in
                                         HStack {
                                             VStack(alignment: .leading) {
-                                                Text(shift.title.isEmpty ? "Regular Shift".localized : shift.title)
+                                                Text(shift.displayTitle.isEmpty ? "Regular Shift".localized : shift.displayTitle)
                                                     .font(.subheadline)
                                                     .foregroundColor(.primary)
                                                 

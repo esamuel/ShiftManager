@@ -292,9 +292,9 @@ private struct PayPeriod: Identifiable {
     
     static var defaultSet: [PayPeriod] {
         [
-            PayPeriod(label: "Payslip 1"),
-            PayPeriod(label: "Payslip 2"),
-            PayPeriod(label: "Payslip 3")
+            PayPeriod(label: String(format: "Payslip %d".localized, 1)),
+            PayPeriod(label: String(format: "Payslip %d".localized, 2)),
+            PayPeriod(label: String(format: "Payslip %d".localized, 3))
         ]
     }
 }

@@ -18,13 +18,7 @@ struct ShiftManagerView: View {
         return formatter
     }()
     
-    private let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
-        return formatter
-    }()
+
     
     var body: some View {
         VStack(spacing: 12) {
@@ -50,35 +44,34 @@ struct ShiftManagerView: View {
             .padding(.horizontal)
             
             // Time Selection
-            HStack(spacing: 12) {
-                // Start Time
-                Button(action: { viewModel.showStartTimePicker = true }) {
-                    HStack {
-                        Text(String(format: "Start Time: %@".localized, timeFormatter.string(from: viewModel.startTime)))
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal)
-                    .background(Color.purple)
-                    .cornerRadius(25)
+            VStack(spacing: 0) {
+                HStack {
+                    Image(systemName: "clock")
+                        .foregroundColor(.purple)
+                    Text("Start Time".localized)
+                        .font(.headline)
+                    Spacer()
+                    DatePicker("", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
                 }
+                .padding()
                 
-                // End Time
-                Button(action: { viewModel.showEndTimePicker = true }) {
-                    HStack {
-                        Text(String(format: "End Time: %@".localized, timeFormatter.string(from: viewModel.endTime)))
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal)
-                    .background(Color.purple)
-                    .cornerRadius(25)
+                Divider()
+                    .padding(.leading)
+                
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .foregroundColor(.purple)
+                    Text("End Time".localized)
+                        .font(.headline)
+                    Spacer()
+                    DatePicker("", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
                 }
+                .padding()
             }
+            .background(Color(.systemGray6))
+            .cornerRadius(12)
             .padding(.horizontal)
             
             // Notes
@@ -148,40 +141,7 @@ struct ShiftManagerView: View {
         .sheet(isPresented: $viewModel.showDatePicker) {
             DatePickerSheetView(selectedDate: $viewModel.selectedDate, isPresented: $viewModel.showDatePicker)
         }
-        .sheet(isPresented: $viewModel.showStartTimePicker) {
-            NavigationView {
-                VStack(spacing: 24) {
-                    Text("Select Time".localized)
-                        .font(.headline)
-                        .padding(.top)
-                    TimePickerRepresentable(selectedTime: $viewModel.startTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
-                        .frame(maxWidth: 350, maxHeight: 350)
-                        .padding()
-                    Spacer()
-                }
-                .navigationBarItems(trailing: Button("Done".localized) {
-                    viewModel.showStartTimePicker = false
-                })
-                .background(Color(.systemBackground))
-            }
-        }
-        .sheet(isPresented: $viewModel.showEndTimePicker) {
-            NavigationView {
-                VStack(spacing: 24) {
-                    Text("Select Time".localized)
-                        .font(.headline)
-                        .padding(.top)
-                    TimePickerRepresentable(selectedTime: $viewModel.endTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
-                        .frame(maxWidth: 350, maxHeight: 350)
-                        .padding()
-                    Spacer()
-                }
-                .navigationBarItems(trailing: Button("Done".localized) {
-                    viewModel.showEndTimePicker = false
-                })
-                .background(Color(.systemBackground))
-            }
-        }
+
         .sheet(isPresented: $viewModel.isEditing) {
             NavigationView {
                 EditShiftView(shift: viewModel.shiftBeingEdited!,
@@ -397,16 +357,9 @@ struct EditShiftView: View {
     @State private var editedEndTime: Date
     @State private var editedNotes: String
     @State private var isSpecialDay: Bool
-    @State private var showStartTimePicker = false
-    @State private var showEndTimePicker = false
+
     
-    private let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
-        return formatter
-    }()
+
     
     init(shift: ShiftModel, onSave: @escaping (ShiftModel) -> Void) {
         self.shift = shift
@@ -423,60 +376,8 @@ struct EditShiftView: View {
             Section {
 
                 DatePicker("Date".localized, selection: $editedDate, displayedComponents: .date)
-                Button(action: { showStartTimePicker = true }) {
-    HStack {
-        Text("Start Time: ")
-            .font(.headline)
-        Text(timeFormatter.string(from: editedStartTime))
-            .font(.title3)
-            .foregroundColor(.accentColor)
-        Spacer()
-    }
-}
-.sheet(isPresented: $showStartTimePicker) {
-    NavigationView {
-        VStack(spacing: 24) {
-            Text("Select Time".localized)
-                .font(.headline)
-                .padding(.top)
-            TimePickerRepresentable(selectedTime: $editedStartTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
-                .frame(maxWidth: 350, maxHeight: 350)
-                .padding()
-            Spacer()
-        }
-        .navigationBarItems(trailing: Button("Done".localized) {
-            showStartTimePicker = false
-        })
-        .background(Color(.systemBackground))
-    }
-}
-                Button(action: { showEndTimePicker = true }) {
-    HStack {
-        Text("End Time: ")
-            .font(.headline)
-        Text(timeFormatter.string(from: editedEndTime))
-            .font(.title3)
-            .foregroundColor(.accentColor)
-        Spacer()
-    }
-}
-.sheet(isPresented: $showEndTimePicker) {
-    NavigationView {
-        VStack(spacing: 24) {
-            Text("Select Time".localized)
-                .font(.headline)
-                .padding(.top)
-            TimePickerRepresentable(selectedTime: $editedEndTime, locale: Locale(identifier: LocalizationManager.shared.currentLanguage))
-                .frame(maxWidth: 350, maxHeight: 350)
-                .padding()
-            Spacer()
-        }
-        .navigationBarItems(trailing: Button("Done".localized) {
-            showEndTimePicker = false
-        })
-        .background(Color(.systemBackground))
-    }
-}
+                DatePicker("Start Time".localized, selection: $editedStartTime, displayedComponents: .hourAndMinute)
+                DatePicker("End Time".localized, selection: $editedEndTime, displayedComponents: .hourAndMinute)
                 Toggle("Special Day".localized, isOn: $isSpecialDay)
                 TextField("Notes".localized, text: $editedNotes)
             }
