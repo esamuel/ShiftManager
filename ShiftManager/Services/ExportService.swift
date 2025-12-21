@@ -3,7 +3,7 @@ import PDFKit
 import SwiftUI
 
 protocol ExportServiceProtocol {
-    func generatePDFReport(shifts: [ShiftModel], startDate: Date, endDate: Date) async throws -> Data
+    func generatePDFReport(shifts: [ShiftModel], startDate: Date, endDate: Date, username: String) async throws -> Data
     func exportDataToJSON() async throws -> Data
     func importDataFromJSON(_ data: Data) async throws
     func generateSearchReport(shifts: [ShiftModel], username: String, periodString: String, summary: (totalDays: Int, totalHours: Double, grossWage: Double, netWage: Double)) async throws -> Data
@@ -17,11 +17,11 @@ class ExportService: ExportServiceProtocol {
         self.repository = repository
     }
     
-    func generatePDFReport(shifts: [ShiftModel], startDate: Date, endDate: Date) async throws -> Data {
+    func generatePDFReport(shifts: [ShiftModel], startDate: Date, endDate: Date, username: String) async throws -> Data {
         let pdfMetaData = [
             kCGPDFContextCreator: "ShiftManager",
-            kCGPDFContextAuthor: "User",
-            kCGPDFContextTitle: "Shift Report"
+            kCGPDFContextAuthor: username,
+            kCGPDFContextTitle: String(format: "%@ Work Report".localized, username)
         ]
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
@@ -29,16 +29,26 @@ class ExportService: ExportServiceProtocol {
         let pageRect = CGRect(x: 0, y: 0, width: 595.2, height: 841.8) // A4
         let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
         
+        // Setup formatters with current locale
+        let currentLocale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = currentLocale
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = currentLocale
+        timeFormatter.timeStyle = .short
+        
         return renderer.pdfData { context in
             context.beginPage()
             
-            // Title
+            // Title attributes
             let titleFont = UIFont.boldSystemFont(ofSize: 24.0)
             let titleAttributes: [NSAttributedString.Key: Any] = [
                 .font: titleFont
             ]
             
-            let title = "Shift Report"
+            let title = String(format: "%@ Work Report".localized, username)
             let titleStringSize = title.size(withAttributes: titleAttributes)
             let titleStringRect = CGRect(
                 x: (pageRect.width - titleStringSize.width) / 2.0,
@@ -54,9 +64,6 @@ class ExportService: ExportServiceProtocol {
                 .font: dateFont
             ]
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
             let dateString = "\(dateFormatter.string(from: startDate)) - \(dateFormatter.string(from: endDate))"
             let dateStringSize = dateString.size(withAttributes: dateAttributes)
             let dateStringRect = CGRect(
@@ -78,7 +85,7 @@ class ExportService: ExportServiceProtocol {
             let totalHours = shifts.reduce(0) { $0 + $1.endTime.timeIntervalSince($1.startTime) } / 3600
             let overtimeShifts = shifts.filter { $0.isOvertime }.count
             
-            let summaryText = "Total Shifts: \(totalShifts) | Total Hours: \(String(format: "%.1f", totalHours)) | Overtime Shifts: \(overtimeShifts)"
+            let summaryText = "\("Total Shifts:".localized) \(totalShifts) | \("Total Hours:".localized) \(String(format: "%.1f", totalHours)) | \("Overtime:".localized) \(overtimeShifts)"
             let summaryStringSize = summaryText.size(withAttributes: summaryAttributes)
             let summaryStringRect = CGRect(
                 x: 50,
@@ -95,14 +102,17 @@ class ExportService: ExportServiceProtocol {
                 .font: shiftFont
             ]
             
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateStyle = .none
-            timeFormatter.timeStyle = .short
-            
             for shift in shifts {
                 let duration = shift.endTime.timeIntervalSince(shift.startTime) / 3600
-                let shiftText = "\(shift.displayTitle) - \(timeFormatter.string(from: shift.startTime)) to \(timeFormatter.string(from: shift.endTime)) (Duration: \(String(format: "%.1f", duration))h)"
+                let shiftText = "\(shift.displayTitle) - \(timeFormatter.string(from: shift.startTime)) \("to".localized) \(timeFormatter.string(from: shift.endTime)) (\("Duration:".localized) \(String(format: "%.1f", duration))h)"
                 let shiftStringSize = shiftText.size(withAttributes: shiftAttributes)
+                
+                // Add new page if needed
+                if yPosition + 50 > pageRect.height {
+                    context.beginPage()
+                    yPosition = 50
+                }
+                
                 let shiftStringRect = CGRect(
                     x: 50,
                     y: yPosition,
@@ -113,8 +123,15 @@ class ExportService: ExportServiceProtocol {
                 yPosition += shiftStringSize.height + 5
                 
                 if !shift.notes.isEmpty {
-                    let notesText = "Notes: \(shift.notes)"
+                    let notesText = "\("Notes:".localized) \(shift.notes)"
                     let notesStringSize = notesText.size(withAttributes: shiftAttributes)
+                    
+                    // Add new page if needed for notes
+                    if yPosition + 25 > pageRect.height {
+                        context.beginPage()
+                        yPosition = 50
+                    }
+                    
                     let notesStringRect = CGRect(
                         x: 70,
                         y: yPosition,
@@ -154,13 +171,22 @@ class ExportService: ExportServiceProtocol {
         let pdfMetaData = [
             kCGPDFContextCreator: "ShiftManager",
             kCGPDFContextAuthor: username,
-            kCGPDFContextTitle: "Work Report"
+            kCGPDFContextTitle: "Work Report".localized
         ]
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
         
         let pageRect = CGRect(x: 0, y: 0, width: 595.2, height: 841.8) // A4
         let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
+        
+        // Setup formatters with current locale
+        let currentLocale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = currentLocale
+        dateFormatter.dateStyle = .medium
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = currentLocale
+        timeFormatter.timeStyle = .short
         
         let data = renderer.pdfData { context in
             context.beginPage()
@@ -184,32 +210,30 @@ class ExportService: ExportServiceProtocol {
             ]
             
             // Draw title
-            let title = "\(username)'s Work Report"
+            let title = String(format: "%@ Work Report".localized, username)
             let titleSize = title.size(withAttributes: titleAttributes)
             title.draw(at: CGPoint(x: (pageRect.width - titleSize.width) / 2, y: 50), withAttributes: titleAttributes)
             
             // Draw period
-            let period = "Period: \(periodString)"
+            let period = "\("Period".localized): \(periodString)"
             let periodSize = period.size(withAttributes: headerAttributes)
             period.draw(at: CGPoint(x: (pageRect.width - periodSize.width) / 2, y: 90), withAttributes: headerAttributes)
             
-            // Table headers
-            var yPosition: CGFloat = 130
+            // Table configurations
             let xPositions: [CGFloat] = [50, 150, 250, 350, 450]
-            let headers = ["Date", "Start Time", "End Time", "Hours", "Notes"]
+            let headers = ["Date".localized, "Start Time".localized, "End Time".localized, "Hours".localized, "Notes".localized]
             
-            for (index, header) in headers.enumerated() {
-                header.draw(at: CGPoint(x: xPositions[index], y: yPosition), withAttributes: headerAttributes)
+            func drawTableHeaders(at y: CGFloat) {
+                for (index, header) in headers.enumerated() {
+                    header.draw(at: CGPoint(x: xPositions[index], y: y), withAttributes: headerAttributes)
+                }
             }
             
+            var yPosition: CGFloat = 130
+            drawTableHeaders(at: yPosition)
             yPosition += 30
             
             // Draw shifts
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            let timeFormatter = DateFormatter()
-            timeFormatter.timeStyle = .short
-            
             for shift in shifts {
                 let date = dateFormatter.string(from: shift.startTime)
                 let startTime = timeFormatter.string(from: shift.startTime)
@@ -228,12 +252,21 @@ class ExportService: ExportServiceProtocol {
                 if yPosition > pageRect.height - 100 {
                     context.beginPage()
                     yPosition = 50
+                    drawTableHeaders(at: yPosition)
+                    yPosition += 30
                 }
             }
             
-            // Draw summary
-            yPosition += 30
-            let summaryTitle = "Summary"
+            // Draw summary section
+            // Check if summary fits on current page, else start new
+            if yPosition > pageRect.height - 150 {
+                context.beginPage()
+                yPosition = 50
+            } else {
+                yPosition += 30
+            }
+            
+            let summaryTitle = "Summary".localized
             summaryTitle.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: headerAttributes)
             
             yPosition += 25
@@ -242,10 +275,10 @@ class ExportService: ExportServiceProtocol {
             let currencySymbol = LocalizationManager.shared.currencySymbol
             
             let summaryItems = [
-                "Total Working Days: \(summary.totalDays)",
-                "Total Hours: \(String(format: "%.2f", summary.totalHours))",
-                "Gross Wage: \(currencySymbol)\(String(format: "%.2f", summary.grossWage))",
-                "Net Wage: \(currencySymbol)\(String(format: "%.2f", summary.netWage))"
+                "\("Total Working Days:".localized) \(summary.totalDays)",
+                "\("Total Hours:".localized) \(String(format: "%.2f", summary.totalHours))",
+                "\("Gross Wage:".localized) \(currencySymbol)\(String(format: "%.2f", summary.grossWage))",
+                "\("Net Wage:".localized) \(currencySymbol)\(String(format: "%.2f", summary.netWage))"
             ]
             
             for item in summaryItems {
@@ -261,7 +294,7 @@ class ExportService: ExportServiceProtocol {
         let pdfMetaData = [
             kCGPDFContextCreator: "ShiftManager",
             kCGPDFContextAuthor: username,
-            kCGPDFContextTitle: "Monthly Report".localized
+            kCGPDFContextTitle: String(format: "%@ Work Report".localized, username)
         ]
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
@@ -312,12 +345,12 @@ class ExportService: ExportServiceProtocol {
             ]
             
             // Draw title
-            let title = "Monthly Report".localized
+            let title = String(format: "%@ Work Report".localized, username)
             let titleSize = title.size(withAttributes: titleAttributes)
             title.draw(at: CGPoint(x: (pageRect.width - titleSize.width) / 2, y: 40), withAttributes: titleAttributes)
             
             // Draw username
-            let usernameText = "\(username)'s \("Report Summary".localized)"
+            let usernameText = String(format: "%@ Report Summary".localized, username)
             let usernameSize = usernameText.size(withAttributes: headerAttributes)
             usernameText.draw(at: CGPoint(x: (pageRect.width - usernameSize.width) / 2, y: 80), withAttributes: headerAttributes)
             

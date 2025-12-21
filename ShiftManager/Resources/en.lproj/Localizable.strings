@@ -212,11 +212,27 @@
 "Special Day" = "Special Day";
 "Long Shift Warning" = "Long Shift Warning";
 "Accept" = "Accept";
-"No upcoming shifts" = "No upcoming shifts";
+"No Upcoming Shifts" = "No Upcoming Shifts";
+"You don't have any upcoming shifts scheduled." = "You don't have any upcoming shifts scheduled.";
 "No shifts scheduled" = "No shifts scheduled";
 "Weekly View" = "Weekly View";
 "Monthly View" = "Monthly View";
 "Wage Breakdown" = "Wage Breakdown";
+"Visual Summary" = "Visual Summary";
+"Hours Breakdown" = "Hours Breakdown";
+"Wage Distribution" = "Wage Distribution";
+"No wage data available for the selected period" = "No wage data available for the selected period";
+"Base Work Hours" = "Base Work Hours";
+"No Overtime Rules" = "No Overtime Rules";
+"Tap the + button to add your first overtime rule." = "Tap the + button to add your first overtime rule.";
+"Report Options" = "Report Options";
+"Generate Report" = "Generate Report";
+"Print Report" = "Print Report";
+"Regular (100%)" = "Regular (100%)";
+"Overtime (125%)" = "Overtime (125%)";
+"Overtime (150%)" = "Overtime (150%)";
+"Overtime (175%)" = "Overtime (175%)";
+"Overtime (200%)" = "Overtime (200%)";
 "Total Working Days" = "Total Working Days";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?";
 "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day.";
@@ -309,6 +325,17 @@
 "No data available to export" = "No data available to export";
 "Failed to generate PDF: No data returned" = "Failed to generate PDF: No data returned";
 "Error generating PDF: %@" = "Error generating PDF: %@";
+"Work Report" = "Work Report";
+"%@ Work Report" = "%@'s Work Report";
+"Report Summary" = "Report Summary";
+"%@ Report Summary" = "%@'s Report Summary";
+"Period" = "Period";
+"Summary" = "Summary";
+"Hours" = "Hours";
+"to" = "to";
+"Duration:" = "Duration:";
+"Total Shifts:" = "Total Shifts:";
+"Overtime:" = "Overtime:";
 
 // Premium Features
 "Upgrade to Premium" = "Upgrade to Premium";
@@ -480,7 +507,7 @@
 // Legal Documents - Terms of Service
 "premium_terms_full_content" = "TERMS OF SERVICE
 
-Last Updated: November 2025
+Last Updated: December 2025
 
 1. ACCEPTANCE OF TERMS
 By purchasing ShiftManager Premium, you agree to these Terms of Service. If you do not agree, please do not purchase or use the premium features.
@@ -540,7 +567,7 @@ For questions about these terms, please contact us through the app's support sec
 
 By purchasing Premium, you acknowledge that you have read, understood, and agree to these Terms of Service.";
 
-"premium_terms_last_updated" = "Last Updated: November 18, 2025";
+"premium_terms_last_updated" = "Last Updated: December 20, 2025";
 
 // Legal Documents - Privacy Policy  
 "premium_privacy_key_principle" = "Our Core Privacy Principle";
@@ -548,7 +575,7 @@ By purchasing Premium, you acknowledge that you have read, understood, and agree
 
 "premium_privacy_full_content" = "PRIVACY POLICY
 
-Last Updated: November 2025
+Last Updated: December 2025
 
 1. OUR PRIVACY COMMITMENT
 ShiftManager is built with privacy at its core. All your shift data, earnings, and work information is stored locally on your device using Apple's Core Data framework. We do not collect, transmit, or store any of your personal work data on external servers.
@@ -633,4 +660,4 @@ Your work data is yours. It stays on your device. We never see it, collect it, o
 
 "premium_privacy_summary_title" = "Privacy Summary";
 "premium_privacy_summary_content" = "✓ All data stored locally on your device\n✓ No data collection or tracking\n✓ No account registration required\n✓ Optional iCloud sync (encrypted)\n✓ Full data control and ownership\n✓ No ads or third-party analytics\n✓ Complete privacy guaranteed";
-"premium_privacy_last_updated" = "Last Updated: November 18, 2025";
+"premium_privacy_last_updated" = "Last Updated: December 20, 2025";

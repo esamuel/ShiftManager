@@ -5,16 +5,18 @@
   Override system UI items for Hebrew localization
 */
 
+"CFBundleDisplayName" = "ShiftManager";
+"CFBundleName" = "ShiftManager";
+
 /* Back button override for UIKit components */
-"Back" = "";
-"Previous" = "";
-"back" = "";
-"חזרה" = "";
-"חזור" = "";
-"Back" = "";
-"UIBarButtonBack" = "";
-"UIBarButtonItemBack" = "";
-"UIButtonBack" = "";
-"UINavigationItemBackBarButtonTitle" = "";
-"UIBarButtonSystemItemBack" = "";
-"NSBackBarButtonTitleKey" = ""; 
+"Back" = "חזור";
+"Previous" = "הקודם";
+"back" = "חזור";
+"חזרה" = "חזרה";
+"חזור" = "חזור";
+"UIBarButtonBack" = "חזור";
+"UIBarButtonItemBack" = "חזור";
+"UIButtonBack" = "חזור";
+"UINavigationItemBackBarButtonTitle" = "חזור";
+"UIBarButtonSystemItemBack" = "חזור";
+"NSBackBarButtonTitleKey" = "חזור";

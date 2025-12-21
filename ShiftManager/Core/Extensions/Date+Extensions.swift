@@ -4,12 +4,15 @@ extension Date {
     func formattedString(format: String = "MMM d, yyyy") -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         return formatter.string(from: self)
     }
     
     func timeString() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
         return formatter.string(from: self)
     }
     

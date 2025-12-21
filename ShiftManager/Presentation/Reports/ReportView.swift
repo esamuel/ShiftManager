@@ -72,144 +72,101 @@ public struct ReportView: View {
     }
     
     public var body: some View {
+        let isRTL = LocalizationManager.shared.currentLanguage == "he" || LocalizationManager.shared.currentLanguage == "ar"
+        
         VStack(spacing: 0) {
             // View Type Selector
             viewTypeSelectorBar
+                .padding(.top, 8)
             
             // Date Navigation
-            HStack {
-                Button(action: { viewModel.previousPeriod() }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.blue)
-                }
-                
-                Spacer()
-                
-                Text(viewModel.periodTitle)
-                    .font(.title2)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                Button(action: { viewModel.nextPeriod() }) {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.blue)
-                }
-            }
-            .padding()
-            
-            Text(viewModel.periodRangeText)
-                .font(.subheadline)
-                .foregroundColor(.gray)
-                .padding(.bottom)
-            
-            // Summary Section moved to top (non-scrolling)
-            VStack(spacing: 8) {
-                Group {
-                    HStack {
-                        Text("Total Working Days:".localized)
-                        Spacer()
-                        Text("\(viewModel.totalWorkingDays)")
+            VStack(spacing: 4) {
+                HStack {
+                    Button(action: { 
+                        if isRTL { viewModel.nextPeriod() } else { viewModel.previousPeriod() }
+                    }) {
+                        Image(systemName: isRTL ? "chevron.right" : "chevron.left")
+                            .font(.title3.bold())
+                            .foregroundColor(.purple)
                     }
                     
-                    HStack {
-                        Text("Total Hours:".localized)
-                        Spacer()
-                        let formattedHours = String(format: "%.2f", viewModel.totalHours)
-                        Text(formattedHours)
-                    }
+                    Spacer()
                     
-                    HStack {
-                        Text("Gross Wage:".localized)
-                        Spacer()
-                        Text(viewModel.grossWage.asCurrency)
-                    }
+                    Text(viewModel.periodTitle)
+                        .font(.title2)
+                        .fontWeight(.bold)
                     
-                    HStack {
-                        Text("Net Wage:".localized)
-                        Spacer()
-                        Text(viewModel.netWage.asCurrency)
+                    Spacer()
+                    
+                    Button(action: { 
+                        if isRTL { viewModel.previousPeriod() } else { viewModel.nextPeriod() }
+                    }) {
+                        Image(systemName: isRTL ? "chevron.left" : "chevron.right")
+                            .font(.title3.bold())
+                            .foregroundColor(.purple)
                     }
                 }
                 .padding(.horizontal)
+                
+                Text(viewModel.periodRangeText)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-            .padding(.vertical, 8)
-            .background(Color(.systemBackground))
+            .padding(.vertical)
             
-            Divider()
+            // Summary Section
+            VStack(spacing: 12) {
+                SummaryRow(label: "Total Working Days:".localized, value: "\(viewModel.totalWorkingDays)")
+                SummaryRow(label: "Total Hours:".localized, value: String(format: "%.2f", viewModel.totalHours))
+                SummaryRow(label: "Gross Wage:".localized, value: viewModel.grossWage.asCurrency, valueColor: .primary)
+                SummaryRow(label: "Net Wage:".localized, value: viewModel.netWage.asCurrency, valueColor: .green)
+            }
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            .padding(.horizontal)
+            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
             
             // Scrollable Content
             ScrollView {
-                VStack(spacing: 16) {
-                    // Wage Breakdown Section moved up
-                    VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 20) {
+                    // Breakdown Section
+                    VStack(alignment: .leading, spacing: 12) {
                         Text("Wage Breakdown".localized)
                             .font(.headline)
-                            .padding(.top, 8)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
                         
-                        Group {
-                            // Regular day rates
+                        VStack(spacing: 8) {
                             if viewModel.regularHours > 0 {
-                                HStack {
-                                    Text("100%")
-                                    Spacer()
-                                    let formattedHours = String(format: "%.2f", viewModel.regularHours)
-                                    Text(formattedHours)
-                                }
+                                BreakdownRow(label: "100%", value: String(format: "%.2f", viewModel.regularHours))
                             }
-                            
-                            // First overtime (125%)
                             if viewModel.overtimeHours125 > 0 {
-                                HStack {
-                                    Text("125%")
-                                    Spacer()
-                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours125)
-                                    Text(formattedHours)
-                                }
+                                BreakdownRow(label: "125%", value: String(format: "%.2f", viewModel.overtimeHours125))
                             }
-                            
-                            // Second overtime (150%)
                             if viewModel.overtimeHours150 > 0 {
-                                HStack {
-                                    Text("150%")
-                                    Spacer()
-                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours150)
-                                    Text(formattedHours)
-                                }
+                                BreakdownRow(label: "150%", value: String(format: "%.2f", viewModel.overtimeHours150))
                             }
-                            
-                            // Special day overtime (175%)
                             if viewModel.overtimeHours175 > 0 {
-                                HStack {
-                                    Text("175%")
-                                    Spacer()
-                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours175)
-                                    Text(formattedHours)
-                                }
+                                BreakdownRow(label: "175%", value: String(format: "%.2f", viewModel.overtimeHours175))
                             }
-                            
-                            // Special day extended overtime (200%)
                             if viewModel.overtimeHours200 > 0 {
-                                HStack {
-                                    Text("200%")
-                                    Spacer()
-                                    let formattedHours = String(format: "%.2f", viewModel.overtimeHours200)
-                                    Text(formattedHours)
-                                }
+                                BreakdownRow(label: "200%", value: String(format: "%.2f", viewModel.overtimeHours200))
                             }
                         }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                     
                     // Visual Charts Section 
-                    VStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("Visual Summary".localized)
-                            .font(.title2)
-                            .fontWeight(.medium)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 16)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
                         
-                        // Hours Breakdown Chart
                         HoursChartView(
                             regularHours: viewModel.regularHours,
                             overtimeHours125: viewModel.overtimeHours125,
@@ -217,8 +174,8 @@ public struct ReportView: View {
                             overtimeHours175: viewModel.overtimeHours175,
                             overtimeHours200: viewModel.overtimeHours200
                         )
+                        .frame(height: 200)
                         
-                        // Wage Distribution Chart
                         WageChartView(
                             regularHours: viewModel.regularHours,
                             overtimeHours125: viewModel.overtimeHours125,
@@ -227,30 +184,33 @@ public struct ReportView: View {
                             overtimeHours200: viewModel.overtimeHours200,
                             hourlyRate: UserDefaults.standard.double(forKey: "hourlyWage")
                         )
-                    }
-                    .padding(.horizontal)
-                    
-                    // List of shifts moved to bottom of scrollView
-                    Text("Shifts".localized)
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 16)
-                    
-                    ForEach(viewModel.shifts) { shift in
-                        ShiftReportCard(shift: shift)
+                        .frame(height: 200)
                     }
                     
-                    // Add a note about tax calculation estimates
+                    // List of shifts
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Shifts".localized)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
+                        
+                        ForEach(viewModel.shifts) { shift in
+                            ShiftReportCard(shift: shift)
+                        }
+                        .padding(.horizontal)
+                    }
+                    
                     Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
                         .font(.caption)
                         .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
+                        .multilineTextAlignment(.center)
+                        .padding()
                 }
-                .padding()
+                .padding(.vertical)
             }
         }
+        .background(Color(.systemGroupedBackground))
+        .environment(\.layoutDirection, isRTL ? .rightToLeft : .leftToRight)
         .navigationTitle("Reports".localized)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -269,6 +229,7 @@ public struct ReportView: View {
         .sheet(isPresented: $showingSearchSheet) {
             SearchShiftView()
         }
+        .refreshOnLanguageChange()
     }
 }
 
@@ -393,19 +354,19 @@ public struct PrintOptionsView: View {
     public var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Report Options")) {
+                Section(header: Text("Report Options".localized)) {
                     // Add print options here
                 }
                 
                 Section {
-                    Button("Generate Report") {
+                    Button("Generate Report".localized) {
                         // Generate PDF and set pdfData
                         showingShareSheet = true
                         dismiss()
                     }
                 }
             }
-            .navigationTitle("Print Report")
+            .navigationTitle("Print Report".localized)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(action: { dismiss() }) {
@@ -437,7 +398,7 @@ public struct PDFPreviewView: View {
                         }
                     }
                     ToolbarItem(placement: .primaryAction) {
-                        Button("Share") {
+                        Button("Share".localized) {
                             onShare()
                         }
                     }
@@ -515,3 +476,37 @@ public struct PDFKitView: UIViewRepresentable {
         ReportView()
     }
 } 
+// Helper components for consistency
+struct SummaryRow: View {
+    let label: String
+    let value: String
+    var valueColor: Color = .primary
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.body)
+                .foregroundColor(.secondary)
+            Spacer()
+            Text(value)
+                .font(.body.bold())
+                .foregroundColor(valueColor)
+        }
+    }
+}
+
+struct BreakdownRow: View {
+    let label: String
+    let value: String
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            Spacer()
+            Text(value)
+                .font(.subheadline.bold())
+        }
+    }
+}

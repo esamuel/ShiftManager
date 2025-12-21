@@ -134,10 +134,6 @@ class BackButtonFix {
         navBar.backItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
-        // Remove back indicator images
-        navBar.backIndicatorImage = UIImage()
-        navBar.backIndicatorTransitionMaskImage = UIImage()
-        
         // Search for any labels in the navigation bar
         recursivelySearchForLabels(in: navBar)
     }
@@ -174,7 +170,7 @@ class BackButtonFix {
         let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back"]
         
         if let text = label.text {
-            if backTexts.contains(text) || text.containsHebrewCharacters() || text.isBackButtonText() {
+            if backTexts.contains(text) || text.isBackButtonText() {
                 label.text = ""
                 label.isHidden = true
                 label.alpha = 0
@@ -283,9 +279,7 @@ class BackButtonFix {
 // MARK: - UILabel Extension
 extension UILabel {
     @objc func swizzled_setText(_ text: String?) {
-        let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back"]
-        
-        if let newText = text, (backTexts.contains(newText) || newText.containsHebrewCharacters()) {
+        if let newText = text, newText.isBackButtonText() {
             // Don't set problematic text, set empty string instead
             self.swizzled_setText("")
             self.isHidden = true
@@ -334,7 +328,7 @@ extension UIBarButtonItem {
         // Detect if this is a back button text
         let backTexts = ["Back", "חזרה", "חזור", "Back", "Previous", "back"]
         
-        if let newTitle = title, backTexts.contains(newTitle) || newTitle.containsHebrewCharacters() {
+        if let newTitle = title, backTexts.contains(newTitle) {
             // For back buttons, set empty title
             self.swizzled_setTitle("")
         } else {
@@ -360,28 +354,19 @@ extension Bundle {
             "Zurück"  // German
         ]
         
-        // Check if the key directly matches any known back button text
-        if backButtonKeys.contains(key) || key.lowercased().contains("back") {
+        // Check for exact matches of the key
+        if backButtonKeys.contains(key) {
             return ""
         }
         
         // Check common patterns in localization keys
-        if key.contains("navigation.back") || key.contains("nav.back") || 
+        if key.lowercased().contains("back") || key.contains("navigation.back") || key.contains("nav.back") || 
            key.contains("button.back") || key.contains("btn.back") {
             return ""
         }
         
-        // Check if the resulting string contains back button text in any language
         for backText in backButtonKeys {
             if originalString.contains(backText) {
-                return ""
-            }
-        }
-        
-        // Additional check for Hebrew text
-        if originalString.containsHebrewCharacters() {
-            // If the string is very short (likely just the back text) and contains Hebrew
-            if originalString.count < 10 {
                 return ""
             }
         }

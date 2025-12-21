@@ -202,11 +202,25 @@
 "Special Day" = "Besonderer Tag";
 "Long Shift Warning" = "Warnung für lange Schicht";
 "Accept" = "Akzeptieren";
-"No upcoming shifts" = "Keine bevorstehenden Schichten";
+"No Upcoming Shifts" = "Keine bevorstehenden Schichten";
+"You don't have any upcoming shifts scheduled." = "Sie haben keine bevorstehenden Schichten geplant.";
 "No shifts scheduled" = "Keine Schichten geplant";
 "Weekly View" = "Wochenansicht";
 "Monthly View" = "Monatsansicht";
 "Wage Breakdown" = "Lohnaufschlüsselung";
+"Visual Summary" = "Visuelle Zusammenfassung";
+"Hours Breakdown" = "Stundenaufschlüsselung";
+"Wage Distribution" = "Lohnverteilung";
+"No wage data available for the selected period" = "Keine Lohndaten für den ausgewählten Zeitraum verfügbar";
+"Base Work Hours" = "Basisarbeitsstunden";
+"No Overtime Rules" = "Keine Überstundenregeln";
+"Tap the + button to add your first overtime rule." = "Tippen Sie auf die +-Schaltfläche, um Ihre erste Überstundenregel hinzuzufügen.";
+"Regular Shift" = "Reguläre Schicht";
+"Regular (100%)" = "Regulär (100%)";
+"Overtime (125%)" = "Überstunden (125%)";
+"Overtime (150%)" = "Überstunden (150%)";
+"Overtime (175%)" = "Überstunden (175%)";
+"Overtime (200%)" = "Überstunden (200%)";
 "Total Working Days" = "Gesamte Arbeitstage";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Sie versuchen, eine Schicht von mehr als 12 Stunden hinzuzufügen. Sind Sie sicher, dass Sie fortfahren möchten?";
 "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Die täglichen Gesamtstunden würden 12 Stunden überschreiten. Maximal erlaubt sind 12 Stunden pro Tag.";
@@ -297,6 +311,17 @@
 "No data available to export" = "Keine Daten zum Exportieren verfügbar";
 "Failed to generate PDF: No data returned" = "PDF-Erstellung fehlgeschlagen: Keine Daten zurückgegeben";
 "Error generating PDF: %@" = "Fehler beim Erstellen der PDF: %@";
+"Work Report" = "Arbeitsbericht";
+"%@ Work Report" = "Arbeitsbericht von %@";
+"Report Summary" = "Berichtszusammenfassung";
+"%@ Report Summary" = "Berichtszusammenfassung von %@";
+"Period" = "Zeitraum";
+"Summary" = "Zusammenfassung";
+"Hours" = "Stunden";
+"to" = "bis";
+"Duration:" = "Dauer:";
+"Total Shifts:" = "Gesamt Schichten:";
+"Overtime:" = "Überstunden:";
 
 // Premium Features
 "Upgrade to Premium" = "Auf Premium upgraden";
@@ -482,7 +507,7 @@
 // Legal Documents - Terms of Service (German)
 "premium_terms_full_content" = "NUTZUNGSBEDINGUNGEN
 
-Letzte Aktualisierung: November 2025
+Letzte Aktualisierung: Dezember 2025
 
 1. ANNAHME DER BEDINGUNGEN
 Durch den Kauf von ShiftManager Premium stimmen Sie diesen Nutzungsbedingungen zu. Wenn Sie nicht zustimmen, kaufen oder nutzen Sie bitte nicht die Premium-Funktionen.
@@ -542,7 +567,7 @@ Für Fragen zu diesen Bedingungen kontaktieren Sie uns bitte über den Support-B
 
 Durch den Kauf von Premium bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen, verstanden und ihnen zugestimmt haben.";
 
-"premium_terms_last_updated" = "Letzte Aktualisierung: 18. November 2025";
+"premium_terms_last_updated" = "Letzte Aktualisierung: 20. Dezember 2025";
 
 // Legal Documents - Privacy Policy (German)
 "premium_privacy_key_principle" = "Unser zentrales Datenschutzprinzip";
@@ -550,7 +575,7 @@ Durch den Kauf von Premium bestätigen Sie, dass Sie diese Nutzungsbedingungen g
 
 "premium_privacy_full_content" = "DATENSCHUTZERKLÄRUNG
 
-Letzte Aktualisierung: November 2025
+Letzte Aktualisierung: Dezember 2025
 
 1. UNSERE DATENSCHUTZVERPFLICHTUNG
 ShiftManager wurde mit Datenschutz im Kern entwickelt. Alle Ihre Schichtdaten, Einnahmen und Arbeitsinformationen werden lokal auf Ihrem Gerät mit Apples Core Data Framework gespeichert. Wir sammeln, übertragen oder speichern keine Ihrer persönlichen Arbeitsdaten auf externen Servern.
@@ -635,4 +660,4 @@ Ihre Arbeitsdaten gehören Ihnen. Sie bleiben auf Ihrem Gerät. Wir sehen, samme
 
 "premium_privacy_summary_title" = "Datenschutz-Zusammenfassung";
 "premium_privacy_summary_content" = "✓ Alle Daten lokal auf Ihrem Gerät gespeichert\n✓ Keine Datensammlung oder Tracking\n✓ Keine Kontoregistrierung erforderlich\n✓ Optionale iCloud-Synchronisierung (verschlüsselt)\n✓ Volle Datenkontrolle und Eigentum\n✓ Keine Werbung oder Drittanbieter-Analysen\n✓ Vollständiger Datenschutz garantiert";
-"premium_privacy_last_updated" = "Letzte Aktualisierung: 18. November 2025";
+"premium_privacy_last_updated" = "Letzte Aktualisierung: 20. Dezember 2025";

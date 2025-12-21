@@ -5,12 +5,14 @@ struct OnboardingView: View {
     @Binding var isShowingOnboarding: Bool
     @State private var currentPage = 0
     @State private var showingQuickStart = false
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+
     
     let pages: [OnboardingPage] = [
         OnboardingPage(
             title: "Welcome to ShiftManager".localized,
             description: "Your personal work shift tracker with wage calculation and reporting features.".localized,
-            imageName: "hand.wave.fill"
+            imageName: "AppLogo"
         ),
         OnboardingPage(
             title: "Track Your Shifts".localized,
@@ -54,34 +56,8 @@ struct OnboardingView: View {
                 // Paging view with dots
                 TabView(selection: $currentPage) {
                     ForEach(0..<pages.count, id: \.self) { index in
-                        VStack(spacing: 20) {
-                            Image(systemName: pages[index].imageName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 150, height: 150)
-                                .foregroundColor(.purple)
-                                .padding(.bottom, 30)
-                            
-                            Text(pages[index].title)
-                                .font(.system(size: 32, weight: .bold))
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                            
-                            Text(pages[index].description)
-                                .font(.system(size: 18))
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 30)
-                                .foregroundColor(.secondary)
-                            
-                            if index == 0 {
-                                VideoTutorialButton(
-                                    title: "Watch: App Overview".localized,
-                                    videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
-                                )
-                                .padding(.top, 10)
-                            }
-                        }
-                        .tag(index)
+                        contentView(for: pages[index], isFirstPage: index == 0)
+                            .tag(index)
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
@@ -139,6 +115,82 @@ struct OnboardingView: View {
                     // End onboarding when quick start is dismissed
                     isShowingOnboarding = false
                 }
+        }
+    }
+    
+    @ViewBuilder
+    private func contentView(for page: OnboardingPage, isFirstPage: Bool) -> some View {
+        ScrollView(showsIndicators: false) {
+            if verticalSizeClass == .compact {
+                // Landscape: Side-by-side
+                HStack(alignment: .center, spacing: 30) {
+                    imageView(for: page.imageName)
+                        .frame(maxWidth: 300)
+                    
+                    VStack(alignment: .center, spacing: 15) {
+                        Text(page.title)
+                            .font(.system(size: 24, weight: .bold))
+                            .multilineTextAlignment(.center)
+                        
+                        Text(page.description)
+                            .font(.system(size: 16))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.secondary)
+                        
+                        if isFirstPage {
+                            VideoTutorialButton(
+                                title: "Watch: App Overview".localized,
+                                videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
+                            )
+                        }
+                    }
+                }
+                .padding(.horizontal, 40)
+                .padding(.vertical, 20)
+            } else {
+                // Portrait: Vertical Stack
+                VStack(spacing: 20) {
+                    imageView(for: page.imageName)
+                        .frame(height: 240)
+                    
+                    Text(page.title)
+                        .font(.system(size: 32, weight: .bold))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    Text(page.description)
+                        .font(.system(size: 18))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 30)
+                        .foregroundColor(.secondary)
+                    
+                    if isFirstPage {
+                        VideoTutorialButton(
+                            title: "Watch: App Overview".localized,
+                            videoURL: URL(string: "https://www.youtube.com/watch?v=placeholder_overview")!
+                        )
+                        .padding(.top, 10)
+                    }
+                }
+                .padding(.top, 40)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func imageView(for imageName: String) -> some View {
+        if imageName == "AppLogo" {
+            Image("AppLogo")
+                .resizable()
+                .scaledToFit()
+                .flipsForRightToLeftLayoutDirection(false)
+        } else {
+            Image(systemName: imageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .foregroundColor(.purple)
+                .padding(.vertical, 40)
         }
     }
 }

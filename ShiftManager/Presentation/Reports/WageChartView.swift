@@ -36,23 +36,23 @@ struct WageChartView: View {
         var data: [WageCategory] = []
         
         if regularWage > 0 {
-            data.append(WageCategory(category: "Regular (100%)", amount: regularWage, color: .blue))
+            data.append(WageCategory(category: "Regular (100%)".localized, amount: regularWage, color: .blue))
         }
         
         if overtimeWage125 > 0 {
-            data.append(WageCategory(category: "Overtime (125%)", amount: overtimeWage125, color: .green))
+            data.append(WageCategory(category: "Overtime (125%)".localized, amount: overtimeWage125, color: .green))
         }
         
         if overtimeWage150 > 0 {
-            data.append(WageCategory(category: "Overtime (150%)", amount: overtimeWage150, color: .orange))
+            data.append(WageCategory(category: "Overtime (150%)".localized, amount: overtimeWage150, color: .orange))
         }
         
         if overtimeWage175 > 0 {
-            data.append(WageCategory(category: "Overtime (175%)", amount: overtimeWage175, color: .red))
+            data.append(WageCategory(category: "Overtime (175%)".localized, amount: overtimeWage175, color: .red))
         }
         
         if overtimeWage200 > 0 {
-            data.append(WageCategory(category: "Overtime (200%)", amount: overtimeWage200, color: .purple))
+            data.append(WageCategory(category: "Overtime (200%)".localized, amount: overtimeWage200, color: .purple))
         }
         
         return data

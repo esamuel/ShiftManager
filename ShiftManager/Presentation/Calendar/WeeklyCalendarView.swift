@@ -68,6 +68,7 @@ public struct WeeklyCalendarView: View {
             }
         }
         .background(Color(.systemBackground))
+        .refreshOnLanguageChange()
     }
     
     private var calendar: Calendar {
@@ -78,7 +79,7 @@ public struct WeeklyCalendarView: View {
     
     private var weekDays: [String] {
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         formatter.dateFormat = "EEE"
         
         var days = [String]()
@@ -93,6 +94,7 @@ public struct WeeklyCalendarView: View {
     
     private var weekRangeText: String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         

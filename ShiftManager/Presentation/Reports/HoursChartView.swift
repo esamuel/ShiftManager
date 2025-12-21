@@ -19,23 +19,23 @@ struct HoursChartView: View {
         var data: [HoursCategory] = []
         
         if regularHours > 0 {
-            data.append(HoursCategory(category: "Regular (100%)", hours: regularHours, color: .blue))
+            data.append(HoursCategory(category: "Regular (100%)".localized, hours: regularHours, color: .blue))
         }
         
         if overtimeHours125 > 0 {
-            data.append(HoursCategory(category: "Overtime (125%)", hours: overtimeHours125, color: .green))
+            data.append(HoursCategory(category: "Overtime (125%)".localized, hours: overtimeHours125, color: .green))
         }
         
         if overtimeHours150 > 0 {
-            data.append(HoursCategory(category: "Overtime (150%)", hours: overtimeHours150, color: .orange))
+            data.append(HoursCategory(category: "Overtime (150%)".localized, hours: overtimeHours150, color: .orange))
         }
         
         if overtimeHours175 > 0 {
-            data.append(HoursCategory(category: "Overtime (175%)", hours: overtimeHours175, color: .red))
+            data.append(HoursCategory(category: "Overtime (175%)".localized, hours: overtimeHours175, color: .red))
         }
         
         if overtimeHours200 > 0 {
-            data.append(HoursCategory(category: "Overtime (200%)", hours: overtimeHours200, color: .purple))
+            data.append(HoursCategory(category: "Overtime (200%)".localized, hours: overtimeHours200, color: .purple))
         }
         
         return data

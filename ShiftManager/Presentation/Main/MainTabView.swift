@@ -33,6 +33,7 @@ public struct MainTabView: View {
             
 
         }
+        .refreshOnLanguageChange()
     }
 }
 

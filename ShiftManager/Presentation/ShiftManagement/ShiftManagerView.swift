@@ -21,101 +21,108 @@ struct ShiftManagerView: View {
 
     
     var body: some View {
-        VStack(spacing: 12) {
-            // Header
-            Text("Add New Shift".localized)
-                .font(.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            
-            // Date Selection
-            Button(action: { viewModel.showDatePicker = true }) {
-                HStack {
-                    Text(String(format: "Select Date: %@".localized, dateFormatter.string(from: viewModel.selectedDate)))
-                        .font(.headline)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal)
-                .background(Color.purple)
-                .cornerRadius(25)
-            }
-            .padding(.horizontal)
-            
-            // Time Selection
-            VStack(spacing: 0) {
-                HStack {
-                    Image(systemName: "clock")
-                        .foregroundColor(.purple)
-                    Text("Start Time".localized)
-                        .font(.headline)
-                    Spacer()
-                    DatePicker("", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
-                        .labelsHidden()
-                }
-                .padding()
-                
-                Divider()
-                    .padding(.leading)
-                
-                HStack {
-                    Image(systemName: "clock.fill")
-                        .foregroundColor(.purple)
-                    Text("End Time".localized)
-                        .font(.headline)
-                    Spacer()
-                    DatePicker("", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
-                        .labelsHidden()
-                }
-                .padding()
-            }
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-            .padding(.horizontal)
-            
-            // Notes
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Add Note".localized)
-                    .font(.headline)
-                    .padding(.horizontal)
-                
-                TextEditor(text: $viewModel.notes)
-                    .frame(height: 50)
-                    .padding(6)
+        ScrollView {
+            VStack(spacing: 20) {
+                // Form Section
+                VStack(spacing: 12) {
+                    // Date Selection
+                    Button(action: { viewModel.showDatePicker = true }) {
+                        HStack {
+                            Text(String(format: "Select Date: %@".localized, dateFormatter.string(from: viewModel.selectedDate)))
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Spacer()
+                            Image(systemName: "calendar")
+                                .foregroundColor(.white)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal)
+                        .background(Color.purple)
+                        .cornerRadius(25)
+                    }
+                    
+                    // Time Selection
+                    VStack(spacing: 0) {
+                        HStack {
+                            Image(systemName: "clock")
+                                .foregroundColor(.purple)
+                            Text("Start Time".localized)
+                                .font(.headline)
+                            Spacer()
+                            DatePicker("", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                        }
+                        .padding()
+                        
+                        Divider()
+                            .padding(.horizontal)
+                        
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(.purple)
+                            Text("End Time".localized)
+                                .font(.headline)
+                            Spacer()
+                            DatePicker("", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                        }
+                        .padding()
+                    }
                     .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
-                    .font(.body)
-                    .focused($isNotesFocused)
-            }
-            .padding(.vertical, 4)
-            
-            // Add Shift Button
-            Button(action: { viewModel.addShift() }) {
-                Text("Add Shift".localized)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color.purple)
-                    .cornerRadius(25)
-            }
-            .padding(.horizontal)
-            .disabled(!viewModel.canAddShift)
-            
-            // Existing Shifts Section
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Existing Shifts".localized)
-                        .font(.title2)
-                    Spacer()
-                    Toggle(viewModel.showCurrentMonthOnly ? "Current Month".localized : "All Months".localized, isOn: $viewModel.showCurrentMonthOnly)
-                        .toggleStyle(SwitchToggleStyle(tint: .purple))
+                    .cornerRadius(12)
+                    
+                    // Notes
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Add Note".localized)
+                            .font(.headline)
+                        
+                        TextEditor(text: $viewModel.notes)
+                            .frame(minHeight: 80)
+                            .padding(8)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                            .font(.body)
+                            .focused($isNotesFocused)
+                    }
+                    
+                    // Add Shift Button
+                    Button(action: { viewModel.addShift() }) {
+                        Text("Add Shift".localized)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(viewModel.canAddShift ? Color.purple : Color.gray)
+                            .cornerRadius(25)
+                    }
+                    .padding(.top, 8)
+                    .disabled(!viewModel.canAddShift)
                 }
                 .padding(.horizontal)
                 
-                ScrollView {
+                // Existing Shifts Section
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .lastTextBaseline) {
+                        Text("Existing Shifts".localized)
+                            .font(.title2)
+                            .bold()
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Toggle(isOn: $viewModel.showCurrentMonthOnly) {
+                                Text(viewModel.showCurrentMonthOnly ? "Current Month".localized : "All Months".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: .purple))
+                            .labelsHidden()
+                            
+                            Text(viewModel.showCurrentMonthOnly ? "Current Month".localized : "All Months".localized)
+                                .font(.caption2)
+                                .foregroundColor(.purple)
+                        }
+                    }
+                    .padding(.horizontal)
+                    
                     if viewModel.filteredShifts.isEmpty {
                         EmptyStateView(
                             title: "No Shifts Found".localized,
@@ -123,7 +130,7 @@ struct ShiftManagerView: View {
                         )
                         .padding(.top, 20)
                     } else {
-                        LazyVStack(spacing: 8) {
+                        VStack(spacing: 12) {
                             ForEach(viewModel.filteredShifts) { shift in
                                 ShiftCard(shift: shift,
                                         onDelete: { viewModel.deleteShift(shift) },
@@ -135,7 +142,9 @@ struct ShiftManagerView: View {
                     }
                 }
             }
+            .padding(.vertical)
         }
+        .background(Color(.systemGroupedBackground))
         .navigationTitle("Shift Manager".localized)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showDatePicker) {
@@ -216,6 +225,7 @@ struct ShiftManagerView: View {
                 }
             }
         }
+        .refreshOnLanguageChange()
     }
 }
 
@@ -231,7 +241,7 @@ struct ShiftCard: View {
         VStack(alignment: .leading, spacing: 8) {
             // Date and Actions
             HStack {
-                Text(shift.startTime, style: .date)
+                Text(shift.startTime.formattedString())
                     .font(.headline)
                 Spacer()
                 
@@ -258,28 +268,34 @@ struct ShiftCard: View {
             }
             
             // Times
-            let startTime = shift.startTime.formatted(date: .omitted, time: .shortened)
-            let endTime = shift.endTime.formatted(date: .omitted, time: .shortened)
+            let startTime = shift.startTime.timeString()
+            let endTime = shift.endTime.timeString()
             Text(String(format: "Start Time: %@ - End Time: %@".localized, startTime, endTime))
             
             // Duration and Wages
             HStack {
-                let formattedDuration = String(format: "%.2f", shift.duration / 3600)
-                Text(String(format: "Total Hours: %@".localized, formattedDuration))
+                Text(String(format: "Total Hours: %@".localized, String(format: "%.2f", shift.duration / 3600)))
                     .foregroundColor(.primary)
+                Spacer()
             }
             
-            HStack {
-                VStack(alignment: .leading) {
-                    // Use asCurrency extension for proper currency symbol display
-                    Text("Gross Wage:".localized + " " + shift.grossWage.asCurrency)
-                    Text("Net Wage:".localized + " " + shift.netWage.asCurrency)
-                    
-                    // Add tax calculation note
-                    Text("Tax calculation is an estimate".localized)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Gross Wage:".localized)
+                    Text(shift.grossWage.asCurrency)
+                        .bold()
                 }
+                
+                HStack {
+                    Text("Net Wage:".localized)
+                    Text(shift.netWage.asCurrency)
+                        .bold()
+                        .foregroundColor(.green)
+                }
+                
+                Text("Tax calculation is an estimate".localized)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
             }
             
             if !shift.notes.isEmpty {

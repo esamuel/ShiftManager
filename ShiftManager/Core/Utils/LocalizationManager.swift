@@ -355,7 +355,17 @@ struct AppLanguage {
 // MARK: - View Extension for Language Refresh
 extension View {
     func refreshOnLanguageChange() -> some View {
-        self.id(LocalizationManager.shared.refreshID)
+        LanguageRefreshWrapper(content: self)
+    }
+}
+
+struct LanguageRefreshWrapper<Content: View>: View {
+    @ObservedObject private var localizationManager = LocalizationManager.shared
+    let content: Content
+    
+    var body: some View {
+        content
+            .id(localizationManager.refreshID)
     }
 }
 

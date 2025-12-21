@@ -107,7 +107,7 @@
 "Delete Shift" = "מחק משמרת";
 "Start Time" = "שעת התחלה";
 "End Time" = "שעת סיום";
-"Date" = "תאריך (לוח שנה עברי)";
+"Date" = "תאריך";
 "Notes" = "הערות";
 "Save Shift" = "שמור משמרת";
 "Delete" = "מחק";
@@ -129,21 +129,39 @@
 "Coming Shifts" = "משמרות קרובות";
 "Add New Shift" = "הוסף משמרת חדשה";
 // בחירת תאריך (ללא כפתורי שמירה/ביטול)
-"Select Date" = "בחר תאריך (לוח שנה עברי)";
+"Select Date" = "בחר תאריך";
 // בחירת שעה מושבתת
 // "Select Time" = "בחר שעה";
 "Add Note" = "הוסף הערה";
 "Existing Shifts" = "משמרות קיימות";
-"Current Month" = "חודש נוכחי (לפי לוח שנה עברי)";
-"All Months" = "כל החודשים (בלוח שנה עברי)";
+"Current Month" = "חודש נוכחי";
+"All Months" = "כל החודשים";
 "Special Day" = "יום מיוחד";
 "Long Shift Warning" = "אזהרת משמרת ארוכה";
 "Accept" = "אשר";
-"No upcoming shifts" = "אין משמרות קרובות";
+"No Upcoming Shifts" = "אין משמרות קרובות";
+"You don't have any upcoming shifts scheduled." = "אין לך משמרות קרובות מתוכננות.";
 "No shifts scheduled" = "אין משמרות מתוכננות";
 "Weekly View" = "תצוגה שבועית";
 "Monthly View" = "תצוגה חודשית";
 "Wage Breakdown" = "פירוט שכר";
+"Visual Summary" = "סיכום חזותי";
+"Hours Breakdown" = "פירוט שעות";
+"Wage Distribution" = "התפלגות שכר";
+"No wage data available for the selected period" = "אין נתוני שכר לתקופה שנבחרה";
+"Base Work Hours" = "שעות עבודה בסיסיות";
+"No Overtime Rules" = "אין כללי שעות נוספות";
+"Tap the + button to add your first overtime rule." = "לחץ על כפתור ה-+ כדי להוסיף את כלל השעות הנוספות הראשון שלך.";
+"Regular Shift" = "משמרת רגילה";
+"Report Options" = "אפשרויות דוח";
+"Generate Report" = "הפק דוח";
+"Print Report" = "הדפס דוח";
+"Share" = "שתף";
+"Regular (100%)" = "רגיל (100%)";
+"Overtime (125%)" = "נוספות (125%)";
+"Overtime (150%)" = "נוספות (150%)";
+"Overtime (175%)" = "נוספות (175%)";
+"Overtime (200%)" = "נוספות (200%)";
 "Total Working Days" = "סך ימי עבודה";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "אתה מנסה להוסיף משמרת ארוכה מ-12 שעות. האם להמשיך?";
 "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "סך השעות היומיות יעלה על 12 שעות. המקסימום המותר הוא 12 שעות ביום.";
@@ -162,7 +180,7 @@
 "Total Hours: %@" = "סך כל השעות: %@";
 "Gross Wage: ₪%@" = "שכר ברוטו: ₪%@";
 "Net Wage: ₪%@" = "שכר נטו: ₪%@";
-"Select Date: %@" = "בחר תאריך: %@ (לוח שנה עברי)";
+"Select Date: %@" = "בחר תאריך: %@";
 "January" = "ינואר";
 "February" = "פברואר";
 "March" = "מרץ";
@@ -247,6 +265,17 @@
 "No data available to export" = "אין נתונים זמינים לייצוא";
 "Failed to generate PDF: No data returned" = "יצירת PDF נכשלה: לא הוחזרו נתונים";
 "Error generating PDF: %@" = "שגיאה ביצירת PDF: %@";
+"Work Report" = "דוח עבודה";
+"%@ Work Report" = "דוח עבודה של %@";
+"Report Summary" = "סיכום דוח";
+"%@ Report Summary" = "סיכום דוח של %@";
+"Period" = "תקופה";
+"Summary" = "סיכום";
+"Hours" = "שעות";
+"to" = "עד";
+"Duration:" = "משך:";
+"Total Shifts:" = "סה״כ משמרות:";
+"Overtime:" = "שעות נוספות:";
 
 // Premium Features
 "Upgrade to Premium" = "שדרג לפרימיום";
@@ -402,7 +431,7 @@
 "Feedback Sent" = "המשוב נשלח";
 "Thank you for your feedback! We'll use it to improve the app." = "תודה על המשוב! נשתמש בו כדי לשפר את האפליקציה.";
 "Tell Friends" = "ספר לחברים";
-"Calendar" = "לוח שנה עברי";
+"Calendar" = "לוח שנה";
 
 // Monthly Report
 "Monthly Report" = "דוח חודשי";
@@ -456,7 +485,7 @@
 // Legal Documents - Terms of Service (Hebrew)
 "premium_terms_full_content" = "תנאי שימוש
 
-עדכון אחרון: נובמבר 2025
+עדכון אחרון: דצמבר 2025
 
 1. קבלת התנאים
 ברכישת ShiftManager Premium, אתה מסכים לתנאי שימוש אלה. אם אינך מסכים, אנא אל תרכוש או תשתמש בתכונות הפרימיום.
@@ -516,7 +545,7 @@ ShiftManager מסופקת \"כמות שהיא\" ללא אחריות. איננו 
 
 ברכישת פרימיום, אתה מאשר שקראת, הבנת והסכמת לתנאי שימוש אלה.";
 
-"premium_terms_last_updated" = "עדכון אחרון: 18 בנובמבר 2025";
+"premium_terms_last_updated" = "עדכון אחרון: 20 בדצמבר 2025";
 
 // Legal Documents - Privacy Policy (Hebrew)
 "premium_privacy_key_principle" = "עקרון הפרטיות המרכזי שלנו";
@@ -524,7 +553,7 @@ ShiftManager מסופקת \"כמות שהיא\" ללא אחריות. איננו 
 
 "premium_privacy_full_content" = "מדיניות פרטיות
 
-עדכון אחרון: נובמבר 2025
+עדכון אחרון: דצמבר 2025
 
 1. התחייבות הפרטיות שלנו
 ShiftManager נבנה עם פרטיות בליבו. כל נתוני המשמרות, השכר ומידע העבודה שלך מאוחסנים מקומית במכשיר שלך באמצעות מסגרת Core Data של Apple. אנחנו לא אוספים, משדרים או מאחסנים שום נתוני עבודה אישיים שלך בשרתים חיצוניים.
@@ -609,4 +638,4 @@ ShiftManager מבקשת רק הרשאות חיוניות:
 
 "premium_privacy_summary_title" = "סיכום פרטיות";
 "premium_privacy_summary_content" = "✓ כל הנתונים מאוחסנים מקומית במכשיר שלך\n✓ אין איסוף נתונים או מעקב\n✓ אין צורך ברישום חשבון\n✓ סנכרון iCloud אופציונלי (מוצפן)\n✓ שליטה ובעלות מלאה על הנתונים\n✓ אין פרסומות או אנליטיקה של צד שלישי\n✓ פרטיות מלאה מובטחת";
-"premium_privacy_last_updated" = "עדכון אחרון: 18 בנובמבר 2025";
+"premium_privacy_last_updated" = "עדכון אחרון: 20 בדצמבר 2025";

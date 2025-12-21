@@ -23,11 +23,6 @@ extension String {
             return true
         }
         
-        // Check for Hebrew text that is short (likely a back button)
-        if self.containsHebrewCharacters() && self.count < 10 {
-            return true
-        }
-        
         return false
     }
 } 

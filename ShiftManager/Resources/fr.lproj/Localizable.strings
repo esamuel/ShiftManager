@@ -191,11 +191,29 @@
 "Special Day" = "Jour spécial";
 "Long Shift Warning" = "Avertissement de quart long";
 "Accept" = "Accepter";
-"No upcoming shifts" = "Aucun quart à venir";
+"No Upcoming Shifts" = "Aucun quart à venir";
+"You don't have any upcoming shifts scheduled." = "Vous n'avez aucun quart programmé.";
 "No shifts scheduled" = "Aucun quart programmé";
 "Weekly View" = "Vue hebdomadaire";
 "Monthly View" = "Vue mensuelle";
 "Wage Breakdown" = "Détail du salaire";
+"Visual Summary" = "Résumé visuel";
+"Hours Breakdown" = "Détail des heures";
+"Wage Distribution" = "Distribution salariale";
+"No wage data available for the selected period" = "Aucune donnée salariale disponible pour la période sélectionnée";
+"Base Work Hours" = "Heures de travail de base";
+"No Overtime Rules" = "Aucune règle d'heures supplémentaires";
+"Tap the + button to add your first overtime rule." = "Appuyez sur le bouton + pour ajouter votre première règle d'heures supplémentaires.";
+"Regular Shift" = "Quart régulier";
+"Report Options" = "Options du rapport";
+"Generate Report" = "Générer le rapport";
+"Print Report" = "Imprimer le rapport";
+"Share" = "Partager";
+"Regular (100%)" = "Régulier (100%)";
+"Overtime (125%)" = "Heures supp. (125%)";
+"Overtime (150%)" = "Heures supp. (150%)";
+"Overtime (175%)" = "Heures supp. (175%)";
+"Overtime (200%)" = "Heures supp. (200%)";
 "Total Working Days" = "Total jours travaillés";
 "You are trying to add a shift longer than 12 hours. Are you sure you want to proceed?" = "Vous essayez d'ajouter un quart de plus de 12 heures. Êtes-vous sûr de vouloir continuer ?";
 "Total daily hours would exceed 12 hours. The maximum allowed is 12 hours per day." = "Les heures quotidiennes totales dépasseraient 12 heures. Le maximum autorisé est de 12 heures par jour.";
@@ -290,6 +308,17 @@
 "No data available to export" = "Aucune donnée disponible à exporter";
 "Failed to generate PDF: No data returned" = "Échec de la génération du PDF : aucune donnée renvoyée";
 "Error generating PDF: %@" = "Erreur lors de la génération du PDF : %@";
+"Work Report" = "Rapport de travail";
+"%@ Work Report" = "Rapport de travail de %@";
+"Report Summary" = "Résumé du rapport";
+"%@ Report Summary" = "Résumé du rapport de %@";
+"Period" = "Période";
+"Summary" = "Résumé";
+"Hours" = "Heures";
+"to" = "à";
+"Duration:" = "Durée :";
+"Total Shifts:" = "Total des quarts :";
+"Overtime:" = "Heures supp. :";
 
 // Premium Features
 "Upgrade to Premium" = "Passer à Premium";
@@ -452,7 +481,7 @@
 // Legal Documents - Terms of Service (French)
 "premium_terms_full_content" = "CONDITIONS D'UTILISATION
 
-Dernière mise à jour : Novembre 2025
+Dernière mise à jour : Décembre 2025
 
 1. ACCEPTATION DES CONDITIONS
 En achetant ShiftManager Premium, vous acceptez ces Conditions d'Utilisation. Si vous n'acceptez pas, veuillez ne pas acheter ou utiliser les fonctionnalités premium.
@@ -512,7 +541,7 @@ Pour toute question concernant ces conditions, veuillez nous contacter via la se
 
 En achetant Premium, vous reconnaissez avoir lu, compris et accepté ces Conditions d'Utilisation.";
 
-"premium_terms_last_updated" = "Dernière mise à jour : 18 novembre 2025";
+"premium_terms_last_updated" = "Dernière mise à jour : 20 décembre 2025";
 
 // Legal Documents - Privacy Policy (French)
 "premium_privacy_key_principle" = "Notre Principe de Confidentialité Fondamental";
@@ -520,7 +549,7 @@ En achetant Premium, vous reconnaissez avoir lu, compris et accepté ces Conditi
 
 "premium_privacy_full_content" = "POLITIQUE DE CONFIDENTIALITÉ
 
-Dernière mise à jour : Novembre 2025
+Dernière mise à jour : Décembre 2025
 
 1. NOTRE ENGAGEMENT EN MATIÈRE DE CONFIDENTIALITÉ
 ShiftManager est conçu avec la confidentialité au cœur. Toutes vos données de quarts, revenus et informations de travail sont stockées localement sur votre appareil à l'aide du framework Core Data d'Apple. Nous ne collectons, ne transmettons ni ne stockons aucune de vos données de travail personnelles sur des serveurs externes.
@@ -605,4 +634,4 @@ Vos données de travail vous appartiennent. Elles restent sur votre appareil. No
 
 "premium_privacy_summary_title" = "Résumé de la Confidentialité";
 "premium_privacy_summary_content" = "✓ Toutes les données stockées localement sur votre appareil\n✓ Aucune collecte de données ou suivi\n✓ Aucune inscription de compte requise\n✓ Synchronisation iCloud optionnelle (cryptée)\n✓ Contrôle et propriété complète des données\n✓ Pas de publicités ou d'analyses tierces\n✓ Confidentialité complète garantie";
-"premium_privacy_last_updated" = "Dernière mise à jour : 18 novembre 2025";
+"premium_privacy_last_updated" = "Dernière mise à jour : 20 décembre 2025";

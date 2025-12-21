@@ -76,6 +76,7 @@ struct OvertimeRulesView: View {
         .task {
             await viewModel.loadRules()
         }
+        .refreshOnLanguageChange()
     }
     
     private var baseHoursSection: some View {

@@ -1,5 +1,5 @@
 import Foundation
-import CoreData
+@preconcurrency import CoreData
 
 class WageCalculationService {
     private let context: NSManagedObjectContext
@@ -417,29 +417,30 @@ class WageCalculationService {
         let dayStart = calendar.startOfDay(for: date)
         let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
         
-        let request = NSFetchRequest<Shift>(entityName: "Shift")
-        request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", dayStart as NSDate, dayEnd as NSDate)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
-        
         let shifts = try await context.perform {
-            try self.context.fetch(request)
+            let request = NSFetchRequest<Shift>(entityName: "Shift")
+            request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", dayStart as NSDate, dayEnd as NSDate)
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
+            let results = try self.context.fetch(request)
+            
+            return results.map { shift in
+                ShiftModel(
+                    id: shift.id ?? UUID(),
+                    title: shift.title ?? "",
+                    category: shift.category ?? "",
+                    startTime: shift.startTime ?? Date(),
+                    endTime: shift.endTime ?? Date(),
+                    notes: shift.notes ?? "",
+                    isOvertime: shift.isOvertime,
+                    isSpecialDay: shift.isSpecialDay,
+                    grossWage: shift.grossWage,
+                    netWage: shift.netWage,
+                    createdAt: shift.createdAt ?? Date()
+                )
+            }
         }
         
-        return shifts.map { shift in
-            ShiftModel(
-                id: shift.id ?? UUID(),
-                title: shift.title ?? "",
-                category: shift.category ?? "",
-                startTime: shift.startTime ?? Date(),
-                endTime: shift.endTime ?? Date(),
-                notes: shift.notes ?? "",
-                isOvertime: shift.isOvertime,
-                isSpecialDay: shift.isSpecialDay,
-                grossWage: shift.grossWage,
-                netWage: shift.netWage,
-                createdAt: shift.createdAt ?? Date()
-            )
-        }
+        return shifts
     }
 }
 

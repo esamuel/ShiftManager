@@ -1,0 +1,20 @@
+/* 
+  InfoPlist.strings
+  ShiftManager
+
+  Override system UI items for French localization
+*/
+
+"CFBundleDisplayName" = "ShiftManager";
+"CFBundleName" = "ShiftManager";
+
+/* Back button override for UIKit components */
+"Back" = "Retour";
+"Previous" = "Précédent";
+"back" = "retour";
+"UIBarButtonBack" = "Retour";
+"UIBarButtonItemBack" = "Retour";
+"UIButtonBack" = "Retour";
+"UINavigationItemBackBarButtonTitle" = "Retour";
+"UIBarButtonSystemItemBack" = "Retour";
+"NSBackBarButtonTitleKey" = "Retour";

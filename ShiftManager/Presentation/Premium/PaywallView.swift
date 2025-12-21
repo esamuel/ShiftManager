@@ -391,8 +391,8 @@ struct ProductCard: View {
                    let yearlyProduct = purchaseManager.getProduct(for: .yearly),
                    let monthlyProduct = purchaseManager.getProduct(for: .monthly) {
                     
-                    if let yearlyPrice = yearlyProduct.price as? Decimal,
-                       let monthlyPrice = monthlyProduct.price as? Decimal {
+                    if let yearlyPrice = yearlyProduct.price as Decimal?,
+                       let monthlyPrice = monthlyProduct.price as Decimal? {
                         let yearlyValue = NSDecimalNumber(decimal: yearlyPrice).doubleValue
                         let monthlyValue = NSDecimalNumber(decimal: monthlyPrice).doubleValue
                         let savings = ((monthlyValue * 12) - yearlyValue) / (monthlyValue * 12) * 100

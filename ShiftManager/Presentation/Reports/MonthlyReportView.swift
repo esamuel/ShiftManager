@@ -76,6 +76,7 @@ public struct MonthlyReportView: View {
                 }
             }
         }
+        .refreshOnLanguageChange()
     }
     
     private func savePDFToTemporaryDirectory(pdfData: Data) -> URL? {
@@ -269,7 +270,7 @@ public struct MonthlyReportView: View {
         
         Task {
             do {
-                let username = UserDefaults.standard.string(forKey: "userName") ?? "User"
+                let username = UserDefaults.standard.string(forKey: "username") ?? "User"
                 let summary = (
                     totalShifts: viewModel.totalShifts,
                     totalDays: viewModel.totalWorkingDays,

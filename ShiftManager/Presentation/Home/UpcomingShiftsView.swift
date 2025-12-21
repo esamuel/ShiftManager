@@ -95,6 +95,7 @@ public struct UpcomingShiftsView: View {
         .task {
             await viewModel.loadUpcomingShifts()
         }
+        .refreshOnLanguageChange()
     }
 }
 

@@ -5,10 +5,13 @@
   Override system UI items for English localization
 */
 
+"CFBundleDisplayName" = "ShiftManager";
+"CFBundleName" = "ShiftManager";
+
 /* Back button override for UIKit components */
-"Back" = "";
-"Previous" = "";
-"back" = "";
+"Back" = "Back";
+"Previous" = "Previous";
+"back" = "back";
 "UIBarButtonBack" = "Back";
 "UIBarButtonItemBack" = "Back";
 "UIButtonBack" = "Back";

@@ -14,7 +14,7 @@ public protocol ShiftRepositoryProtocol: Sendable {
 }
 
 public final class ShiftRepository: ShiftRepositoryProtocol, @unchecked Sendable {
-    private nonisolated(unsafe) let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     public init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.context = context

@@ -2,16 +2,15 @@ import SwiftUI
 
 public struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var showingUpcomingShifts = true
+    @State private var showingUpcomingShifts = false
     @State private var showingGuide = false
     
     public init() {}
     
     public var body: some View {
-        ZStack {
-            NavigationView {
-                VStack(spacing: 16) {
-                    // Title with custom font size
+        NavigationView {
+            VStack(spacing: 16) {
+                // Title
                     HStack {
                         Text("Shift Manager".localized)
                             .font(.system(size: 32, weight: .bold))
@@ -94,7 +93,6 @@ public struct HomeView: View {
                         }
                         .padding()
                     }
-                }
                 .onAppear {
                     // Defer non-critical UI operations to the next run loop
                     DispatchQueue.main.async {
@@ -104,29 +102,26 @@ public struct HomeView: View {
                     }
                 }
             }
-            
-            if showingUpcomingShifts {
-                NavigationView {
-                    UpcomingShiftsView()
-                        .navigationTitle("Upcoming Shifts".localized)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button("Done".localized) {
-                                    withAnimation {
-                                        showingUpcomingShifts = false
-                                    }
-                                }
+        }
+        .fullScreenCover(isPresented: $showingUpcomingShifts) {
+            NavigationView {
+                UpcomingShiftsView()
+                    .navigationTitle("Upcoming Shifts".localized)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done".localized) {
+                                showingUpcomingShifts = false
                             }
+                            .foregroundColor(.purple)
                         }
-                }
-                .transition(.move(edge: .bottom))
-                .zIndex(100)
+                    }
             }
         }
         .sheet(isPresented: $showingGuide) {
             GuideView()
         }
+        .refreshOnLanguageChange()
     }
 }
 

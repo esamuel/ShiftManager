@@ -11,7 +11,7 @@ public struct GuideView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     // Welcome Section
-                    GuideSection(title: "Welcome to ShiftManager".localized, iconName: "hand.wave.fill") {
+                    GuideSection(title: "Welcome to ShiftManager".localized, iconName: "AppLogo") {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("ShiftManager helps you track your work shifts, calculate wages, and manage overtime. This guide will walk you through all the app's features.".localized)
                             
@@ -155,6 +155,7 @@ public struct GuideView: View {
                 animateContent = true
             }
         }
+        .refreshOnLanguageChange()
     }
 }
 
@@ -172,9 +173,16 @@ struct GuideSection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: iconName)
-                    .foregroundColor(.purple)
-                    .font(.title2)
+                if iconName == "AppLogo" {
+                    Image("AppLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
+                } else {
+                    Image(systemName: iconName)
+                        .foregroundColor(.purple)
+                        .font(.title2)
+                }
                 Text(title)
                     .font(.title3)
                     .fontWeight(.bold)

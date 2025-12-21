@@ -21,11 +21,11 @@ struct AboutView: View {
                             .frame(width: 80, height: 80)
                             .foregroundColor(.blue)
                         
-                        Text("Shift Manager")
+                        Text("Shift Manager".localized)
                             .font(.title)
                             .bold()
                         
-                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                        Text("\("Version".localized) \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

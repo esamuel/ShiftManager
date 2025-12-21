@@ -51,24 +51,18 @@ public class ReportViewModel: ObservableObject {
     }
     
     var periodTitle: String {
-        // Get the month name and year from the current period
-        let month = calendar.component(.month, from: currentPeriodStart)
-        let year = calendar.component(.year, from: currentPeriodStart)
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
         
-        // Get localized month name directly
-        let monthNames = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ]
-        
-        // Make sure to apply localization to the month name
-        let localizedMonth = monthNames[month - 1].localized
-        
-        // For RTL languages like Hebrew, reverse the order
-        if LocalizationManager.shared.currentLanguage == "he" || LocalizationManager.shared.currentLanguage == "ar" {
-            return "\(year) \(localizedMonth)"
+        if selectedView == .weekly {
+            // For weekly, show Month Year (e.g. "December 2025")
+            // We use the start date of the week
+            formatter.setLocalizedDateFormatFromTemplate("MMMM yyyy")
+            return formatter.string(from: currentPeriodStart)
         } else {
-            return "\(localizedMonth) \(year)"
+            // For monthly, show just Month Year
+            formatter.setLocalizedDateFormatFromTemplate("MMMM yyyy")
+            return formatter.string(from: currentPeriodStart)
         }
     }
     

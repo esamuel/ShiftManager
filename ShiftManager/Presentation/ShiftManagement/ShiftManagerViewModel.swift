@@ -321,23 +321,19 @@ public class ShiftManagerViewModel: ObservableObject {
                 let request = NSFetchRequest<Shift>(entityName: "Shift")
                 request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
                 
-                let results = try await context.perform {
-                    try self.context.fetch(request)
-                }
-                
-                if let shiftToDelete = results.first {
-                    await context.perform {
-                        self.context.delete(shiftToDelete)
-                    }
-                    try await context.perform {
+                try await context.perform {
+                    let request = NSFetchRequest<Shift>(entityName: "Shift")
+                    request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
+                    let results = try self.context.fetch(request)
+                    if let entity = results.first {
+                        self.context.delete(entity)
                         try self.context.save()
                     }
-                    
-                    // Recalculate wages for remaining shifts on the same day
-                    await recalculateDailyWages(for: shiftDate)
-                    
-                    await loadShifts()
                 }
+                
+                // Recalculate wages for remaining shifts on the same day
+                await recalculateDailyWages(for: shiftDate)
+                await loadShifts()
             } catch {
                 print("Error deleting shift: \(error)")
             }

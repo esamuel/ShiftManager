@@ -17,6 +17,7 @@ struct ContentView: View {
         // Use LazyView to defer creation of MainTabView until needed
         LazyView {
             MainTabView()
+                .refreshOnLanguageChange()
                 .id(themeManager.refreshID) // Force refresh on theme change
                 .withAppTheme() // Apply theme
         }

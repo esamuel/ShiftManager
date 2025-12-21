@@ -29,7 +29,7 @@ public class UpcomingShiftsViewModel: ObservableObject {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(localeDidChange),
-            name: NSLocale.currentLocaleDidChangeNotification,
+            name: NSNotification.Name("LanguageChanged"),
             object: nil
         )
         

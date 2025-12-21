@@ -138,7 +138,7 @@ public struct SearchShiftView: View {
                                                 netWage: viewModel.netWage
                                             )
                                             let periodString = "\(startDate.formatted(date: .long, time: .omitted)) - \(endDate.formatted(date: .long, time: .omitted))"
-                                            let username = UserDefaults.standard.string(forKey: "userName") ?? "User"
+                                            let username = UserDefaults.standard.string(forKey: "username") ?? "User"
                                             pdfData = try await exportService.generateSearchReport(
                                                 shifts: viewModel.shifts,
                                                 username: username,
