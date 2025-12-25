@@ -1,5 +1,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import MessageUI
+
 
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
@@ -31,601 +33,62 @@ public struct SettingsView: View {
     }
     
     public var body: some View {
+        navigationContainer
+            .withAppTheme() // Apply the selected theme
+            .onAppear {
+                DispatchQueue.main.async {
+                    UINavigationBar.appearance().backItem?.backButtonTitle = ""
+                    UINavigationBar.appearance().topItem?.backButtonTitle = ""
+                }
+            }
+            .fileExporter(
+                isPresented: $viewModel.showingExporter,
+                document: viewModel.backupDocument,
+                contentType: .json,
+                defaultFilename: "ShiftManager_Backup"
+            ) { result in
+                if case .failure(let error) = result {
+                    print("Export failed: \(error.localizedDescription)")
+                }
+            }
+            .fileImporter(
+                isPresented: $viewModel.showingImporter,
+                allowedContentTypes: [.json],
+                allowsMultipleSelection: false
+            ) { result in
+                switch result {
+                case .success(let urls):
+                    if let url = urls.first {
+                        viewModel.restoreBackup(from: url)
+                    }
+                case .failure(let error):
+                    print("Import failed: \(error.localizedDescription)")
+                }
+            }
+            .alert("Import Result".localized, isPresented: $viewModel.showingImportAlert) {
+                Button("OK".localized, role: .cancel) { }
+            } message: {
+                if let error = viewModel.importError {
+                    Text(String(format: "Error importing data: %@".localized, error.localizedDescription))
+                } else {
+                    Text(viewModel.importMessage.localized)
+                }
+            }
+    }
+    
+    private var navigationContainer: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Search bar
                 if isSearching {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.secondary)
-                        
-                        TextField("Search settings".localized, text: $searchText)
-                            .disableAutocorrection(true)
-                        
-                        if !searchText.isEmpty {
-                            Button(action: {
-                                searchText = ""
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemBackground))
+                    searchBar
                 }
                 
-                Form {
-                    // Setup Reminder (Only shows if needed)
-                    if viewModel.showSetupReminder {
-                        Section {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Image(systemName: "exclamationmark.circle")
-                                        .foregroundColor(.orange)
-                                    Text("Setup Recommended".localized)
-                                        .font(.headline)
-                                        .foregroundColor(.orange)
-                                }
-                                
-                                Text("Please complete your basic profile settings to get the most out of the app.".localized)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                
-                                Button(action: {
-                                    // Scroll to personal information section
-                                }) {
-                                    Text("Complete Setup".localized)
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .padding(.vertical, 8)
-                                        .padding(.horizontal, 16)
-                                        .background(Color.orange)
-                                        .cornerRadius(8)
-                                }
-                                .padding(.top, 6)
-                            }
-                            .padding(.vertical, 8)
-                        }
-                    }
-                    
-                    // Premium Section
-                    if !purchaseManager.isPremium {
-                        Section {
-                            Button(action: {
-                                purchaseManager.showPaywall = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "crown.fill")
-                                        .foregroundColor(.yellow)
-                                        .font(.title3)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Upgrade to Premium".localized)
-                                            .font(.headline)
-                                            .foregroundColor(.primary)
-                                        
-                                        Text("Unlock all features & unlimited shifts".localized)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.vertical, 8)
-                            }
-                        }
-                    } else {
-                        Section {
-                            HStack {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .foregroundColor(.green)
-                                    .font(.title3)
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Premium Active".localized)
-                                        .font(.headline)
-                                        .foregroundColor(.primary)
-                                    
-                                    Text("You have access to all features".localized)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                Spacer()
-                            }
-                            .padding(.vertical, 8)
-                            
-                            #if DEBUG
-                            Button("Reset Purchases (Debug)") {
-                                purchaseManager.resetPurchases()
-                            }
-                            .foregroundColor(.red)
-                            #endif
-                        }
-                    }
-                    
-                    // Profile Section
-                    if shouldShowSection("Profile".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "person.fill")
-                                    .foregroundColor(.blue)
-                                    .frame(width: 25)
-                                Text("Username".localized)
-                                Spacer()
-                                TextField("Username", text: $viewModel.username)
-                                    .multilineTextAlignment(.trailing)
-                                    .submitLabel(.done)
-                                    .onSubmit {
-                                        viewModel.saveSettings()
-                                    }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Profile".localized, iconName: "person.crop.circle")
-                        }
-                    }
-                    
-                    // Regional Settings
-                    if shouldShowSection("Regional".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "globe")
-                                    .foregroundColor(.purple)
-                                    .frame(width: 25)
-                                Picker("Work Country".localized, selection: $viewModel.selectedCountry) {
-                                    ForEach(Country.allCases) { country in
-                                        Text(country.displayName)
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.7)
-                                            .tag(country)
-                                    }
-                                }
-                                .onChange(of: viewModel.selectedCountry) { _ in viewModel.saveSettings() }
-                                .pickerStyle(MenuPickerStyle())
-                                .frame(maxWidth: .infinity)
-                            }
-                            
-                            HStack {
-                                Image(systemName: "dollarsign.circle")
-                                    .foregroundColor(.green)
-                                    .frame(width: 25)
-                                Text("Currency".localized)
-                                Spacer()
-                                Text(viewModel.selectedCountry.currencySymbol)
-                                    .foregroundColor(.gray)
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Regional".localized, iconName: "globe")
-                        }
-                    }
-                    
-                    // Language Settings
-                    if shouldShowSection("Language".localized) {
-                        Section {
-                            Button(action: {
-                                viewModel.showingLanguagePicker = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "globe")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("App Language".localized)
-                                    Spacer()
-                                    Text(viewModel.selectedLanguage.displayName)
-                                        .foregroundColor(.gray)
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
-                                }
-                            }
-                            .foregroundColor(.primary)
-                            .help("App Language Description".localized)
-                        } header: {
-                            SectionHeaderView(title: "Language".localized, iconName: "character.bubble")
-                        }
-                    }
-                    
-                    // Appearance Section
-                    if shouldShowSection("Appearance".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: themeIcon(for: themeManager.currentTheme))
-                                    .foregroundColor(themeColor(for: themeManager.currentTheme))
-                                    .frame(width: 25)
-                                Picker("Theme".localized, selection: $themeManager.currentTheme) {
-                                    Text("System".localized).tag(Theme.system)
-                                    Text("Light".localized).tag(Theme.light)
-                                    Text("Dark".localized).tag(Theme.dark)
-                                }
-                                .pickerStyle(SegmentedPickerStyle())
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Appearance".localized, iconName: "paintbrush")
-                        }
-                    }
-                    
-                    // Wage Settings Section
-                    if shouldShowSection("Wage Settings".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "dollarsign.circle.fill")
-                                    .foregroundColor(.green)
-                                    .frame(width: 25)
-                                
-                                Text("Hourly Wage".localized)
-                                Spacer()
-                                TextField("0.00", value: $viewModel.hourlyWage, format: .number)
-                                    .keyboardType(.decimalPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(width: 120)
-                            }
-                            
-                            HStack {
-                                Image(systemName: "percent")
-                                    .foregroundColor(.red)
-                                    .frame(width: 25)
-                                
-                                HStack {
-                                    Text("Tax Deduction (%)".localized)
-                                    Button(action: { showingTaxTooltip.toggle() }) {
-                                        Image(systemName: "info.circle")
-                                            .font(.footnote)
-                                            .foregroundColor(.blue)
-                                    }
-                                    .popover(isPresented: $showingTaxTooltip) {
-                                        TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
-                                    }
-                                }
-                                Spacer()
-                                TextField("0.00", value: $viewModel.taxDeduction, format: .number)
-                                    .keyboardType(.decimalPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(width: 100)
-                                Text("%")
-                            }
-                            
-                            // Tax calculation note with improved styling
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle")
-                                    .foregroundColor(.orange)
-                                    .frame(width: 25)
-                                
-                                Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.top, 4)
-
-                            
-                            Button(action: { showingDeductionCalculator = true }) {
-                                HStack {
-                                    Image(systemName: "function")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Deduction Calculator".localized)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
-                                }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
-                        }
-                    }
-                    
-                    // Hours Settings Section
-                    if shouldShowSection("Hours Settings".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "clock.fill")
-                                    .foregroundColor(.blue)
-                                    .frame(width: 25)
-                                
-                                HStack {
-                                    Text("Base Hours (Weekday)".localized)
-                                    Button(action: { showingBaseHoursTooltip.toggle() }) {
-                                        Image(systemName: "info.circle")
-                                            .font(.footnote)
-                                            .foregroundColor(.blue)
-                                    }
-                                    .popover(isPresented: $showingBaseHoursTooltip) {
-                                        TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
-                                    }
-                                }
-                                Spacer()
-                                TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(width: 60)
-                            }
-                            
-                            HStack {
-                                Image(systemName: "calendar.badge.clock")
-                                    .foregroundColor(.purple)
-                                    .frame(width: 25)
-                                
-                                HStack {
-                                    Text("Base Hours (Special Day)".localized)
-                                    Button(action: { showingSpecialDayTooltip.toggle() }) {
-                                        Image(systemName: "info.circle")
-                                            .font(.footnote)
-                                            .foregroundColor(.blue)
-                                    }
-                                    .popover(isPresented: $showingSpecialDayTooltip) {
-                                        TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
-                                    }
-                                }
-                                Spacer()
-                                TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(width: 60)
-                            }
-
-                            HStack {
-                                Image(systemName: "calendar")
-                                    .foregroundColor(.orange)
-                                    .frame(width: 25)
-                                
-                                Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
-                                Button(action: { showingWorkWeekTooltip.toggle() }) {
-                                    Image(systemName: "info.circle")
-                                        .font(.footnote)
-                                        .foregroundColor(.blue)
-                                }
-                                .popover(isPresented: $showingWorkWeekTooltip) {
-                                    TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
-                                }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
-                        }
-                    }
-                    
-                    // Notifications Section
-                    if shouldShowSection("Notifications".localized) {
-                        Section {
-                            HStack {
-                                Image(systemName: "bell.fill")
-                                    .foregroundColor(.red)
-                                    .frame(width: 25)
-                                Toggle(isOn: $viewModel.notificationsEnabled) {
-                                    Text("Enable Notifications".localized)
-                                }
-                            }
-                            if viewModel.notificationsEnabled {
-                                HStack {
-                                    Image(systemName: "timer")
-                                        .foregroundColor(.orange)
-                                        .frame(width: 25)
-                                    Picker("Remind me before shift".localized, selection: $viewModel.notificationLeadTime) {
-                                        ForEach(NotificationLeadTime.allCases) { leadTime in
-                                            Text(leadTime.description).tag(leadTime)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Notifications".localized, iconName: "bell")
-                        }
-                    }
-                    
-
-                    
-
-                    
-                    // Backup & Restore Section
-                    if shouldShowSection("Backup & Restore".localized) {
-                        Section {
-                            VStack(alignment: .leading, spacing: 20) {
-                                // Export
-                                Text("Export Data to Computer".localized)
-                                    .font(.headline)
-                                    .bold()
-                                Text("Save a backup file of your shifts to your computer. You can later restore your data by importing this file.".localized)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Button(action: {
-                                    viewModel.prepareBackupDocument()
-                                }) {
-                                    HStack {
-                                        Image(systemName: "square.and.arrow.up")
-                                            .foregroundColor(.blue)
-                                        Text("Export Shifts Backup".localized)
-                                    }
-                                }
-                                .padding(.vertical, 4)
-
-                                Divider()
-
-                                // Import
-                                Text("Import Data from Computer".localized)
-                                    .font(.headline)
-                                    .bold()
-                                Text("Upload a previously exported backup file from your computer to restore your shifts data.".localized)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Button(action: {
-                                    viewModel.showingImporter = true
-                                }) {
-                                    HStack {
-                                        Image(systemName: "square.and.arrow.down")
-                                            .foregroundColor(.green)
-                                        Text("Import Shifts Backup".localized)
-                                    }
-                                }
-                                .padding(.vertical, 4)
-
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.orange)
-                                    .font(.title2)
-                                    .padding(.top, 2)
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("Important: Data Loss Warning".localized)
-                                        .font(.headline)
-                                        .foregroundColor(.orange)
-                                    Text("Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app.".localized)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.vertical, 8)
-                        } header: {
-                            SectionHeaderView(title: "Backup & Restore".localized, iconName: "externaldrive")
-                        }
-                    }
-                    
-                    // Help & FAQ Section
-                    if shouldShowSection("Help & FAQ".localized) {
-                        Section {
-                            Button(action: { showingHelpSheet = true }) {
-                                HStack {
-                                    Image(systemName: "questionmark.circle")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Frequently Asked Questions".localized)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
-                                }
-                            }
-                            .foregroundColor(.primary)
-                            
-                            NavigationLink(destination: VideoTutorialsListView()) {
-                                HStack {
-                                    Image(systemName: "play.rectangle")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Video Tutorials".localized)
-                                }
-                            }
-                            
-                            NavigationLink(destination: GuideView()) {
-                                HStack {
-                                    Image(systemName: "book")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("User Guide".localized)
-                                }
-                            }
-                            
-                            NavigationLink(destination: FeedbackView()) {
-                                HStack {
-                                    Image(systemName: "star")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Send Feedback".localized)
-                                }
-                            }
-                            
-                            NavigationLink(destination: ContactSupportView()) {
-                                HStack {
-                                    Image(systemName: "envelope")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Contact Support".localized)
-                                }
-                            }
-                            
-                            Button(action: {
-                                viewModel.showingShareSheet = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "square.and.arrow.up")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Tell Friends".localized)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 13))
-                                }
-                            }
-                            .foregroundColor(.primary)
-                        } header: {
-                            SectionHeaderView(title: "Help & FAQ".localized, iconName: "questionmark.circle")
-                        }
-                    }
-                    
-                    // About Section
-                    if shouldShowSection("About".localized) {
-                        Section {
-                            NavigationLink(destination: AboutView()) {
-                                HStack {
-                                    Image(systemName: "info.circle")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("About Shift Manager".localized)
-                                    Spacer()
-                                    Text(viewModel.appVersion)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "About".localized, iconName: "info.circle")
-                        }
-                    }
-                    
-                    // Legal Section
-                    if shouldShowSection("Legal".localized) {
-                        Section {
-                            NavigationLink(destination: PrivacyPolicyView()) {
-                                HStack {
-                                    Image(systemName: "lock.shield")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Privacy Policy".localized)
-                                }
-                            }
-                            NavigationLink(destination: TermsOfUseView()) {
-                                HStack {
-                                    Image(systemName: "doc.text")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 25)
-                                    Text("Terms of Use".localized)
-                                }
-                            }
-                        } header: {
-                            SectionHeaderView(title: "Legal".localized, iconName: "doc.text")
-                        }
-                    }
-                    
-
-                }
+                settingsForm
             }
             .navigationTitle("Settings".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        isSearching.toggle()
-                        if !isSearching {
-                            searchText = ""
-                        }
-                    }) {
-                        Image(systemName: isSearching ? "xmark" : "magnifyingglass")
-                    }
-                }
-                
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: viewModel.saveSettings) {
-                        Image(systemName: "checkmark")
-                    }
-                }
+                navigationToolbar
             }
             .alert("Settings Saved".localized, isPresented: $viewModel.showingSaveConfirmation) {
                 Button("OK".localized, role: .cancel) { }
@@ -645,56 +108,663 @@ public struct SettingsView: View {
                 DeductionCalculatorView(taxDeduction: $viewModel.taxDeduction)
             }
             .sheet(isPresented: $viewModel.showingShareSheet) {
-                // Share sheet implementation would go here
-                // For now we can use a simple ActivityViewController wrapper or similar
                 Text("Share Sheet Placeholder")
             }
-            .onChange(of: viewModel.hourlyWage) { _ in viewModel.saveSettings() }
-            .onChange(of: viewModel.taxDeduction) { _ in viewModel.saveSettings() }
-            .onChange(of: viewModel.baseHoursWeekday) { _ in viewModel.saveSettings() }
-            .onChange(of: viewModel.baseHoursSpecialDay) { _ in viewModel.saveSettings() }
-            // Username is saved on submit, not on change to prevent navigation issues
+            .onChange(of: viewModel.username) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.hourlyWage) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.taxDeduction) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.baseHoursWeekday) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.baseHoursSpecialDay) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.startWorkOnSunday) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.notificationsEnabled) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.notificationLeadTime) { _ in viewModel.checkForChanges() }
+            .onChange(of: viewModel.selectedLanguage) { _ in viewModel.checkForChanges() }
+            .onChange(of: themeManager.currentTheme) { _ in
+                viewModel.selectedTheme = themeManager.currentTheme
+                viewModel.checkForChanges()
+            }
             .refreshOnLanguageChange()
             .id(themeManager.refreshID) // Force refresh when theme changes
         }
-        .withAppTheme() // Apply the selected theme
-        .onAppear {
-            DispatchQueue.main.async {
-                UINavigationBar.appearance().backItem?.backButtonTitle = ""
-                UINavigationBar.appearance().topItem?.backButtonTitle = ""
+    }
+
+    @ToolbarContentBuilder
+    private var navigationToolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button(action: { dismiss() }) {
+                Image(systemName: "chevron.left")
             }
         }
-        .fileExporter(
-            isPresented: $viewModel.showingExporter,
-            document: viewModel.backupDocument,
-            contentType: .json,
-            defaultFilename: "ShiftManager_Backup"
-        ) { result in
-            if case .failure(let error) = result {
-                print("Export failed: \(error.localizedDescription)")
-            }
-        }
-        .fileImporter(
-            isPresented: $viewModel.showingImporter,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                if let url = urls.first {
-                    viewModel.restoreBackup(from: url)
+        
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button(action: {
+                isSearching.toggle()
+                if !isSearching {
+                    searchText = ""
                 }
-            case .failure(let error):
-                print("Import failed: \(error.localizedDescription)")
+            }) {
+                Image(systemName: isSearching ? "xmark" : "magnifyingglass")
             }
         }
-        .alert("Import Result".localized, isPresented: $viewModel.showingImportAlert) {
-            Button("OK".localized, role: .cancel) { }
-        } message: {
-            if let error = viewModel.importError {
-                Text(String(format: "Error importing data: %@".localized, error.localizedDescription))
-            } else {
-                Text(viewModel.importMessage.localized)
+        
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: viewModel.saveSettings) {
+                Image(systemName: "checkmark")
+            }
+            .disabled(!viewModel.hasUnsavedChanges)
+            .opacity(viewModel.hasUnsavedChanges ? 1 : 0)
+        }
+    }
+
+    private var settingsForm: some View {
+        Form {
+            setupReminderSection
+            premiumSection
+            profileSection
+            regionalSection
+            languageSection
+            appearanceSection
+            wageSettingsSection
+            hoursSettingsSection
+            notificationsSection
+            backupRestoreSection
+            helpFAQSection
+            aboutSection
+            legalSection
+        }
+    }
+    
+    @ViewBuilder
+    private var searchBar: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+            
+            TextField("Search settings".localized, text: $searchText)
+                .disableAutocorrection(true)
+            
+            if !searchText.isEmpty {
+                Button(action: {
+                    searchText = ""
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(Color(.systemBackground))
+    }
+    
+    @ViewBuilder
+    private var setupReminderSection: some View {
+        if viewModel.showSetupReminder {
+            Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Image(systemName: "exclamationmark.circle")
+                            .foregroundColor(.orange)
+                        Text("Setup Recommended".localized)
+                            .font(.headline)
+                            .foregroundColor(.orange)
+                    }
+                    
+                    Text("Please complete your basic profile settings to get the most out of the app.".localized)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    Button(action: {
+                        // Scroll to personal information section
+                    }) {
+                        Text("Complete Setup".localized)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Color.orange)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 6)
+                }
+                .padding(.vertical, 8)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var premiumSection: some View {
+        if !purchaseManager.isPremium {
+            Section {
+                Button(action: {
+                    purchaseManager.showPaywall = true
+                }) {
+                    HStack {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(.yellow)
+                            .font(.title3)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Upgrade to Premium".localized)
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            Text("Unlock all features & unlimited shifts".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 8)
+                }
+            }
+        } else {
+            Section {
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundColor(.green)
+                        .font(.title3)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Premium Active".localized)
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        Text("You have access to all features".localized)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.vertical, 8)
+                
+                #if DEBUG
+                Button("Reset Purchases (Debug)") {
+                    purchaseManager.resetPurchases()
+                }
+                .foregroundColor(.red)
+                #endif
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var profileSection: some View {
+        if shouldShowSection("Profile".localized) {
+            Section {
+                HStack {
+                    Image(systemName: "person.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 25)
+                    Text("Username".localized)
+                    Spacer()
+                    TextField("Username", text: $viewModel.username)
+                        .multilineTextAlignment(.trailing)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            viewModel.checkForChanges()
+                        }
+                }
+            } header: {
+                SectionHeaderView(title: "Profile".localized, iconName: "person.crop.circle")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var regionalSection: some View {
+        if shouldShowSection("Regional".localized) {
+            Section {
+                HStack {
+                    Image(systemName: "globe")
+                        .foregroundColor(.purple)
+                        .frame(width: 25)
+                    Picker("Work Country".localized, selection: $viewModel.selectedCountry) {
+                        ForEach(Country.allCases) { country in
+                            Text(country.displayName)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                                .tag(country)
+                        }
+                    }
+                    .onChange(of: viewModel.selectedCountry) { _ in viewModel.checkForChanges() }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(maxWidth: .infinity)
+                }
+                
+                HStack {
+                    Image(systemName: "dollarsign.circle")
+                        .foregroundColor(.green)
+                        .frame(width: 25)
+                    Text("Currency".localized)
+                    Spacer()
+                    Text(viewModel.selectedCountry.currencySymbol)
+                        .foregroundColor(.gray)
+                }
+            } header: {
+                SectionHeaderView(title: "Regional".localized, iconName: "globe")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var languageSection: some View {
+        if shouldShowSection("Language".localized) {
+            Section {
+                Button(action: {
+                    viewModel.showingLanguagePicker = true
+                }) {
+                    HStack {
+                        Image(systemName: "globe")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("App Language".localized)
+                        Spacer()
+                        Text(viewModel.selectedLanguage.displayName)
+                            .foregroundColor(.gray)
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 13))
+                    }
+                }
+                .foregroundColor(.primary)
+                .help("App Language Description".localized)
+            } header: {
+                SectionHeaderView(title: "Language".localized, iconName: "character.bubble")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var appearanceSection: some View {
+        if shouldShowSection("Appearance".localized) {
+            Section {
+                HStack {
+                    Image(systemName: themeIcon(for: themeManager.currentTheme))
+                        .foregroundColor(themeColor(for: themeManager.currentTheme))
+                        .frame(width: 25)
+                    Picker("Theme".localized, selection: $themeManager.currentTheme) {
+                        Text("System".localized).tag(Theme.system)
+                        Text("Light".localized).tag(Theme.light)
+                        Text("Dark".localized).tag(Theme.dark)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+            } header: {
+                SectionHeaderView(title: "Appearance".localized, iconName: "paintbrush")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var wageSettingsSection: some View {
+        if shouldShowSection("Wage Settings".localized) {
+            Section {
+                HStack {
+                    Image(systemName: "dollarsign.circle.fill")
+                        .foregroundColor(.green)
+                        .frame(width: 25)
+                    
+                    Text("Hourly Wage".localized)
+                    Spacer()
+                    TextField("0.00", value: $viewModel.hourlyWage, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 120)
+                }
+                
+                HStack {
+                    Image(systemName: "percent")
+                        .foregroundColor(.red)
+                        .frame(width: 25)
+                    
+                    HStack {
+                        Text("Tax Deduction (%)".localized)
+                        Button(action: { showingTaxTooltip.toggle() }) {
+                            Image(systemName: "info.circle")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        .popover(isPresented: $showingTaxTooltip) {
+                            TooltipView(text: "This percentage will be deducted from your total earnings to calculate your net income. The actual tax may vary based on local regulations.".localized)
+                        }
+                    }
+                    Spacer()
+                    TextField("0.00", value: $viewModel.taxDeduction, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 100)
+                    Text("%")
+                }
+                
+                // Tax calculation note with improved styling
+                HStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(.orange)
+                        .frame(width: 25)
+                    
+                    Text("Note: Tax calculation is an estimate and may vary based on local regulations.".localized)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.top, 4)
+                
+                Button(action: { showingDeductionCalculator = true }) {
+                    HStack {
+                        Image(systemName: "function")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Deduction Calculator".localized)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 13))
+                    }
+                }
+            } header: {
+                SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var hoursSettingsSection: some View {
+        if shouldShowSection("Hours Settings".localized) {
+            Section {
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 25)
+                    
+                    HStack {
+                        Text("Base Hours (Weekday)".localized)
+                        Button(action: { showingBaseHoursTooltip.toggle() }) {
+                            Image(systemName: "info.circle")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        .popover(isPresented: $showingBaseHoursTooltip) {
+                            TooltipView(text: "Standard work hours for a regular weekday before overtime calculation begins.".localized)
+                        }
+                    }
+                    Spacer()
+                    TextField("8", value: $viewModel.baseHoursWeekday, format: .number)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 60)
+                }
+                
+                HStack {
+                    Image(systemName: "calendar.badge.clock")
+                        .foregroundColor(.purple)
+                        .frame(width: 25)
+                    
+                    HStack {
+                        Text("Base Hours (Special Day)".localized)
+                        Button(action: { showingSpecialDayTooltip.toggle() }) {
+                            Image(systemName: "info.circle")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        .popover(isPresented: $showingSpecialDayTooltip) {
+                            TooltipView(text: "Standard work hours for special days (weekends, holidays) before overtime calculation begins.".localized)
+                        }
+                    }
+                    Spacer()
+                    TextField("8", value: $viewModel.baseHoursSpecialDay, format: .number)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 60)
+                }
+                
+                HStack {
+                    Image(systemName: "calendar")
+                        .foregroundColor(.orange)
+                        .frame(width: 25)
+                    
+                    Toggle(viewModel.startWorkOnSunday ? "Start work on Sunday".localized : "Start work on Monday".localized, isOn: $viewModel.startWorkOnSunday)
+                    Button(action: { showingWorkWeekTooltip.toggle() }) {
+                        Image(systemName: "info.circle")
+                            .font(.footnote)
+                            .foregroundColor(.blue)
+                    }
+                    .popover(isPresented: $showingWorkWeekTooltip) {
+                        TooltipView(text: "Sets the first day of your work week for reporting and calculations. Different countries use different standards.".localized)
+                    }
+                }
+            } header: {
+                SectionHeaderView(title: "Hours Settings".localized, iconName: "clock")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var notificationsSection: some View {
+        if shouldShowSection("Notifications".localized) {
+            Section {
+                HStack {
+                    Image(systemName: "bell.fill")
+                        .foregroundColor(.red)
+                        .frame(width: 25)
+                    Toggle(isOn: $viewModel.notificationsEnabled) {
+                        Text("Enable Notifications".localized)
+                    }
+                }
+                if viewModel.notificationsEnabled {
+                    HStack {
+                        Image(systemName: "timer")
+                            .foregroundColor(.orange)
+                            .frame(width: 25)
+                        Picker("Remind me before shift".localized, selection: $viewModel.notificationLeadTime) {
+                            ForEach(NotificationLeadTime.allCases) { leadTime in
+                                Text(leadTime.description).tag(leadTime)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                }
+            } header: {
+                SectionHeaderView(title: "Notifications".localized, iconName: "bell")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var backupRestoreSection: some View {
+        if shouldShowSection("Backup & Restore".localized) {
+            Section {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Export
+                    Text("Export Data to Computer".localized)
+                        .font(.headline)
+                        .bold()
+                    Text("Save a backup file of your shifts to your computer. You can later restore your data by importing this file.".localized)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Button(action: {
+                        viewModel.prepareBackupDocument()
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.blue)
+                            Text("Export Shifts Backup".localized)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    Divider()
+                    
+                    // Import
+                    Text("Import Data from Computer".localized)
+                        .font(.headline)
+                        .bold()
+                    Text("Upload a previously exported backup file from your computer to restore your shifts data.".localized)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Button(action: {
+                        viewModel.showingImporter = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                                .foregroundColor(.green)
+                            Text("Import Shifts Backup".localized)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                        .font(.title2)
+                        .padding(.top, 2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Important: Data Loss Warning".localized)
+                            .font(.headline)
+                            .foregroundColor(.orange)
+                        Text("Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app.".localized)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 8)
+            } header: {
+                SectionHeaderView(title: "Backup & Restore".localized, iconName: "externaldrive")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var helpFAQSection: some View {
+        if shouldShowSection("Help & FAQ".localized) {
+            Section {
+                Button(action: { showingHelpSheet = true }) {
+                    HStack {
+                        Image(systemName: "questionmark.circle")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Frequently Asked Questions".localized)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 13))
+                    }
+                }
+                .foregroundColor(.primary)
+                
+                NavigationLink(destination: VideoTutorialsListView()) {
+                    HStack {
+                        Image(systemName: "play.rectangle")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Video Tutorials".localized)
+                    }
+                }
+                
+                NavigationLink(destination: GuideView()) {
+                    HStack {
+                        Image(systemName: "book")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("User Guide".localized)
+                    }
+                }
+                
+                NavigationLink(destination: FeedbackView()) {
+                    HStack {
+                        Image(systemName: "star")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Send Feedback".localized)
+                    }
+                }
+                
+                NavigationLink(destination: FeedbackManagementView()) {
+                    HStack {
+                        Image(systemName: "list.bullet.clipboard")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("View Feedback History".localized)
+                    }
+                }
+
+                
+                NavigationLink(destination: ContactSupportView()) {
+                    HStack {
+                        Image(systemName: "envelope")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Contact Support".localized)
+                    }
+                }
+                
+                Button(action: {
+                    viewModel.showingShareSheet = true
+                }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Tell Friends".localized)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 13))
+                    }
+                }
+                .foregroundColor(.primary)
+            } header: {
+                SectionHeaderView(title: "Help & FAQ".localized, iconName: "questionmark.circle")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var aboutSection: some View {
+        if shouldShowSection("About".localized) {
+            Section {
+                NavigationLink(destination: AboutView()) {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("About Shift Manager".localized)
+                        Spacer()
+                        Text(viewModel.appVersion)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } header: {
+                SectionHeaderView(title: "About".localized, iconName: "info.circle")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var legalSection: some View {
+        if shouldShowSection("Legal".localized) {
+            Section {
+                NavigationLink(destination: PrivacyPolicyView()) {
+                    HStack {
+                        Image(systemName: "lock.shield")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Privacy Policy".localized)
+                    }
+                }
+                NavigationLink(destination: TermsOfUseView()) {
+                    HStack {
+                        Image(systemName: "doc.text")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Terms of Use".localized)
+                    }
+                }
+            } header: {
+                SectionHeaderView(title: "Legal".localized, iconName: "doc.text")
             }
         }
     }
@@ -969,23 +1039,15 @@ struct FeedbackView: View {
     @State private var feedback = ""
     @State private var selectedCategory = FeedbackCategory.general
     @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var showingMailComposer = false
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var repository = FeedbackRepository()
+    @Environment(\.dismiss) private var dismiss
     
-    enum FeedbackCategory: String, CaseIterable, Identifiable {
-        case general, usability, features, bugs, suggestions
-        
-        var id: String { rawValue }
-        
-        var displayName: String {
-            switch self {
-            case .general: return "General".localized
-            case .usability: return "Usability".localized
-            case .features: return "Features".localized
-            case .bugs: return "Bug Report".localized
-            case .suggestions: return "Suggestions".localized
-            }
-        }
-    }
+    // Email configuration - UPDATE THIS WITH YOUR SUPPORT EMAIL
+    private let supportEmail = "support@shiftmanager.app"
     
     var body: some View {
         Form {
@@ -1034,43 +1096,189 @@ struct FeedbackView: View {
             }
             
             Section {
+                // Save locally button
                 Button(action: {
-                    submitFeedback()
+                    saveFeedbackLocally()
                 }) {
-                    Text("Submit Feedback".localized)
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(.blue)
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                        Text("Save Feedback Locally".localized)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.blue)
                 }
                 .disabled(rating == 0 || feedback.isEmpty)
+                
+                // Send via email button
+                Button(action: {
+                    sendFeedbackViaEmail()
+                }) {
+                    HStack {
+                        Image(systemName: "envelope")
+                        Text("Send via Email".localized)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.green)
+                }
+                .disabled(rating == 0 || feedback.isEmpty)
+                
+                // Combined: Save and Send
+                Button(action: {
+                    saveAndSendFeedback()
+                }) {
+                    HStack {
+                        Image(systemName: "paperplane.fill")
+                        Text("Save & Send Feedback".localized)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.purple)
+                }
+                .disabled(rating == 0 || feedback.isEmpty)
+            } footer: {
+                Text("Your feedback is saved locally and can optionally be sent via email.".localized)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
         }
         .navigationTitle("App Feedback".localized)
-        .alert("Feedback Sent".localized, isPresented: $showingAlert) {
+        .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK".localized, role: .cancel) { }
         } message: {
-            Text("Thank you for your feedback! We'll use it to improve the app.".localized)
+            Text(alertMessage)
+        }
+        .sheet(isPresented: $showingMailComposer) {
+            if MailHelper.canSendMail {
+                MailComposeView(
+                    recipients: [supportEmail],
+                    subject: "Shift Manager Feedback - \(selectedCategory.displayName)",
+                    body: createFeedbackModel().emailBody,
+                    onComplete: handleMailResult
+                )
+            } else {
+                VStack(spacing: 20) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 60))
+                        .foregroundColor(.orange)
+                    
+                    Text("Mail Not Configured".localized)
+                        .font(.headline)
+                    
+                    Text("Please configure your email account in Settings app to send feedback via email.".localized)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal)
+                    
+                    Button("Copy Email Address".localized) {
+                        UIPasteboard.general.string = supportEmail
+                        alertTitle = "Copied!".localized
+                        alertMessage = "Email address copied to clipboard.".localized
+                        showingMailComposer = false
+                        showingAlert = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Close".localized) {
+                        showingMailComposer = false
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .padding()
+            }
         }
         .id(themeManager.refreshID)
         .withAppTheme()
     }
     
-    private func submitFeedback() {
-        // In a real app, this would send the feedback to a server
-        // For now, we'll just show a success message
+    private func createFeedbackModel() -> FeedbackModel {
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let deviceModel = UIDevice.current.model
         
-        // Here you could implement an API call to submit feedback:
-        // AppAnalytics.submitFeedback(rating: rating, category: selectedCategory.rawValue, comment: feedback)
-        
-        showingAlert = true
-        
-        // Reset the form after submission
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            rating = 0
-            feedback = ""
-            selectedCategory = .general
+        return FeedbackModel(
+            rating: rating,
+            category: selectedCategory,
+            comment: feedback,
+            appVersion: appVersion,
+            deviceModel: deviceModel
+        )
+    }
+    
+    private func saveFeedbackLocally() {
+        do {
+            let feedbackModel = createFeedbackModel()
+            try repository.saveFeedback(feedbackModel) // Synchronous call on MainActor
+            
+            alertTitle = "Feedback Saved".localized
+            alertMessage = "Your feedback has been saved locally. Thank you!".localized
+            showingAlert = true
+            
+            // Reset form
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                resetForm()
+            }
+        } catch {
+            alertTitle = "Error".localized
+            alertMessage = String(format: "Failed to save feedback: %@".localized, error.localizedDescription)
+            showingAlert = true
         }
     }
+    
+    private func sendFeedbackViaEmail() {
+        showingMailComposer = true
+    }
+    
+    private func saveAndSendFeedback() {
+        do {
+            var feedbackModel = createFeedbackModel()
+            feedbackModel.isSentViaEmail = true
+            try repository.saveFeedback(feedbackModel)
+            
+            // Then open email composer
+            showingMailComposer = true
+        } catch {
+            alertTitle = "Error".localized
+            alertMessage = String(format: "Failed to save feedback: %@".localized, error.localizedDescription)
+            showingAlert = true
+        }
+    }
+
+    
+    private func handleMailResult(_ result: Result<MFMailComposeResult, Error>) {
+        switch result {
+        case .success(let mailResult):
+            switch mailResult {
+            case .sent:
+                alertTitle = "Feedback Sent".localized
+                alertMessage = "Thank you for your feedback! We'll use it to improve the app.".localized
+                showingAlert = true
+                resetForm()
+            case .saved:
+                alertTitle = "Draft Saved".localized
+                alertMessage = "Your feedback email has been saved as a draft.".localized
+                showingAlert = true
+            case .cancelled:
+                // User cancelled, do nothing
+                break
+            case .failed:
+                alertTitle = "Send Failed".localized
+                alertMessage = "Failed to send email. Please try again.".localized
+                showingAlert = true
+            @unknown default:
+                break
+            }
+        case .failure(let error):
+            alertTitle = "Error".localized
+            alertMessage = error.localizedDescription
+            showingAlert = true
+        }
+    }
+    
+    private func resetForm() {
+        rating = 0
+        feedback = ""
+        selectedCategory = .general
+    }
 }
+
 
 #Preview {
     SettingsView()

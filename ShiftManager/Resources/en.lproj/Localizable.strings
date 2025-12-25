@@ -489,6 +489,39 @@
 "Thank you for your feedback! We'll use it to improve the app." = "Thank you for your feedback! We'll use it to improve the app.";
 "Tell Friends" = "Tell Friends";
 
+// New Feedback Features
+"Save Feedback Locally" = "Save Feedback Locally";
+"Send via Email" = "Send via Email";
+"Save & Send Feedback" = "Save & Send Feedback";
+"Your feedback is saved locally and can optionally be sent via email." = "Your feedback is saved locally and can optionally be sent via email.";
+"Feedback Saved" = "Feedback Saved";
+"Your feedback has been saved locally. Thank you!" = "Your feedback has been saved locally. Thank you!";
+"Failed to save feedback: %@" = "Failed to save feedback: %@";
+"Mail Not Configured" = "Mail Not Configured";
+"Please configure your email account in Settings app to send feedback via email." = "Please configure your email account in Settings app to send feedback via email.";
+"Copy Email Address" = "Copy Email Address";
+"Copied!" = "Copied!";
+"Email address copied to clipboard." = "Email address copied to clipboard.";
+"Draft Saved" = "Draft Saved";
+"Your feedback email has been saved as a draft." = "Your feedback email has been saved as a draft.";
+"Send Failed" = "Send Failed";
+"Failed to send email. Please try again." = "Failed to send email. Please try again.";
+
+// Feedback Management
+"View Feedback History" = "View Feedback History";
+"Feedback History" = "Feedback History";
+"Loading feedback..." = "Loading feedback...";
+"No Feedback Yet" = "No Feedback Yet";
+"Feedback submitted by users will appear here." = "Feedback submitted by users will appear here.";
+"Delete Feedback?" = "Delete Feedback?";
+"This action cannot be undone." = "This action cannot be undone.";
+"Delete All" = "Delete All";
+"Export as CSV" = "Export as CSV";
+"Retry" = "Retry";
+"Show More" = "Show More";
+"Show Less" = "Show Less";
+
+
 // Monthly Report
 "Monthly Report" = "Monthly Report";
 "Select Month" = "Select Month";

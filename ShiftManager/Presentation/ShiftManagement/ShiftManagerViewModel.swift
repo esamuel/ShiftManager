@@ -45,7 +45,9 @@ public class ShiftManagerViewModel: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = NSLocalizedString("Upcoming Shift", comment: "")
         content.body = String(format: NSLocalizedString("Your shift starts at %@", comment: ""), shift.startTime.formattedString(format: "MMM d, h:mm a"))
-        content.sound = .default
+        content.sound = UNNotificationSound.default
+        content.badge = 1
+        content.categoryIdentifier = "SHIFT_REMINDER"
         
         let triggerDate = shift.startTime.addingTimeInterval(TimeInterval(-leadTimeMinutes * 60))
         let triggerComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
@@ -54,6 +56,8 @@ public class ShiftManagerViewModel: ObservableObject {
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("Failed to schedule notification: \(error)")
+            } else {
+                print("✅ Notification scheduled for shift at \(shift.startTime) (reminder \(leadTimeMinutes) min before)")
             }
         }
     }
@@ -61,6 +65,30 @@ public class ShiftManagerViewModel: ObservableObject {
     func cancelShiftNotification(shiftID: UUID) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [shiftID.uuidString])
     }
+    
+    func rescheduleAllNotifications() {
+        Task {
+            // Cancel all existing notifications
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            
+            // Only reschedule if notifications are enabled
+            guard SettingsManager.shared.notificationsEnabled else { return }
+            
+            let leadTimeMinutes = UserDefaults.standard.integer(forKey: "notificationLeadTime")
+            let leadTime = leadTimeMinutes > 0 ? leadTimeMinutes : 15
+            
+            // Get all future shifts
+            let futureShifts = shifts.filter { $0.startTime > Date() }
+            
+            // Schedule notification for each future shift
+            for shift in futureShifts {
+                scheduleShiftNotification(shift: shift, leadTimeMinutes: leadTime)
+            }
+            
+            print("✅ Rescheduled \(futureShifts.count) notifications")
+        }
+    }
+
     
     init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext,
          wageCalculationService: WageCalculationService = WageCalculationService()) {
@@ -88,6 +116,13 @@ public class ShiftManagerViewModel: ObservableObject {
             .dropFirst() // To avoid re-triggering for the initial selectedDate value
             .sink { [weak self] newDate in
                 self?.setDefaultTimes(for: newDate)
+            }
+            .store(in: &cancellables)
+        
+        // Listen for notification settings changes
+        NotificationCenter.default.publisher(for: NSNotification.Name("RescheduleNotifications"))
+            .sink { [weak self] _ in
+                self?.rescheduleAllNotifications()
             }
             .store(in: &cancellables)
     }
@@ -309,6 +344,28 @@ public class ShiftManagerViewModel: ObservableObject {
             try await context.perform {
                 try self.context.save()
             }
+            
+            // Schedule notification if enabled
+            if SettingsManager.shared.notificationsEnabled {
+                let leadTimeMinutes = UserDefaults.standard.integer(forKey: "notificationLeadTime")
+                let leadTime = leadTimeMinutes > 0 ? leadTimeMinutes : 15 // Default to 15 minutes
+                
+                let shiftModel = ShiftModel(
+                    id: entity.id ?? UUID(),
+                    title: entity.title ?? "",
+                    category: entity.category ?? "",
+                    startTime: entity.startTime ?? Date(),
+                    endTime: entity.endTime ?? Date(),
+                    notes: entity.notes ?? "",
+                    isOvertime: entity.isOvertime,
+                    isSpecialDay: entity.isSpecialDay,
+                    grossWage: entity.grossWage,
+                    netWage: entity.netWage,
+                    createdAt: entity.createdAt ?? Date()
+                )
+                
+                scheduleShiftNotification(shift: shiftModel, leadTimeMinutes: leadTime)
+            }
         } catch {
             print("Error saving shift: \(error)")
         }
@@ -330,6 +387,9 @@ public class ShiftManagerViewModel: ObservableObject {
                         try self.context.save()
                     }
                 }
+                
+                // Cancel any scheduled notification for this shift
+                cancelShiftNotification(shiftID: shift.id)
                 
                 // Recalculate wages for remaining shifts on the same day
                 await recalculateDailyWages(for: shiftDate)
@@ -410,6 +470,14 @@ public class ShiftManagerViewModel: ObservableObject {
                     
                     try await context.perform {
                         try self.context.save()
+                    }
+                    
+                    // Cancel old notification and schedule new one if notifications are enabled
+                    cancelShiftNotification(shiftID: shift.id)
+                    if SettingsManager.shared.notificationsEnabled {
+                        let leadTimeMinutes = UserDefaults.standard.integer(forKey: "notificationLeadTime")
+                        let leadTime = leadTimeMinutes > 0 ? leadTimeMinutes : 15
+                        scheduleShiftNotification(shift: shift, leadTimeMinutes: leadTime)
                     }
                     
                     // Recalculate wages for all shifts on the same day

@@ -641,3 +641,35 @@ ShiftManager запрашивает только необходимые разр
 "premium_privacy_summary_title" = "Краткая информация о конфиденциальности";
 "premium_privacy_summary_content" = "✓ Все данные хранятся локально на вашем устройстве\n✓ Нет сбора данных или отслеживания\n✓ Не требуется регистрация учетной записи\n✓ Опциональная синхронизация iCloud (зашифрованная)\n✓ Полный контроль и владение данными\n✓ Нет рекламы или сторонней аналитики\n✓ Гарантированная полная конфиденциальность";
 "premium_privacy_last_updated" = "Последнее обновление: 20 декабря 2025";
+
+// New Feedback Features
+"Save Feedback Locally" = "Сохранить отзыв локально";
+"Send via Email" = "Отправить по электронной почте";
+"Save & Send Feedback" = "Сохранить и отправить отзыв";
+"Your feedback is saved locally and can optionally be sent via email." = "Ваш отзыв сохранен локально и может быть отправлен по электронной почте.";
+"Feedback Saved" = "Отзыв сохранен";
+"Your feedback has been saved locally. Спасибо!" = "Ваш отзыв был сохранен локально. Спасибо!";
+"Failed to save feedback: %@" = "Ошибка сохранения отзыва: %@";
+"Mail Not Configured" = "Почта не настроена";
+"Please configure your email account in Settings app to send feedback via email." = "Пожалуйста, настройте свою учетную запись электронной почты в приложении Настройки, чтобы отправить отзыв по электронной почте.";
+"Copy Email Address" = "Копировать адрес электронной почты";
+"Copied!" = "Скопировано!";
+"Email address copied to clipboard." = "Адрес электронной почты скопирован в буфер обмена.";
+"Draft Saved" = "Черновик сохранен";
+"Your feedback email has been saved as a draft." = "Письмо с отзывом сохранено в черновиках.";
+"Send Failed" = "Ошибка отправки";
+"Failed to send email. Please try again." = "Не удалось отправить письмо. Повторите попытку.";
+
+// Feedback Management
+"View Feedback History" = "История отзывов";
+"Feedback History" = "История отзывов";
+"Loading feedback..." = "Загрузка отзывов...";
+"No Feedback Yet" = "Отзывов пока нет";
+"Feedback submitted by users will appear here." = "Здесь будут отображаться отзывы, отправленные пользователями.";
+"Delete Feedback?" = "Удалить отзыв?";
+"This action cannot be undone." = "Это действие нельзя отменить.";
+"Delete All" = "Удалить все";
+"Export as CSV" = "Экспорт в CSV";
+"Retry" = "Повторить";
+"Show More" = "Показать больше";
+"Show Less" = "Показать меньше";

@@ -155,11 +155,13 @@ struct OvertimeRuleCard: View {
                     Image(systemName: "pencil")
                         .foregroundColor(.gray)
                 }
+                .buttonStyle(BorderlessButtonStyle())
                 
                 Button(action: onDelete) {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
             
             Text(rule.isEnabled ? "Special Days".localized : "Weekdays".localized)

@@ -696,3 +696,35 @@ Tus datos de trabajo son tuyos. Permanecen en tu dispositivo. Nunca los vemos, r
 "premium_privacy_summary_title" = "Resumen de Privacidad";
 "premium_privacy_summary_content" = "✓ Todos los datos almacenados localmente en tu dispositivo\n✓ Sin recopilación de datos ni seguimiento\n✓ No se requiere registro de cuenta\n✓ Sincronización opcional de iCloud (cifrada)\n✓ Control y propiedad total de datos\n✓ Sin anuncios ni análisis de terceros\n✓ Privacidad completa garantizada";
 "premium_privacy_last_updated" = "Última actualización: 20 de diciembre de 2025";
+
+// New Feedback Features
+"Save Feedback Locally" = "Guardar comentarios localmente";
+"Send via Email" = "Enviar por correo electrónico";
+"Save & Send Feedback" = "Guardar y enviar comentarios";
+"Your feedback is saved locally and can optionally be sent via email." = "Tus comentarios se guardan localmente y opcionalmente se pueden enviar por correo electrónico.";
+"Feedback Saved" = "Comentarios guardados";
+"Your feedback has been saved locally. ¡Gracias!" = "Tus comentarios se han guardado localmente. ¡Gracias!";
+"Failed to save feedback: %@" = "Error al guardar los comentarios: %@";
+"Mail Not Configured" = "Correo no configurado";
+"Please configure your email account in Settings app to send feedback via email." = "Por favor, configura tu cuenta de correo en la aplicación Ajustes para enviar comentarios por correo electrónico.";
+"Copy Email Address" = "Copiar dirección de correo";
+"Copied!" = "¡Copiado!";
+"Email address copied to clipboard." = "Dirección de correo copiada al portapapeles.";
+"Draft Saved" = "Borrador guardado";
+"Your feedback email has been saved as a draft." = "Tu correo de comentarios se ha guardado como borrador.";
+"Send Failed" = "Error al enviar";
+"Failed to send email. Please try again." = "Error al enviar el correo. Por favor, inténtalo de nuevo.";
+
+// Feedback Management
+"View Feedback History" = "Ver historial de comentarios";
+"Feedback History" = "Historial de comentarios";
+"Loading feedback..." = "Cargando comentarios...";
+"No Feedback Yet" = "Aún no hay comentarios";
+"Feedback submitted by users will appear here." = "Los comentarios enviados por los usuarios aparecerán aquí.";
+"Delete Feedback?" = "¿Eliminar comentario?";
+"This action cannot be undone." = "Esta acción no se puede deshacer.";
+"Delete All" = "Eliminar todo";
+"Export as CSV" = "Exportar como CSV";
+"Retry" = "Reintentar";
+"Show More" = "Mostrar más";
+"Show Less" = "Mostrar menos";

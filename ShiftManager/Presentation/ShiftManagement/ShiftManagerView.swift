@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct ShiftManagerView: View {
+public struct ShiftManagerView: View {
     @StateObject private var viewModel: ShiftManagerViewModel
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isNotesFocused: Bool
     
-    init(viewModel: ShiftManagerViewModel? = nil) {
+    public init(viewModel: ShiftManagerViewModel? = nil) {
         _viewModel = StateObject(wrappedValue: viewModel ?? ShiftManagerViewModel())
     }
     
@@ -20,7 +20,7 @@ struct ShiftManagerView: View {
     
 
     
-    var body: some View {
+    public var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 // Form Section

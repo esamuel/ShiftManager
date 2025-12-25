@@ -12,14 +12,18 @@ public struct MainTabView: View {
                 Image(systemName: "house.fill")
                 Text("Home".localized)
             }
+            .tag(0)
             
-            DeferredView {
-                ShiftManagerView()
+            DeferredView(preload: false) {
+                NavigationView {
+                    ShiftManagerView()
+                }
             }
             .tabItem {
-                Image(systemName: "calendar")
+                Image(systemName: "briefcase.fill")
                 Text("Manager".localized)
             }
+            .tag(1)
             
             DeferredView {
                 NavigationView {
@@ -30,6 +34,7 @@ public struct MainTabView: View {
                 Image(systemName: "chart.bar.fill")
                 Text("Reports".localized)
             }
+            .tag(2)
             
 
         }

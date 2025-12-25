@@ -1,16 +1,10 @@
 import UIKit
 import os.log
-import ObjectiveC  // Add this for method swizzling
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // OPTIMIZED: Only do essential initialization during app launch
-        
-        // Initialize swizzling (lightweight operation)
-        _ = ForceInitializer.shared
-        _ = BackButtonFix.shared
-        let _ = UIBarButtonItem.swizzleTitle
         
         // Basic navigation bar appearance (lightweight)
         configureNavigationBarAppearance()

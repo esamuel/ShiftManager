@@ -639,3 +639,36 @@ ShiftManager מבקשת רק הרשאות חיוניות:
 "premium_privacy_summary_title" = "סיכום פרטיות";
 "premium_privacy_summary_content" = "✓ כל הנתונים מאוחסנים מקומית במכשיר שלך\n✓ אין איסוף נתונים או מעקב\n✓ אין צורך ברישום חשבון\n✓ סנכרון iCloud אופציונלי (מוצפן)\n✓ שליטה ובעלות מלאה על הנתונים\n✓ אין פרסומות או אנליטיקה של צד שלישי\n✓ פרטיות מלאה מובטחת";
 "premium_privacy_last_updated" = "עדכון אחרון: 20 בדצמבר 2025";
+
+// New Feedback Features
+"Save Feedback Locally" = "שמור משוב מקומית";
+"Send via Email" = "שלח באמצעות אימייל";
+"Save & Send Feedback" = "שמור ושלח משוב";
+"Your feedback is saved locally and can optionally be sent via email." = "המשוב שלך נשמר מקומית וניתן לשליחה באימייל לבחירתך.";
+"Feedback Saved" = "המשוב נשמר";
+"Your feedback has been saved locally. Thank you!" = "המשוב שלך נשמר מקומית. תודה!";
+"Failed to save feedback: %@" = "שמירת המשוב נכשלה: %@";
+"Mail Not Configured" = "אימייל לא מוגדר";
+"Please configure your email account in Settings app to send feedback via email." = "אנא הגדר את חשבון האימייל שלך באפליקציית ההגדרות כדי לשלוח משוב באימייל.";
+"Copy Email Address" = "העתק כתובת אימייל";
+"Copied!" = "הועתק!";
+"Email address copied to clipboard." = "כתובת האימייל הועתקה ללוח.";
+"Draft Saved" = "טיוטה נשמרה";
+"Your feedback email has been saved as a draft." = "אימייל המשוב נשמר כטיוטה.";
+"Send Failed" = "השליחה נכשלה";
+"Failed to send email. Please try again." = "שליחת האימייל נכשלה. אנא נסה שוב.";
+
+// Feedback Management
+"View Feedback History" = "צפה בהיסטוריית משוב";
+"Feedback History" = "היסטוריית משוב";
+"Loading feedback..." = "טוען משוב...";
+"No Feedback Yet" = "אין משוב עדיין";
+"Feedback submitted by users will appear here." = "משוב שיוגש על ידי משתמשים יופיע כאן.";
+"Delete Feedback?" = "מחק משוב?";
+"This action cannot be undone." = "פעולה זו אינה ניתנת לביטול.";
+"Delete All" = "מחק הכל";
+"Export as CSV" = "ייצא כ-CSV";
+"Retry" = "נסה שוב";
+"Show More" = "הצג עוד";
+"Show Less" = "הצג פחות";
+

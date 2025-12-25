@@ -111,11 +111,7 @@ public class SettingsViewModel: ObservableObject {
     @Published var taxDeduction: Double
     @Published var baseHoursWeekday: Int
     @Published var baseHoursSpecialDay: Int
-    @Published var startWorkOnSunday: Bool {
-        didSet {
-            saveSettings()
-        }
-    }
+    @Published var startWorkOnSunday: Bool
     @Published var selectedLanguage: Language
     @Published var selectedCountry: Country
     @Published var selectedTheme: Theme
@@ -136,11 +132,40 @@ public class SettingsViewModel: ObservableObject {
     @Published var showingImportAlert = false
     @Published var importMessage = ""
     
-    @Published var notificationsEnabled: Bool {
-        didSet {
-            SettingsManager.shared.notificationsEnabled = notificationsEnabled
+    @Published var notificationsEnabled: Bool
+    @Published var hasUnsavedChanges = false
+    
+    private var initialHourlyWage: Double = 0
+    private var initialTaxDeduction: Double = 0
+    private var initialUsername: String = ""
+    private var initialBaseHoursWeekday: Int = 0
+    private var initialBaseHoursSpecialDay: Int = 0
+    private var initialStartWorkOnSunday: Bool = true
+    private var initialLanguage: Language = .english
+    private var initialCountry: Country = .israel
+    private var initialTheme: Theme = .system
+    private var initialNotificationsEnabled: Bool = true
+    private var initialNotificationLeadTime: NotificationLeadTime = .min15
+    
+    func checkForChanges() {
+        let currentHasChanges = 
+            username != initialUsername ||
+            hourlyWage != initialHourlyWage ||
+            taxDeduction != initialTaxDeduction ||
+            baseHoursWeekday != initialBaseHoursWeekday ||
+            baseHoursSpecialDay != initialBaseHoursSpecialDay ||
+            startWorkOnSunday != initialStartWorkOnSunday ||
+            selectedLanguage != initialLanguage ||
+            selectedCountry != initialCountry ||
+            selectedTheme != initialTheme ||
+            notificationsEnabled != initialNotificationsEnabled ||
+            notificationLeadTime != initialNotificationLeadTime
+        
+        if hasUnsavedChanges != currentHasChanges {
+            hasUnsavedChanges = currentHasChanges
         }
     }
+    
     // App version property
     var appVersion: String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
@@ -172,15 +197,26 @@ public class SettingsViewModel: ObservableObject {
         let savedTheme = UserDefaults.standard.string(forKey: "theme") ?? "system"
         self.selectedTheme = Theme(rawValue: savedTheme) ?? .system
         
-        // Set default values if not already set
         if self.hourlyWage == 0 {
             self.hourlyWage = 40.04
             self.taxDeduction = 11.78
             self.baseHoursWeekday = 8
             self.baseHoursSpecialDay = 8
             self.startWorkOnSunday = true
-            saveSettings()
         }
+        
+        // Save initial state to track changes
+        self.initialUsername = self.username
+        self.initialHourlyWage = self.hourlyWage
+        self.initialTaxDeduction = self.taxDeduction
+        self.initialBaseHoursWeekday = self.baseHoursWeekday
+        self.initialBaseHoursSpecialDay = self.baseHoursSpecialDay
+        self.initialStartWorkOnSunday = self.startWorkOnSunday
+        self.initialLanguage = self.selectedLanguage
+        self.initialCountry = self.selectedCountry
+        self.initialTheme = self.selectedTheme
+        self.initialNotificationsEnabled = self.notificationsEnabled
+        self.initialNotificationLeadTime = self.notificationLeadTime
         
         // Check if we should show the setup reminder
         checkSetupStatus()
@@ -199,6 +235,10 @@ public class SettingsViewModel: ObservableObject {
     }
     
     func saveSettings() {
+        let notificationSettingsChanged = 
+            notificationsEnabled != initialNotificationsEnabled ||
+            notificationLeadTime.rawValue != UserDefaults.standard.integer(forKey: "notificationLeadTime")
+        
         UserDefaults.standard.set(notificationLeadTime.rawValue, forKey: "notificationLeadTime")
         UserDefaults.standard.set(username, forKey: "username")
         UserDefaults.standard.set(hourlyWage, forKey: "hourlyWage")
@@ -210,11 +250,12 @@ public class SettingsViewModel: ObservableObject {
         UserDefaults.standard.set(selectedCountry.rawValue, forKey: "country")
         UserDefaults.standard.set(selectedTheme.rawValue, forKey: "theme")
         
+        SettingsManager.shared.notificationsEnabled = notificationsEnabled
+        
         // Mark that setup has been completed
         UserDefaults.standard.set(true, forKey: "hasCompletedSetup")
         
         // Only update LocalizationManager if language or country changed
-        // This prevents unnecessary root view reloads which reset navigation
         if LocalizationManager.shared.currentLanguage != selectedLanguage.rawValue {
             LocalizationManager.shared.setLanguage(selectedLanguage.rawValue)
         }
@@ -223,7 +264,26 @@ public class SettingsViewModel: ObservableObject {
             LocalizationManager.shared.setCountry(selectedCountry)
         }
         
-        showingSaveConfirmation = true
+        // Reschedule all notifications if notification settings changed
+        if notificationSettingsChanged {
+            NotificationCenter.default.post(name: NSNotification.Name("RescheduleNotifications"), object: nil)
+        }
+        
+        // Update initial state AFTER successful save
+        self.initialUsername = self.username
+        self.initialHourlyWage = self.hourlyWage
+        self.initialTaxDeduction = self.taxDeduction
+        self.initialBaseHoursWeekday = self.baseHoursWeekday
+        self.initialBaseHoursSpecialDay = self.baseHoursSpecialDay
+        self.initialStartWorkOnSunday = self.startWorkOnSunday
+        self.initialLanguage = self.selectedLanguage
+        self.initialCountry = self.selectedCountry
+        self.initialTheme = self.selectedTheme
+        self.initialNotificationsEnabled = self.notificationsEnabled
+        self.initialNotificationLeadTime = self.notificationLeadTime
+        
+        self.hasUnsavedChanges = false
+        self.showingSaveConfirmation = true
     }
     
     // Method to apply language change immediately

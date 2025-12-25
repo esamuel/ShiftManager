@@ -1,7 +1,7 @@
 import Foundation
 @preconcurrency import CoreData
 
-class WageCalculationService {
+class WageCalculationService: @unchecked Sendable {
     private let context: NSManagedObjectContext
     private let calendar: Calendar
     
@@ -226,12 +226,12 @@ class WageCalculationService {
         let weekStart = calendar.startOfWeek(for: shift.startTime)
         let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart)!
         
-        // Fetch all shifts in the week
-        let request = NSFetchRequest<Shift>(entityName: "Shift")
-        request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", weekStart as NSDate, weekEnd as NSDate)
-        
-        let weekShifts = try context.fetch(request)
-        let totalWeeklyHours = weekShifts.reduce(0.0) { $0 + ($1.endTime!.timeIntervalSince($1.startTime!)) } / 3600
+        let totalWeeklyHours = try await context.perform { [context] in
+            let request = NSFetchRequest<Shift>(entityName: "Shift")
+            request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", weekStart as NSDate, weekEnd as NSDate)
+            let weekShifts = try context.fetch(request)
+            return weekShifts.reduce(0.0) { $0 + (($1.endTime?.timeIntervalSince($1.startTime ?? Date()) ?? 0) / 3600) }
+        }
         
         // Check if exceeded weekly threshold
         let weeklyThreshold = 40.0 // This could be made configurable
@@ -417,11 +417,11 @@ class WageCalculationService {
         let dayStart = calendar.startOfDay(for: date)
         let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
         
-        let shifts = try await context.perform {
+        let shifts = try await context.perform { [context] in
             let request = NSFetchRequest<Shift>(entityName: "Shift")
             request.predicate = NSPredicate(format: "startTime >= %@ AND startTime < %@", dayStart as NSDate, dayEnd as NSDate)
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
-            let results = try self.context.fetch(request)
+            let results = try context.fetch(request)
             
             return results.map { shift in
                 ShiftModel(

@@ -184,7 +184,6 @@ public struct ReportView: View {
                             overtimeHours200: viewModel.overtimeHours200,
                             hourlyRate: UserDefaults.standard.double(forKey: "hourlyWage")
                         )
-                        .frame(height: 200)
                     }
                     
                     // List of shifts
