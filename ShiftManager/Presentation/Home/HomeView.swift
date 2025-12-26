@@ -4,6 +4,7 @@ public struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var showingUpcomingShifts = false
     @State private var showingGuide = false
+    @State private var showingAISupport = false
     @State private var activeDestination: HomeDestination?
     
     private enum HomeDestination: Hashable {
@@ -18,7 +19,7 @@ public struct HomeView: View {
     
     public var body: some View {
         NavigationView {
-            VStack(spacing: 8) {
+            VStack(spacing: 0) {
                 // Title
                 HStack {
                     Text("Shift Manager".localized)
@@ -40,61 +41,81 @@ public struct HomeView: View {
                     .accessibilityLabel("Help".localized)
                     .help("Open User Guide".localized)
                 }
-                .padding(.top, 8)
+                .padding(.top, 4)
                 .padding(.horizontal)
+                .padding(.bottom, 0)
                 
                 // Hidden navigation links
                 navigationLinks
                 
+                // App Logo
+                Image("AppLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 80)
+                    .padding(.top, -10)
+                    .padding(.bottom, 8)
+                
                 // Menu Buttons
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 12) {
-                        // Home Button (Main Screen)
-                        Button(action: { showingUpcomingShifts = true }) {
-                            MenuButton(
-                                title: "Coming Shifts".localized,
-                                icon: "house.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
+                    VStack(spacing: 8) { // Reduced spacing
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                            // Home Button (Main Screen)
+                            Button(action: { showingUpcomingShifts = true }) {
+                                GridMenuButton(
+                                    title: "Coming Shifts".localized,
+                                    icon: "house.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            Button(action: { navigate(to: .shiftManager) }) {
+                                GridMenuButton(
+                                    title: "Shift Manager".localized,
+                                    icon: "briefcase.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            Button(action: { navigate(to: .reports) }) {
+                                GridMenuButton(
+                                    title: "Reports".localized,
+                                    icon: "chart.bar.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            Button(action: { navigate(to: .guide) }) {
+                                GridMenuButton(
+                                    title: "Guide".localized,
+                                    icon: "info.circle.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            Button(action: { navigate(to: .overtimeRules) }) {
+                                GridMenuButton(
+                                    title: "Overtime Rules".localized,
+                                    icon: "clock.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
+                            
+                            Button(action: { navigate(to: .settings) }) {
+                                GridMenuButton(
+                                    title: "Settings".localized,
+                                    icon: "gearshape.fill",
+                                    color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                )
+                            }
                         }
                         
-                        Button(action: { navigate(to: .shiftManager) }) {
+                        // AI Support Agent (Full Width)
+                        Button(action: { showingAISupport = true }) {
                             MenuButton(
-                                title: "Shift Manager".localized,
-                                icon: "briefcase.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        Button(action: { navigate(to: .reports) }) {
-                            MenuButton(
-                                title: "Reports".localized,
-                                icon: "chart.bar.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        Button(action: { navigate(to: .guide) }) {
-                            MenuButton(
-                                title: "Guide".localized,
-                                icon: "info.circle.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        Button(action: { navigate(to: .overtimeRules) }) {
-                            MenuButton(
-                                title: "Overtime Rules".localized,
-                                icon: "clock.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
-                            )
-                        }
-                        
-                        Button(action: { navigate(to: .settings) }) {
-                            MenuButton(
-                                title: "Settings".localized,
-                                icon: "gearshape.fill",
-                                color: Color(red: 0.8, green: 0.7, blue: 1.0)
+                                title: "AI Support Agent".localized,
+                                icon: "brain.head.profile",
+                                color: .purple
                             )
                         }
                     }
@@ -120,6 +141,9 @@ public struct HomeView: View {
         }
         .sheet(isPresented: $showingGuide) {
             GuideView()
+        }
+        .fullScreenCover(isPresented: $showingAISupport) {
+            VoiceAISupportView()
         }
         .refreshOnLanguageChange()
     }
@@ -247,6 +271,41 @@ public struct MenuButton: View {
         .background(color.opacity(0.2))
         .cornerRadius(12)
         .environment(\.layoutDirection, isRTL ? .rightToLeft : .leftToRight)
+    }
+}
+
+public struct GridMenuButton: View {
+    let title: String
+    let icon: String
+    let color: Color
+    
+    public init(title: String, icon: String, color: Color) {
+        self.title = title
+        self.icon = icon
+        self.color = color
+    }
+    
+    public var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 28))
+                .foregroundColor(.white)
+                .frame(width: 48, height: 48)
+                .background(color)
+                .clipShape(Circle())
+            
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .padding(.horizontal, 4)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 110)
+        .background(color.opacity(0.2))
+        .cornerRadius(16)
     }
 }
 

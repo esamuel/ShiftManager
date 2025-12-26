@@ -8,5 +8,9 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We use speech recognition to let you ask help questions using your voice.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We use your microphone to listen to your help questions.</string>
 </dict>
 </plist>

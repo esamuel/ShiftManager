@@ -34,9 +34,25 @@ public class ShiftManagerViewModel: ObservableObject {
     
     // MARK: - Notification Scheduling
     func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("Notification permission error: \(error)")
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .notDetermined:
+                // Request permission
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                    if let error = error {
+                        print("❌ Notification permission error: \(error)")
+                    } else if granted {
+                        print("✅ Notification permission granted")
+                    } else {
+                        print("⚠️ Notification permission denied by user")
+                    }
+                }
+            case .denied:
+                print("⚠️ Notifications are denied. Please enable in Settings.")
+            case .authorized, .provisional, .ephemeral:
+                print("✅ Notifications already authorized")
+            @unknown default:
+                print("⚠️ Unknown notification authorization status")
             }
         }
     }
@@ -50,20 +66,45 @@ public class ShiftManagerViewModel: ObservableObject {
         content.categoryIdentifier = "SHIFT_REMINDER"
         
         let triggerDate = shift.startTime.addingTimeInterval(TimeInterval(-leadTimeMinutes * 60))
-        let triggerComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+        
+        // Use calendar with timezone to ensure proper local time scheduling
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        let triggerComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .timeZone], from: triggerDate)
+        
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: false)
         let request = UNNotificationRequest(identifier: shift.id.uuidString, content: content, trigger: trigger)
+        
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Failed to schedule notification: \(error)")
+                print("❌ Failed to schedule notification: \(error)")
             } else {
-                print("✅ Notification scheduled for shift at \(shift.startTime) (reminder \(leadTimeMinutes) min before)")
+                let formatter = DateFormatter()
+                formatter.dateStyle = .short
+                formatter.timeStyle = .short
+                print("✅ Notification scheduled for shift at \(shift.startTime)")
+                print("   📅 Trigger time: \(triggerDate) (local time)")
+                print("   ⏰ Reminder: \(leadTimeMinutes) min before shift")
+                print("   🆔 ID: \(shift.id.uuidString)")
             }
         }
     }
     
     func cancelShiftNotification(shiftID: UUID) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [shiftID.uuidString])
+    }
+    
+    // Debug function to check pending notifications
+    func listPendingNotifications() {
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            print("📋 Pending Notifications: \(requests.count)")
+            for request in requests {
+                if let trigger = request.trigger as? UNCalendarNotificationTrigger,
+                   let nextTriggerDate = trigger.nextTriggerDate() {
+                    print("   🔔 \(request.identifier): \(nextTriggerDate)")
+                }
+            }
+        }
     }
     
     func rescheduleAllNotifications() {
@@ -94,6 +135,9 @@ public class ShiftManagerViewModel: ObservableObject {
          wageCalculationService: WageCalculationService = WageCalculationService()) {
         self.context = context
         self.wageCalculationService = wageCalculationService
+        
+        // Request notification permissions
+        requestNotificationPermission()
         
         // Set initial default times for startTime and endTime based on selectedDate
         setDefaultTimes(for: self.selectedDate)
@@ -365,6 +409,9 @@ public class ShiftManagerViewModel: ObservableObject {
                 )
                 
                 scheduleShiftNotification(shift: shiftModel, leadTimeMinutes: leadTime)
+                
+                // Debug: List all pending notifications
+                listPendingNotifications()
             }
         } catch {
             print("Error saving shift: \(error)")

@@ -35,8 +35,6 @@ public struct MainTabView: View {
                 Text("Reports".localized)
             }
             .tag(2)
-            
-
         }
         .refreshOnLanguageChange()
     }

@@ -11,6 +11,8 @@ A modern iOS app for managing work shifts, calculating wages, and tracking overt
 - Monthly view of shifts
 - Detailed wage calculations including tax deductions
 - Support for different work week configurations (Sunday/Monday start)
+- **AI Support Agent**: High-performance multilingual AI support for instant app assistance.
+
 
 ## Requirements
 

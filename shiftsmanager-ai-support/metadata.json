@@ -1,0 +1,8 @@
+
+{
+  "name": "ShiftsManager AI Support",
+  "description": "Real-time multilingual voice assistant for ShiftsManager.com users. Support in English, Hebrew, Russian, French, Spanish, and German.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
