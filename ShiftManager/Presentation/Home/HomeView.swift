@@ -5,7 +5,6 @@ public struct HomeView: View {
     @StateObject private var migrationManager = StationMigrationManager.shared
     @State private var showingUpcomingShifts = false
     @State private var showingGuide = false
-    @State private var showingAISupport = false
     @State private var activeDestination: HomeDestination?
     
     private enum HomeDestination: Hashable {
@@ -110,15 +109,6 @@ public struct HomeView: View {
                                 )
                             }
                         }
-                        
-                        // AI Support Agent (Full Width)
-                        Button(action: { showingAISupport = true }) {
-                            MenuButton(
-                                title: "AI Support Agent".localized,
-                                icon: "brain.head.profile",
-                                color: .purple
-                            )
-                        }
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
@@ -142,9 +132,6 @@ public struct HomeView: View {
         }
         .sheet(isPresented: $showingGuide) {
             GuideView()
-        }
-        .fullScreenCover(isPresented: $showingAISupport) {
-            VoiceAISupportView()
         }
         .alert(
             String(format: "We noticed %d shifts marked '%@'. Create a Work Station for them?".localized,

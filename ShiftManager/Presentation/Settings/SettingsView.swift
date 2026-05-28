@@ -738,19 +738,6 @@ public struct SettingsView: View {
                     }
                 }
                 
-                NavigationLink(destination: VoiceSettingsView()) {
-                    HStack {
-                        Image(systemName: "waveform")
-                            .foregroundColor(.blue)
-                            .frame(width: 25)
-                        Text("Voice Settings")
-                        Spacer()
-                        Image(systemName: "crown.fill")
-                            .font(.caption)
-                            .foregroundColor(.yellow)
-                    }
-                }
-                
                 Button(action: {
                     viewModel.showingShareSheet = true
                 }) {
