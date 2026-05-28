@@ -694,3 +694,19 @@ Your work data is yours. It stays on your device. We never see it, collect it, o
 "premium_privacy_summary_title" = "Privacy Summary";
 "premium_privacy_summary_content" = "✓ All data stored locally on your device\n✓ No data collection or tracking\n✓ No account registration required\n✓ Optional iCloud sync (encrypted)\n✓ Full data control and ownership\n✓ No ads or third-party analytics\n✓ Complete privacy guaranteed";
 "premium_privacy_last_updated" = "Last Updated: December 20, 2025";
+// Work Stations (U-Agent Step C)
+"Work Stations" = "Work Stations";
+"Work Station" = "Work Station";
+"No Work Stations" = "No Work Stations";
+"Create a station for each role with a different hourly wage." = "Create a station for each role with a different hourly wage.";
+"Add Station" = "Add Station";
+"Edit Station" = "Edit Station";
+"Station name" = "Station name";
+"Hourly wage" = "Hourly wage";
+"Color" = "Color";
+"Default wage" = "Default wage";
+"hour" = "hour";
+"%.2f / %@" = "%.2f / %@";
+"We noticed %d shifts marked '%@'. Create a Work Station for them?" = "We noticed %d shifts marked '%@'. Create a Work Station for them?";
+"Create Station" = "Create Station";
+"Not now" = "Not now";

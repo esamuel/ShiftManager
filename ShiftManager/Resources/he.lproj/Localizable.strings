@@ -672,3 +672,20 @@ ShiftManager מבקשת רק הרשאות חיוניות:
 "Show More" = "הצג עוד";
 "Show Less" = "הצג פחות";
 
+
+// Work Stations (U-Agent Step C)
+"Work Stations" = "תחנות עבודה";
+"Work Station" = "תחנת עבודה";
+"No Work Stations" = "אין תחנות עבודה";
+"Create a station for each role with a different hourly wage." = "צור תחנה לכל תפקיד עם שכר שעתי שונה.";
+"Add Station" = "הוסף תחנה";
+"Edit Station" = "ערוך תחנה";
+"Station name" = "שם התחנה";
+"Hourly wage" = "שכר לשעה";
+"Color" = "צבע";
+"Default wage" = "שכר ברירת מחדל";
+"hour" = "שעה";
+"%.2f / %@" = "%.2f / %@";
+"We noticed %d shifts marked '%@'. Create a Work Station for them?" = "זוהו %d משמרות עם '%@'. ליצור תחנת עבודה?";
+"Create Station" = "צור תחנה";
+"Not now" = "לא עכשיו";
