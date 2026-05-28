@@ -71,11 +71,44 @@ public struct ShiftManagerView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
                     
+                    // Work Station picker (only when at least one station exists)
+                    if !viewModel.stations.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Work Station".localized)
+                                .font(.headline)
+
+                            Menu {
+                                Button("Default wage".localized) {
+                                    viewModel.stationId = nil
+                                }
+                                ForEach(viewModel.stations) { station in
+                                    Button(station.name) {
+                                        viewModel.stationId = station.id
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "briefcase.fill")
+                                        .foregroundColor(.purple)
+                                    Text(viewModel.stations.first(where: { $0.id == viewModel.stationId })?.name ?? "Default wage".localized)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Image(systemName: "chevron.up.chevron.down")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(12)
+                            }
+                        }
+                    }
+
                     // Notes
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Add Note".localized)
                             .font(.headline)
-                        
+
                         TextEditor(text: $viewModel.notes)
                             .frame(minHeight: 80)
                             .padding(8)
@@ -367,16 +400,15 @@ struct DatePickerSheet: View {
 struct EditShiftView: View {
     let shift: ShiftModel
     let onSave: (ShiftModel) -> Void
-    
+
     @State private var editedDate: Date
     @State private var editedStartTime: Date
     @State private var editedEndTime: Date
     @State private var editedNotes: String
     @State private var isSpecialDay: Bool
+    @State private var editedStationId: UUID?
+    @State private var availableStations: [StationModel] = []
 
-    
-
-    
     init(shift: ShiftModel, onSave: @escaping (ShiftModel) -> Void) {
         self.shift = shift
         self.onSave = onSave
@@ -385,8 +417,9 @@ struct EditShiftView: View {
         _editedEndTime = State(initialValue: shift.endTime)
         _editedNotes = State(initialValue: shift.notes)
         _isSpecialDay = State(initialValue: shift.isSpecialDay)
+        _editedStationId = State(initialValue: shift.stationId)
     }
-    
+
     var body: some View {
         Form {
             Section {
@@ -395,6 +428,14 @@ struct EditShiftView: View {
                 DatePicker("Start Time".localized, selection: $editedStartTime, displayedComponents: .hourAndMinute)
                 DatePicker("End Time".localized, selection: $editedEndTime, displayedComponents: .hourAndMinute)
                 Toggle("Special Day".localized, isOn: $isSpecialDay)
+                if !availableStations.isEmpty {
+                    Picker("Work Station".localized, selection: $editedStationId) {
+                        Text("Default wage".localized).tag(UUID?.none)
+                        ForEach(availableStations) { station in
+                            Text(station.name).tag(Optional(station.id))
+                        }
+                    }
+                }
                 TextField("Notes".localized, text: $editedNotes)
             }
             
@@ -427,13 +468,17 @@ struct EditShiftView: View {
                         isSpecialDay: isSpecialDay,
                         grossWage: shift.grossWage,
                         netWage: shift.netWage,
-                        createdAt: shift.createdAt
+                        createdAt: shift.createdAt,
+                        stationId: editedStationId
                     )
                     
                     onSave(updatedShift)
                 }
                 .frame(maxWidth: .infinity)
             }
+        }
+        .task {
+            availableStations = (try? await StationRepository().fetchAll()) ?? []
         }
     }
 }

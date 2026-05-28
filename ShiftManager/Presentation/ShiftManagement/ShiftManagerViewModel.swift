@@ -11,6 +11,8 @@ public class ShiftManagerViewModel: ObservableObject {
     @Published public var startTime: Date = Date()
     @Published public var endTime: Date = Date()
     @Published public var notes: String = ""
+    @Published public var stationId: UUID?
+    @Published public private(set) var stations: [StationModel] = []
     @Published public var showingDuplicateAlert = false
     @Published public var showingLongShiftAlert = false
     @Published public var showingDailyLimitAlert = false
@@ -30,6 +32,7 @@ public class ShiftManagerViewModel: ObservableObject {
     
     private let context: NSManagedObjectContext
     private let wageCalculationService: WageCalculationService
+    private let stationRepository: StationRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Notification Scheduling
@@ -132,18 +135,21 @@ public class ShiftManagerViewModel: ObservableObject {
 
     
     init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext,
-         wageCalculationService: WageCalculationService = WageCalculationService()) {
+         wageCalculationService: WageCalculationService = WageCalculationService(),
+         stationRepository: StationRepositoryProtocol = StationRepository()) {
         self.context = context
         self.wageCalculationService = wageCalculationService
-        
+        self.stationRepository = stationRepository
+
         // Request notification permissions
         requestNotificationPermission()
-        
+
         // Set initial default times for startTime and endTime based on selectedDate
         setDefaultTimes(for: self.selectedDate)
 
         Task {
             await loadShifts()
+            await loadStations()
         }
         
         // Listen for language changes
@@ -214,11 +220,20 @@ public class ShiftManagerViewModel: ObservableObject {
                     isSpecialDay: shift.isSpecialDay,
                     grossWage: shift.grossWage,
                     netWage: shift.netWage,
-                    createdAt: shift.createdAt ?? Date()
+                    createdAt: shift.createdAt ?? Date(),
+                    stationId: shift.value(forKey: "stationId") as? UUID
                 )
             }
         } catch {
             print("Error loading shifts: \(error)")
+        }
+    }
+
+    func loadStations() async {
+        do {
+            self.stations = try await stationRepository.fetchAll()
+        } catch {
+            print("Error loading stations: \(error)")
         }
     }
     
@@ -332,16 +347,16 @@ public class ShiftManagerViewModel: ObservableObject {
                 return
             }
             
-            await createShift(startTime: shiftStart, endTime: shiftEnd, notes: notes)
-            
+            await createShift(startTime: shiftStart, endTime: shiftEnd, notes: notes, stationId: stationId)
+
             // Recalculate wages for all shifts on the same day
             await recalculateDailyWages(for: shiftStart)
-            
+
             await loadShifts()
         }
     }
-    
-    func createShift(startTime: Date, endTime: Date, notes: String) async {
+
+    func createShift(startTime: Date, endTime: Date, notes: String, stationId: UUID? = nil) async {
         let calendar = Calendar.current
         let startWorkOnSunday = UserDefaults.standard.bool(forKey: "startWorkOnSunday")
         let weekday = calendar.component(.weekday, from: startTime)
@@ -366,7 +381,8 @@ public class ShiftManagerViewModel: ObservableObject {
         entity.isOvertime = false
         entity.isSpecialDay = isSpecialDay
         entity.category = ""
-        
+        entity.setValue(stationId, forKey: "stationId")
+
         if let calculation = try? await wageCalculationService.calculateWage(for: ShiftModel(
             id: entity.id ?? UUID(),
             title: entity.title ?? "",
@@ -378,7 +394,8 @@ public class ShiftManagerViewModel: ObservableObject {
             isSpecialDay: entity.isSpecialDay,
             grossWage: entity.grossWage,
             netWage: entity.netWage,
-            createdAt: entity.createdAt ?? Date()
+            createdAt: entity.createdAt ?? Date(),
+            stationId: stationId
         )) {
             entity.grossWage = calculation.grossWage
             entity.netWage = calculation.netWage
@@ -452,6 +469,7 @@ public class ShiftManagerViewModel: ObservableObject {
         startTime = shift.startTime
         endTime = shift.endTime
         notes = shift.notes
+        stationId = shift.stationId
     }
     
     func toggleSpecialDay(_ shift: ShiftModel) {
@@ -514,7 +532,8 @@ public class ShiftManagerViewModel: ObservableObject {
                     entity.endTime = shift.endTime
                     entity.notes = shift.notes
                     entity.isSpecialDay = shift.isSpecialDay
-                    
+                    entity.setValue(shift.stationId, forKey: "stationId")
+
                     try await context.perform {
                         try self.context.save()
                     }
