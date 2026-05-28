@@ -1,15 +1,13 @@
 import UIKit
+import UserNotifications
 import os.log
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // OPTIMIZED: Only do essential initialization during app launch
-        
-        // Basic navigation bar appearance (lightweight)
         configureNavigationBarAppearance()
+        clearBadge()
         
-        // DEFER heavy operations until after the app has fully launched
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.performDeferredInitialization()
         }
@@ -70,8 +68,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     @objc private func applicationStateChanged() {
-        // Apply fixes only once when app becomes active
+        clearBadge()
         applyBackButtonFixes()
+    }
+    
+    private func clearBadge() {
+        if #available(iOS 16.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(0)
+        } else {
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
     
     private func applyBackButtonFixes() {

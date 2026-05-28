@@ -196,7 +196,7 @@ public class ShiftManagerViewModel: ObservableObject {
     func loadShifts() async {
         do {
             let request = NSFetchRequest<Shift>(entityName: "Shift")
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: false)]
             
             let results = try await context.perform {
                 try self.context.fetch(request)

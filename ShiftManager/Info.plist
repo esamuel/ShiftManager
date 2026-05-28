@@ -12,5 +12,11 @@
 	<string>We use speech recognition to let you ask help questions using your voice.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We use your microphone to listen to your help questions.</string>
+	<key>AI_PROXY_URL</key>
+	<string>https://object-howard-direct-symposium.trycloudflare.com/ai/support</string>
+	<key>AI_PROXY_TOKEN</key>
+	<string>shiftmanager-local-token</string>
+	<key>GEMINI_API_KEY</key>
+	<string></string>
 </dict>
 </plist>

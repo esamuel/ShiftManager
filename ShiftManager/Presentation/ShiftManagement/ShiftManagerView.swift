@@ -241,7 +241,7 @@ struct ShiftCard: View {
         VStack(alignment: .leading, spacing: 8) {
             // Date and Actions
             HStack {
-                Text(shift.startTime.formattedString())
+                Text(shift.startTime.localizedDateWithWeekday())
                     .font(.headline)
                 Spacer()
                 

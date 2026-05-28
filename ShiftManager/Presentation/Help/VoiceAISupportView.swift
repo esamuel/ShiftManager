@@ -1,6 +1,7 @@
 import SwiftUI
 import AVFoundation
 import Speech
+import NaturalLanguage
 
 struct VoiceAISupportView: View {
     @Environment(\.dismiss) var dismiss
@@ -269,8 +270,9 @@ class VoiceAISupportViewModel: ObservableObject {
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
     
-    private let apiKey = "AIzaSyAQZXciegzMpCz0wVzTa1N28Wm-aN4_Z5U"
-    private let apiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    private let apiKey = AIConfig.apiKey
+    private let apiURLs = AIConfig.apiURLs
+    private let proxyToken = AIConfig.proxyToken
     
     let supportedLanguages = [
         SupportedLanguage(code: "en", name: "English", nativeName: "English", flag: "🇺🇸"),
@@ -282,25 +284,23 @@ class VoiceAISupportViewModel: ObservableObject {
     ]
     
     private var systemPrompt: String {
-        """
-        You are the ShiftManager AI Support Assistant.
+        var basePrompt = AIConfig.systemPrompt
+        basePrompt += "\n\nSTRICT KNOWLEDGE SOURCE (use this as ground truth):\n"
+        basePrompt += CanonicalSupportKnowledge.content
+        basePrompt += "\n\nACCURACY RULES:\n"
+        basePrompt += "1. Answer ONLY with features/actions that exist in ShiftManager.\n"
+        basePrompt += "2. If not sure, explicitly say you are not sure and ask one clarifying question.\n"
+        basePrompt += "3. Do NOT invent buttons, tabs, or capabilities.\n"
         
-        CONTEXT (Use this to answer questions):
-        \(AppKnowledgeBase.content)
+        // Add voice-specific instructions
+        basePrompt += "\n\nVOICE SPECIFIC INSTRUCTIONS:\n"
+        basePrompt += "1. Return JSON only with fields: \"language\", \"text\", \"confidence\", \"needsClarification\", \"clarifyingQuestion\".\n"
+        basePrompt += "2. Keep text super concise (1-2 sentences max) for voice.\n"
+        basePrompt += "3. HARD GUARD: if confidence < 70, set needsClarification=true and do NOT guess.\n"
+        basePrompt += "4. If needsClarification=true, \"text\" must be a short \"I'm not sure\" sentence + one clarifying question.\n"
+        basePrompt += "5. Do NOT wrap JSON in markdown blocks."
         
-        INSTRUCTIONS:
-        1. Detect the language of the user's question.
-        2. Answer ONLY in that ONE language.
-        3. Return your answer as a JSON object with two fields: "language" (2-letter code) and "text".
-        
-        Example response:
-        {
-          "language": "es",
-          "text": "Para exportar a PDF, ve a la pestaña Reportes y toca el icono de compartir."
-        }
-        
-        Keep text concise (1-2 sentences). Do NOT wrap the JSON in markdown blocks.
-        """
+        return basePrompt
     }
     
     @Published var selectedLanguageCode: String = Locale.current.languageCode ?? "en"
@@ -401,6 +401,14 @@ class VoiceAISupportViewModel: ObservableObject {
         recognitionTask = nil
         recognitionRequest = nil
         
+        // Deactivate audio session to allow clean transition to playback
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            print("🔇 Recording session deactivated")
+        } catch {
+            print("⚠️ Failed to deactivate recording session: \(error.localizedDescription)")
+        }
+        
         isListening = false
         isPulsing = false
         statusText = "Ready to help"
@@ -411,10 +419,75 @@ class VoiceAISupportViewModel: ObservableObject {
         recognitionTask?.cancel()
         recognitionTask = nil
         
-        // Configure audio session
+        // Configure audio session with robust error handling
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
-        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        
+        // Strategy: Try multiple approaches in order of preference
+        var sessionActivated = false
+        var lastError: Error?
+        
+        // APPROACH 1: Try with clean slate (deactivate first)
+        do {
+            // Only deactivate if there's an active session
+            // Trying to deactivate an inactive session can cause errors
+            if audioSession.isOtherAudioPlaying == false {
+                do {
+                    try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
+                    print("🔇 Deactivated previous audio session")
+                    Thread.sleep(forTimeInterval: 0.05)
+                } catch {
+                    // Ignore deactivation errors - session might not be active
+                    print("ℹ️ Session deactivation skipped: \(error.localizedDescription)")
+                }
+            }
+            
+            // Configure for recording
+            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+            
+            sessionActivated = true
+            print("✅ Recording session activated (approach 1)")
+            
+        } catch let error {
+            lastError = error
+            print("⚠️ Approach 1 failed: \(error.localizedDescription)")
+        }
+        
+        // APPROACH 2: Try with .playAndRecord category (more flexible)
+        if !sessionActivated {
+            do {
+                try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [.defaultToSpeaker, .allowBluetooth, .duckOthers])
+                try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+                
+                sessionActivated = true
+                print("✅ Recording session activated (approach 2 - playAndRecord)")
+                
+            } catch let error {
+                lastError = error
+                print("⚠️ Approach 2 failed: \(error.localizedDescription)")
+            }
+        }
+        
+        // APPROACH 3: Try without deactivating, just override
+        if !sessionActivated {
+            do {
+                try audioSession.setCategory(.record, mode: .default, options: [])
+                try audioSession.setActive(true, options: [])
+                
+                sessionActivated = true
+                print("✅ Recording session activated (approach 3 - simple override)")
+                
+            } catch let error {
+                lastError = error
+                print("⚠️ Approach 3 failed: \(error.localizedDescription)")
+            }
+        }
+        
+        // If all approaches failed, throw the last error
+        if !sessionActivated {
+            print("❌ All audio session activation approaches failed")
+            throw lastError ?? NSError(domain: "VoiceAI", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to activate audio session"])
+        }
         
         // Create recognition request
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -474,11 +547,23 @@ class VoiceAISupportViewModel: ObservableObject {
         guard !transcription.isEmpty else { return }
         
         stopSession()
-        statusText = "Processing..."
         
         Task {
-            await sendToGemini(transcription)
+            await processQuestion(transcription)
         }
+    }
+    
+    /// Process user question with 3-tier strategy
+    /// AI-only mode: always call Gemini API for every question.
+    private func processQuestion(_ userQuestion: String) async {
+        // Track statistics
+        UsageTracker.shared.recordQuestion()
+
+        // Always use AI for the final answer.
+        await MainActor.run {
+            statusText = "Asking AI..."
+        }
+        await sendToGemini(userQuestion)
     }
     
     private func sendToGemini(_ userQuestion: String) async {
@@ -494,24 +579,18 @@ class VoiceAISupportViewModel: ObservableObject {
             ]
         ]
         
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: payload),
-              let url = URL(string: "\(apiURL)?key=\(apiKey)") else {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: payload) else {
             print("ERROR: Failed to create request")
             await MainActor.run {
                 statusText = "Error creating request"
             }
             return
         }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonData
-        
-        print("Sending request to: \(apiURL)")
+
+        print("Sending request to AI endpoint list")
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await requestGeminiData(jsonData: jsonData)
             
             if let httpResponse = response as? HTTPURLResponse {
                 print("HTTP Status: \(httpResponse.statusCode)")
@@ -534,38 +613,177 @@ class VoiceAISupportViewModel: ObservableObject {
                 }
             } else {
                 // Try to decode error
-                if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = errorDict["error"] as? [String: Any] {
                     print("❌ ERROR Response: \(errorDict)")
                     
-                    if let error = errorDict["error"] as? [String: Any],
-                       let message = error["message"] as? String {
-                        await MainActor.run {
-                            statusText = "API Error: \(message)"
+                    let code = error["code"] as? Int ?? 0
+                    let status = error["status"] as? String ?? ""
+                    let message = error["message"] as? String ?? "Unknown error"
+                    
+                    await MainActor.run {
+                        // Handle errors by speaking a friendly help message instead of a technical error
+                        let fallbackMessage: String
+                        if status == "PERMISSION_DENIED" || message.lowercased().contains("api key") || code == 403 {
+                            fallbackMessage = getAPIKeyIssueMessage(for: userQuestion)
+                        } else {
+                            fallbackMessage = getFriendlyFallback(for: userQuestion)
                         }
-                    } else {
-                        await MainActor.run {
-                            statusText = "Failed to decode response"
-                        }
+                        statusText = "Please be more specific"
+                        speak(text: fallbackMessage, languageCode: detectLanguage(userQuestion))
+                        print("🤖 AI Fallback: \(fallbackMessage)")
                     }
                 } else {
                     await MainActor.run {
-                        statusText = "Invalid response format"
+                        let fallbackMessage = getFriendlyFallback(for: userQuestion)
+                        statusText = "Please be more specific"
+                        speak(text: fallbackMessage, languageCode: detectLanguage(userQuestion))
                     }
                 }
+            }
+        } catch let configError as AIConfigurationError {
+            print("❌ CONFIG ERROR: \(configError)")
+            await MainActor.run {
+                let fallbackMessage = getConfigurationIssueMessage(for: userQuestion)
+                statusText = "AI not configured"
+                speak(text: fallbackMessage, languageCode: detectLanguage(userQuestion))
             }
         } catch {
             print("❌ NETWORK ERROR: \(error.localizedDescription)")
             await MainActor.run {
-                statusText = "Connection error: \(error.localizedDescription)"
+                let fallbackMessage = getFriendlyFallback(for: userQuestion)
+                statusText = "Connection issue"
+                speak(text: fallbackMessage, languageCode: detectLanguage(userQuestion))
             }
         }
         
         print("=== END GEMINI CALL ===")
     }
+
+    private func requestGeminiData(jsonData: Data) async throws -> (Data, URLResponse) {
+        var lastError: Error?
+
+        if let proxyURL = AIConfig.proxyURL {
+            guard let url = URL(string: proxyURL) else {
+                throw AIConfigurationError.invalidProxyURL
+            }
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let proxyToken, !proxyToken.isEmpty {
+                request.addValue("Bearer \(proxyToken)", forHTTPHeaderField: "Authorization")
+            }
+            request.httpBody = jsonData
+
+            return try await URLSession.shared.data(for: request)
+        }
+
+        guard !apiKey.isEmpty else {
+            throw AIConfigurationError.missingCredentials
+        }
+
+        for endpoint in apiURLs {
+            guard let url = URL(string: "\(endpoint)?key=\(apiKey)") else { continue }
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = jsonData
+
+            do {
+                let (data, response) = try await URLSession.shared.data(for: request)
+                if let http = response as? HTTPURLResponse, http.statusCode == 404 {
+                    continue
+                }
+                return (data, response)
+            } catch {
+                lastError = error
+            }
+        }
+
+        throw lastError ?? URLError(.badServerResponse)
+    }
+    
+    // Helper to provide a friendly spoken response when Gemini fails or provides an error
+    private func getFriendlyFallback(for message: String) -> String {
+        let language = detectLanguage(message)
+        
+        switch language {
+        case "he":
+            return "אני לא בטוח שהבנתי. תוכל לשאול שאלה יותר ספציפית? למשל: איך אני מוסיף משמרת?"
+        case "ru":
+            return "Я не совсем понял. Можете задать более конкретный вопрос? Например: Как добавить смену?"
+        case "fr":
+            return "Je ne suis pas sûr de comprendre. Pouvez-vous poser une question plus précise? Par exemple: Comment ajouter un quart?"
+        case "es":
+            return "No estoy seguro de entender. ¿Puedes hacer una pregunta más específica? Por ejemplo: ¿Cómo agrego un turno?"
+        case "de":
+            return "Ich bin mir nicht sicher, ob ich verstehe. Können Sie eine spezifischere Frage stellen? Zum Beispiel: Wie füge ich eine Schicht hinzu?"
+        default: // English
+            return "I'm not sure I understood that. Could you ask a more specific question? For example: How do I add a shift?"
+        }
+    }
+
+    private func getAPIKeyIssueMessage(for message: String) -> String {
+        let language = detectLanguage(message)
+        switch language {
+        case "he":
+            return "שירות ה-AI לא זמין כרגע בגלל מפתח API לא תקין. צריך לעדכן מפתח חדש."
+        case "ru":
+            return "Сервис AI временно недоступен из-за недействительного API-ключа. Нужно обновить ключ."
+        case "fr":
+            return "Le service IA est indisponible en raison d'une clé API invalide. Veuillez mettre à jour la clé."
+        case "es":
+            return "El servicio de IA no está disponible por una clave API inválida. Hay que actualizar la clave."
+        case "de":
+            return "Der KI-Dienst ist wegen eines ungültigen API-Schlüssels nicht verfügbar. Bitte aktualisieren Sie den Schlüssel."
+        default:
+            return "AI service is unavailable due to an invalid API key. Please update the key."
+        }
+    }
+
+    private func getConfigurationIssueMessage(for message: String) -> String {
+        let language = detectLanguage(message)
+        switch language {
+        case "he":
+            return "שירות ה-AI לא מוגדר כרגע. יש להגדיר AI_PROXY_URL (מומלץ) או GEMINI_API_KEY בקונפיגורציה."
+        case "ru":
+            return "Сервис AI сейчас не настроен. Укажите AI_PROXY_URL (рекомендуется) или GEMINI_API_KEY в конфигурации."
+        case "fr":
+            return "Le service IA n'est pas configuré. Configurez AI_PROXY_URL (recommandé) ou GEMINI_API_KEY."
+        case "es":
+            return "El servicio de IA no está configurado. Configura AI_PROXY_URL (recomendado) o GEMINI_API_KEY."
+        case "de":
+            return "Der KI-Dienst ist nicht konfiguriert. Bitte AI_PROXY_URL (empfohlen) oder GEMINI_API_KEY setzen."
+        default:
+            return "AI service is not configured. Set AI_PROXY_URL (recommended) or GEMINI_API_KEY in app configuration."
+        }
+    }
+    
+    // Simple language detection for the fallback system
+    private func detectLanguage(_ text: String) -> String {
+        if text.range(of: "[א-ת]", options: .regularExpression) != nil { return "he" }
+        if text.range(of: "[а-яА-Я]", options: .regularExpression) != nil { return "ru" }
+
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(text)
+        switch recognizer.dominantLanguage {
+        case .french: return "fr"
+        case .spanish: return "es"
+        case .german: return "de"
+        case .russian: return "ru"
+        case .hebrew: return "he"
+        default: return "en"
+        }
+    }
     
     struct AIResponse: Codable {
         let language: String
         let text: String
+        let confidence: Int?
+        let needsClarification: Bool?
+        let clarifyingQuestion: String?
     }
     
     private func parseMultilingualResponse(_ rawText: String) {
@@ -580,8 +798,22 @@ class VoiceAISupportViewModel: ObservableObject {
         if let data = cleanText.data(using: .utf8),
            let jsonResponse = try? JSONDecoder().decode(AIResponse.self, from: data) {
             languageCode = jsonResponse.language.lowercased()
-            responseText = jsonResponse.text
-            print("✅ Parsed JSON: Lang=\(languageCode), Text=\(responseText)")
+            let parsedConfidence = max(0, min(100, jsonResponse.confidence ?? 60))
+            let needsClarification = jsonResponse.needsClarification ?? (parsedConfidence < 70)
+
+            if needsClarification || parsedConfidence < 70 {
+                let fallbackClarify = localizedUnsurePrefix(for: languageCode)
+                let question = jsonResponse.clarifyingQuestion?.trimmingCharacters(in: .whitespacesAndNewlines)
+                if let question, !question.isEmpty {
+                    responseText = "\(fallbackClarify) \(question)"
+                } else {
+                    responseText = getFriendlyFallback(for: responseText)
+                }
+                statusText = "Need clarification"
+            } else {
+                responseText = jsonResponse.text
+            }
+            print("✅ Parsed JSON: Lang=\(languageCode), confidence=\(parsedConfidence), needsClarification=\(needsClarification)")
         } else {
             print("⚠️ Failed to parse JSON, falling back to raw text path")
             // Try to rescue if it's just the prefix format from before
@@ -602,6 +834,17 @@ class VoiceAISupportViewModel: ObservableObject {
         // Speak
         speak(text: responseText, languageCode: languageCode)
     }
+
+    private func localizedUnsurePrefix(for language: String) -> String {
+        switch language {
+        case "he": return "אני לא בטוח."
+        case "ru": return "Я не уверен."
+        case "fr": return "Je ne suis pas sûr."
+        case "es": return "No estoy seguro."
+        case "de": return "Ich bin mir nicht sicher."
+        default: return "I'm not sure."
+        }
+    }
     
     private let synthesizer = AVSpeechSynthesizer()
     
@@ -611,21 +854,200 @@ class VoiceAISupportViewModel: ObservableObject {
             synthesizer.stopSpeaking(at: .immediate)
         }
         
-        let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: languageCode)
-        utterance.rate = 0.5
-        utterance.pitchMultiplier = 1.0
-        utterance.volume = 1.0
+        // Clean up text for better speech (remove emojis for cleaner pronunciation)
+        let cleanedText = text.replacingOccurrences(of: "[\\p{Emoji_Presentation}\\p{Emoji}\\u{FE0F}]", with: "", options: .regularExpression)
         
-        // Ensure audio session is compatible with playback
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            print("Failed to set audio session for playback: \(error)")
+        let utterance = AVSpeechUtterance(string: cleanedText)
+        
+        let targetLanguage = mapLanguageCode(languageCode)
+        
+        // Get the best quality voice for each language
+        var selectedVoice: AVSpeechSynthesisVoice?
+        
+        // STEP 1: Try to get the absolute best premium voices by specific identifiers
+        // These are the most natural-sounding voices on iOS
+        let premiumVoiceIdentifiers: [String] = {
+            switch languageCode.lowercased() {
+            case "en":
+                // English: Samantha (Premium), Ava (Enhanced), or other premium voices
+                return [
+                    "com.apple.voice.premium.en-US.Zoe",      // Premium female (very natural)
+                    "com.apple.voice.enhanced.en-US.Ava",     // Enhanced female
+                    "com.apple.voice.premium.en-US.Samantha", // Premium female (classic)
+                    "com.apple.voice.enhanced.en-US.Nicky",   // Enhanced male
+                    "com.apple.ttsbundle.Samantha-premium"    // Alternative identifier
+                ]
+            case "he":
+                // Hebrew: Carmit (Premium)
+                return [
+                    "com.apple.voice.premium.he-IL.Carmit",   // Premium female
+                    "com.apple.voice.enhanced.he-IL.Carmit",  // Enhanced female
+                    "com.apple.ttsbundle.Carmit-premium"      // Alternative identifier
+                ]
+            case "ru":
+                // Russian: Milena (Premium), Yuri (Male)
+                return [
+                    "com.apple.voice.premium.ru-RU.Milena",   // Premium female
+                    "com.apple.voice.enhanced.ru-RU.Milena",  // Enhanced female
+                    "com.apple.voice.premium.ru-RU.Yuri",     // Premium male
+                    "com.apple.ttsbundle.Milena-premium"      // Alternative identifier
+                ]
+            case "fr":
+                // French: Amelie (Premium), Thomas (Male)
+                return [
+                    "com.apple.voice.premium.fr-FR.Amelie",   // Premium female
+                    "com.apple.voice.enhanced.fr-FR.Thomas",  // Enhanced male
+                    "com.apple.voice.premium.fr-FR.Thomas",   // Premium male
+                    "com.apple.ttsbundle.Amelie-premium"      // Alternative identifier
+                ]
+            case "es":
+                // Spanish: Monica (Premium), Paulina (Mexico)
+                return [
+                    "com.apple.voice.premium.es-ES.Monica",   // Premium female (Spain)
+                    "com.apple.voice.enhanced.es-ES.Monica",  // Enhanced female
+                    "com.apple.voice.premium.es-MX.Paulina",  // Premium female (Mexico)
+                    "com.apple.ttsbundle.Monica-premium"      // Alternative identifier
+                ]
+            case "de":
+                // German: Anna (Premium), Markus (Male)
+                return [
+                    "com.apple.voice.premium.de-DE.Anna",     // Premium female
+                    "com.apple.voice.enhanced.de-DE.Anna",    // Enhanced female
+                    "com.apple.voice.premium.de-DE.Markus",   // Premium male
+                    "com.apple.ttsbundle.Anna-premium"        // Alternative identifier
+                ]
+            default:
+                return []
+            }
+        }()
+        
+        // STEP 1: Search by quality AND user gender preference
+        // Priority 1: Premium/Enhanced quality voices with matching gender
+        // Priority 2: Standard quality voices with matching gender
+        // Priority 3: Fallback to best available
+        
+        let preferredGenderString = UserDefaults.standard.string(forKey: "preferredVoiceGender") ?? "female"
+        let preferredGender: AVSpeechSynthesisVoiceGender = (preferredGenderString == "male") ? .male : .female
+        
+        let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+        let languageVoices = availableVoices.filter { voice in
+            voice.language.hasPrefix(targetLanguage.prefix(2))
         }
         
+        // Priority 1: Premium/Enhanced voices of PREFERRED gender
+        if #available(iOS 16.0, *) {
+            selectedVoice = languageVoices.first { voice in
+                (voice.quality == .premium || voice.quality == .enhanced) && voice.gender == preferredGender
+            }
+        }
+        
+        // Priority 2: Any voice of PREFERRED gender
+        if selectedVoice == nil {
+            if #available(iOS 13.0, *) {
+                selectedVoice = languageVoices.first { voice in
+                    voice.gender == preferredGender
+                }
+            }
+        }
+        
+        // Priority 3: Try specifically by previous premium identifiers (legacy fallback)
+        if selectedVoice == nil {
+            for identifier in premiumVoiceIdentifiers {
+                if let voice = AVSpeechSynthesisVoice(identifier: identifier) {
+                    selectedVoice = voice
+                    break
+                }
+            }
+        }
+        
+        // Priority 4: Any premium/enhanced voice regardless of gender
+        if selectedVoice == nil {
+            if #available(iOS 16.0, *) {
+                selectedVoice = languageVoices.first { voice in
+                    voice.quality == .premium || voice.quality == .enhanced
+                }
+            }
+        }
+        
+        // Priority 5: Any voice at all for the language
+        if selectedVoice == nil {
+            selectedVoice = languageVoices.first
+        }
+        
+        // STEP 3: Fallback to default voice for language
+        if selectedVoice == nil {
+            selectedVoice = AVSpeechSynthesisVoice(language: targetLanguage)
+        }
+        
+        utterance.voice = selectedVoice
+        
+        // USER CUSTOMIZED SPEECH PARAMETERS
+        // Rate: Loaded from settings, default to 0.53
+        let savedRate = UserDefaults.standard.double(forKey: "voiceSpeechRate")
+        utterance.rate = Float(savedRate == 0 ? 0.53 : savedRate)
+        
+        // Pitch: Loaded from settings, default to 1.0
+        let savedPitch = UserDefaults.standard.double(forKey: "voicePitchMultiplier")
+        utterance.pitchMultiplier = Float(savedPitch == 0 ? 1.0 : savedPitch)
+        
+        // Volume: Full but not overwhelming
+        utterance.volume = 0.95
+        
+        // Pre-utterance delay: Small pause before speaking (more natural)
+        utterance.preUtteranceDelay = 0.1
+        
+        // Post-utterance delay: Small pause after speaking
+        utterance.postUtteranceDelay = 0.05
+        
+        // Log voice details
+        if let voice = selectedVoice {
+            print("🎙️ Using voice: \(voice.name) (\(voice.language))")
+            print("   Identifier: \(voice.identifier)")
+            if #available(iOS 16.0, *) {
+                print("   Quality: \(voice.quality.rawValue)")
+            }
+            if #available(iOS 13.0, *) {
+                print("   Gender: \(voice.gender.rawValue)")
+            }
+        }
+        
+        
+        // Configure audio session for optimal playback quality
+        // Use .playAndRecord to support both playback and future recording
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            
+            // Configure for playback with optimal settings
+            // .playAndRecord allows both recording and playback (prevents conflicts)
+            // .defaultToSpeaker ensures it plays through speaker, not earpiece
+            // .allowBluetooth enables AirPods and other Bluetooth devices
+            try audioSession.setCategory(.playAndRecord, mode: .spokenAudio, options: [.defaultToSpeaker, .allowBluetooth])
+            
+            // Activate the session for playback (will override recording session if active)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+            
+            print("✅ Audio session configured for high-quality playback")
+        } catch {
+            print("⚠️ Failed to configure audio session: \(error.localizedDescription)")
+            // Continue anyway - synthesizer might still work with current session
+        }
+        
+        // Speak the utterance
         synthesizer.speak(utterance)
+        print("🗣️ Speaking: \"\(cleanedText)\"")
+    }
+    
+    // Helper function to map language codes to full locale identifiers
+    private func mapLanguageCode(_ code: String) -> String {
+        switch code.lowercased() {
+        case "en": return "en-US"
+        case "he": return "he-IL"
+        case "ru": return "ru-RU"
+        case "fr": return "fr-FR"
+        case "es": return "es-ES"
+        case "de": return "de-DE"
+        default: return code
+        }
     }
 }
 

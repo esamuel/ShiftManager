@@ -91,3 +91,9 @@ iOSInjectionProject/
 
 # macOS
 .DS_Store 
+
+# Local secrets / config (do not commit)
+Secrets.xcconfig
+*.local.xcconfig
+ShiftManager/Config/Secrets.xcconfig
+ai-proxy/.env

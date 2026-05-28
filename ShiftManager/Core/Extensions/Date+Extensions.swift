@@ -15,6 +15,13 @@ extension Date {
         formatter.dateStyle = .none
         return formatter.string(from: self)
     }
+
+    func localizedDateWithWeekday() -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: LocalizationManager.shared.currentLanguage)
+        formatter.setLocalizedDateFormatFromTemplate("EEE d MMM yyyy")
+        return formatter.string(from: self)
+    }
     
     func isSameDay(as date: Date) -> Bool {
         let calendar = Calendar.current

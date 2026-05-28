@@ -171,6 +171,7 @@ public struct SettingsView: View {
             helpFAQSection
             aboutSection
             legalSection
+            dangerZoneSection
         }
     }
     
@@ -617,23 +618,50 @@ public struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                     
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.orange)
-                        .font(.title2)
-                        .padding(.top, 2)
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Important: Data Loss Warning".localized)
-                            .font(.headline)
-                            .foregroundColor(.orange)
-                        Text("Deleting this app will erase all your data unless you have synced to iCloud or exported a backup file.\n\nTo protect your data, use iCloud sync or export a backup before deleting the app.".localized)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
                 }
                 .padding(.vertical, 8)
             } header: {
                 SectionHeaderView(title: "Backup & Restore".localized, iconName: "externaldrive")
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var dangerZoneSection: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Delete All Data".localized)
+                    .font(.headline)
+                    .bold()
+                    .foregroundColor(.red)
+                
+                Text("Permanently delete all shifts, settings, and app data. This action cannot be undone.".localized)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Button(action: {
+                    viewModel.showingDeleteConfirmation = true
+                }) {
+                    HStack {
+                        Image(systemName: "trash.fill")
+                            .foregroundColor(.red)
+                        Text("Delete All Data".localized)
+                            .foregroundColor(.red)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .padding(.vertical, 8)
+        } header: {
+            SectionHeaderView(title: "Danger Zone".localized, iconName: "exclamationmark.triangle")
+        }
+        .alert("Delete All Data?".localized, isPresented: $viewModel.showingDeleteConfirmation) {
+            Button("Cancel".localized, role: .cancel) { }
+            Button("Delete".localized, role: .destructive) {
+                viewModel.deleteAllData()
+            }
+        } message: {
+            Text("This will permanently delete all your shifts, settings, and app data. This action cannot be undone.\n\nAre you sure you want to continue?".localized)
         }
     }
     
@@ -698,6 +726,19 @@ public struct SettingsView: View {
                             .foregroundColor(.blue)
                             .frame(width: 25)
                         Text("Contact Support".localized)
+                    }
+                }
+                
+                NavigationLink(destination: VoiceSettingsView()) {
+                    HStack {
+                        Image(systemName: "waveform")
+                            .foregroundColor(.blue)
+                            .frame(width: 25)
+                        Text("Voice Settings")
+                        Spacer()
+                        Image(systemName: "crown.fill")
+                            .font(.caption)
+                            .foregroundColor(.yellow)
                     }
                 }
                 

@@ -131,6 +131,7 @@ public class SettingsViewModel: ObservableObject {
     @Published var importError: Error?
     @Published var showingImportAlert = false
     @Published var importMessage = ""
+    @Published var showingDeleteConfirmation = false
     
     @Published var notificationsEnabled: Bool
     @Published var hasUnsavedChanges = false
@@ -417,5 +418,37 @@ public class SettingsViewModel: ObservableObject {
             createdAt: entity.value(forKey: "createdAt") as? Date ?? Date(),
             username: entity.value(forKey: "username") as? String ?? ""
         )
+    }
+    
+    // MARK: - Delete All Data
+    
+    /// Permanently deletes all shifts and settings data
+    func deleteAllData() {
+        let context = PersistenceController.shared.container.viewContext
+        
+        // Delete all shifts from Core Data
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Shift")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(deleteRequest)
+            try context.save()
+            
+            // Clear all UserDefaults
+            let domain = Bundle.main.bundleIdentifier!
+            UserDefaults.standard.removePersistentDomain(forName: domain)
+            UserDefaults.standard.synchronize()
+            
+            // Notify that data has been deleted
+            NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
+            
+            print("✅ All data deleted successfully")
+            
+            // Reset to defaults
+            resetToDefaults()
+            
+        } catch {
+            print("❌ Error deleting data: \(error)")
+        }
     }
 }
