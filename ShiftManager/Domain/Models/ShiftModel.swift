@@ -13,19 +13,21 @@ public struct ShiftModel: Identifiable, Codable, Sendable {
     public var grossWage: Double
     public var netWage: Double
     public var username: String
-    
-    public init(id: UUID = UUID(), 
-         title: String = "", 
-         category: String = "", 
-         startTime: Date = Date(), 
-         endTime: Date = Date(), 
-         notes: String = "", 
-         isOvertime: Bool = false, 
-         isSpecialDay: Bool = false, 
-         grossWage: Double = 0.0, 
-         netWage: Double = 0.0, 
+    public var stationId: UUID?
+
+    public init(id: UUID = UUID(),
+         title: String = "",
+         category: String = "",
+         startTime: Date = Date(),
+         endTime: Date = Date(),
+         notes: String = "",
+         isOvertime: Bool = false,
+         isSpecialDay: Bool = false,
+         grossWage: Double = 0.0,
+         netWage: Double = 0.0,
          createdAt: Date = Date(),
-         username: String = "") {
+         username: String = "",
+         stationId: UUID? = nil) {
         self.id = id
         self.title = title
         self.category = category
@@ -38,6 +40,7 @@ public struct ShiftModel: Identifiable, Codable, Sendable {
         self.netWage = netWage
         self.createdAt = createdAt
         self.username = username
+        self.stationId = stationId
     }
     
     public var duration: TimeInterval {

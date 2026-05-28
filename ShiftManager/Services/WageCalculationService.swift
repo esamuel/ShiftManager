@@ -90,16 +90,39 @@ class WageCalculationService: @unchecked Sendable {
         return false
     }
     
+    /// Resolves the effective hourly wage for a shift.
+    /// Priority: linked Station → legacy "סייר" note hack → default.
+    private func hourlyWage(for shift: ShiftModel, default defaultWage: Double) -> Double {
+        if let stationId = shift.stationId,
+           let rate = stationRate(for: stationId), rate > 0 {
+            return rate
+        }
+        if shift.notes.contains("סייר") { return 46.04 }
+        return defaultWage
+    }
+
+    private func stationRate(for id: UUID) -> Double? {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "Station")
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        request.fetchLimit = 1
+        var result: Double?
+        context.performAndWait {
+            if let station = try? context.fetch(request).first {
+                result = station.value(forKey: "hourlyWage") as? Double
+            }
+        }
+        return result
+    }
+
     func calculateWage(for shift: ShiftModel) async throws -> WageCalculation {
         let duration = shift.duration
         let hoursWorked = duration / 3600 // Convert seconds to hours
-        
+
         // Get base settings
         let defaultHourlyWage = UserDefaults.standard.double(forKey: "hourlyWage")
         let taxDeduction = UserDefaults.standard.double(forKey: "taxDeduction") / 100
-        
-        // Check if this is a patrol shift ("סייר")
-        let hourlyWage = shift.notes.contains("סייר") ? 46.04 : defaultHourlyWage
+
+        let hourlyWage = self.hourlyWage(for: shift, default: defaultHourlyWage)
         
         // Dynamic detection of special days (weekend, Jewish/Israeli holiday, or global holiday)
         let isSpecialDayDynamic = isSpecialWorkDay(shift.startTime)
@@ -314,9 +337,9 @@ class WageCalculationService: @unchecked Sendable {
             let shiftProportion = shiftHours / totalDailyHours
             let shiftGrossWage = cumulativeWage * shiftProportion
             
-            // Check for patrol shift adjustment ("סייר")
-            let hourlyWage = shift.notes.contains("סייר") ? 46.04 : defaultHourlyWage
-            let wageAdjustment = (hourlyWage / defaultHourlyWage)
+            // Resolve effective hourly wage (Station → legacy סייר → default)
+            let hourlyWage = self.hourlyWage(for: shift, default: defaultHourlyWage)
+            let wageAdjustment = defaultHourlyWage > 0 ? (hourlyWage / defaultHourlyWage) : 1.0
             let adjustedGrossWage = shiftGrossWage * wageAdjustment
             
             let taxAmount = adjustedGrossWage * taxDeduction

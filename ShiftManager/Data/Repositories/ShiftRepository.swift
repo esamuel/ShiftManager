@@ -123,10 +123,11 @@ public final class ShiftRepository: ShiftRepositoryProtocol, @unchecked Sendable
             isSpecialDay: entity.isSpecialDay,
             grossWage: entity.grossWage,
             netWage: entity.netWage,
-            createdAt: entity.createdAt ?? Date()
+            createdAt: entity.createdAt ?? Date(),
+            stationId: entity.value(forKey: "stationId") as? UUID
         )
     }
-    
+
     private func mapToEntity(_ model: ShiftModel, entity: Shift) {
         entity.id = model.id
         entity.title = model.title
@@ -139,6 +140,7 @@ public final class ShiftRepository: ShiftRepositoryProtocol, @unchecked Sendable
         entity.createdAt = model.createdAt
         entity.grossWage = model.grossWage
         entity.netWage = model.netWage
+        entity.setValue(model.stationId, forKey: "stationId")
     }
     
     public func recalculateDailyWages(for date: Date) async throws {
