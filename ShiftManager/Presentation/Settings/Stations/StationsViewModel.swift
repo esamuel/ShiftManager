@@ -51,18 +51,29 @@ public final class StationsViewModel: ObservableObject {
         do {
             try await repository.update(station)
             // If the hourly wage changed, recompute shifts linked to this
-            // station from today onward. Past shifts stay frozen.
+            // station from the start of the current month onward — same
+            // rule as the default-wage change in Settings. Past months
+            // stay frozen.
             if let previous, previous.hourlyWage != station.hourlyWage {
-                let cutoff = Calendar.current.startOfDay(for: Date())
+                let cutoff = Self.startOfCurrentMonth()
                 try await shiftRepository.recalculateShifts(
                     from: cutoff,
                     stationFilter: .station(station.id)
+                )
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("LanguageChanged"), object: nil
                 )
             }
             await load()
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    private static func startOfCurrentMonth() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: Date())
+        return calendar.date(from: components) ?? Date()
     }
 
     public func delete(at offsets: IndexSet) async {
