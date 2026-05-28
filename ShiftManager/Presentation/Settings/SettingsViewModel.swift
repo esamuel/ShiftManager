@@ -236,9 +236,12 @@ public class SettingsViewModel: ObservableObject {
     }
     
     func saveSettings() {
-        let notificationSettingsChanged = 
+        let notificationSettingsChanged =
             notificationsEnabled != initialNotificationsEnabled ||
             notificationLeadTime.rawValue != UserDefaults.standard.integer(forKey: "notificationLeadTime")
+
+        let hourlyWageChanged = hourlyWage != initialHourlyWage
+        let taxChanged = taxDeduction != initialTaxDeduction
         
         UserDefaults.standard.set(notificationLeadTime.rawValue, forKey: "notificationLeadTime")
         UserDefaults.standard.set(username, forKey: "username")
@@ -268,6 +271,21 @@ public class SettingsViewModel: ObservableObject {
         // Reschedule all notifications if notification settings changed
         if notificationSettingsChanged {
             NotificationCenter.default.post(name: NSNotification.Name("RescheduleNotifications"), object: nil)
+        }
+
+        // Recompute wages from the start of the current month onward when
+        // wage-impacting settings change. Past months stay frozen so the
+        // user keeps a verifiable record of what was owed at the time.
+        if hourlyWageChanged || taxChanged {
+            let cutoff = Self.startOfCurrentMonth()
+            // Tax applies to all shifts; default wage only to shifts with no station.
+            let filter: ShiftRepository.StationFilter = taxChanged ? .any : .defaultWage
+            Task.detached {
+                try? await ShiftRepository().recalculateShifts(from: cutoff, stationFilter: filter)
+                await MainActor.run {
+                    NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
+                }
+            }
         }
         
         // Update initial state AFTER successful save
@@ -316,6 +334,12 @@ public class SettingsViewModel: ObservableObject {
         saveSettings()
     }
     
+    private static func startOfCurrentMonth() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: Date())
+        return calendar.date(from: components) ?? Date()
+    }
+
     func formatDuration(_ duration: Double) -> String {
         let hours = Int(duration) / 3600
         let minutes = Int(duration) / 60 % 60

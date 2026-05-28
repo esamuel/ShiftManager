@@ -145,33 +145,78 @@ public final class ShiftRepository: ShiftRepositoryProtocol, @unchecked Sendable
     
     public func recalculateDailyWages(for date: Date) async throws {
         let wageService = WageCalculationService(context: context)
-        
+
         // Fetch all shifts on the same day
         let sameDayShifts = try await wageService.fetchShiftsOnSameDay(as: date)
-        
+
         guard !sameDayShifts.isEmpty else { return }
-        
+
         // Calculate wages considering daily overtime
         let wageCalculations = try await wageService.calculateDailyWagesForShifts(sameDayShifts)
-        
+
         // Update each shift in Core Data
         try await context.perform {
             for shift in sameDayShifts {
                 guard let calculation = wageCalculations[shift.id] else { continue }
-                
+
                 let request = NSFetchRequest<Shift>(entityName: "Shift")
                 request.predicate = NSPredicate(format: "id == %@", shift.id as CVarArg)
-                
+
                 let results = try self.context.fetch(request)
-                
+
                 if let entity = results.first {
                     entity.grossWage = calculation.grossWage
                     entity.netWage = calculation.netWage
                 }
             }
-            
+
             try self.context.save()
         }
+    }
+
+    /// Recompute wages for all shifts starting on or after `cutoff`, optionally
+    /// scoped to a specific station. Used when a wage rate changes — past
+    /// payslips stay frozen, future ones reflect the new rate.
+    ///
+    /// - Parameters:
+    ///   - cutoff: include only shifts with `startTime >= cutoff`.
+    ///   - stationFilter: `.any` for all shifts; `.station(id)` for shifts
+    ///     linked to that station; `.defaultWage` for shifts with no station.
+    public func recalculateShifts(
+        from cutoff: Date,
+        stationFilter: StationFilter = .any
+    ) async throws {
+        let request = NSFetchRequest<Shift>(entityName: "Shift")
+        switch stationFilter {
+        case .any:
+            request.predicate = NSPredicate(format: "startTime >= %@", cutoff as NSDate)
+        case .defaultWage:
+            request.predicate = NSPredicate(format: "startTime >= %@ AND stationId == nil", cutoff as NSDate)
+        case .station(let id):
+            request.predicate = NSPredicate(
+                format: "startTime >= %@ AND stationId == %@",
+                cutoff as NSDate, id as CVarArg
+            )
+        }
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Shift.startTime, ascending: true)]
+
+        let candidates: [ShiftModel] = try await context.perform {
+            let entities = try self.context.fetch(request)
+            return entities.map { self.mapToModel($0) }
+        }
+        guard !candidates.isEmpty else { return }
+
+        let calendar = Calendar.current
+        let uniqueDays = Set(candidates.map { calendar.startOfDay(for: $0.startTime) })
+        for day in uniqueDays {
+            try await recalculateDailyWages(for: day)
+        }
+    }
+
+    public enum StationFilter: Sendable {
+        case any
+        case defaultWage
+        case station(UUID)
     }
 }
 

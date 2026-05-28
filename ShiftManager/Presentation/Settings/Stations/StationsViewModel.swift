@@ -8,9 +8,14 @@ public final class StationsViewModel: ObservableObject {
     @Published public var errorMessage: String?
 
     private let repository: StationRepositoryProtocol
+    private let shiftRepository: ShiftRepository
 
-    public init(repository: StationRepositoryProtocol = StationRepository()) {
+    public init(
+        repository: StationRepositoryProtocol = StationRepository(),
+        shiftRepository: ShiftRepository = ShiftRepository()
+    ) {
         self.repository = repository
+        self.shiftRepository = shiftRepository
     }
 
     public func load() async {
@@ -42,8 +47,18 @@ public final class StationsViewModel: ObservableObject {
     }
 
     public func update(_ station: StationModel) async {
+        let previous = stations.first(where: { $0.id == station.id })
         do {
             try await repository.update(station)
+            // If the hourly wage changed, recompute shifts linked to this
+            // station from today onward. Past shifts stay frozen.
+            if let previous, previous.hourlyWage != station.hourlyWage {
+                let cutoff = Calendar.current.startOfDay(for: Date())
+                try await shiftRepository.recalculateShifts(
+                    from: cutoff,
+                    stationFilter: .station(station.id)
+                )
+            }
             await load()
         } catch {
             errorMessage = error.localizedDescription
