@@ -47,14 +47,27 @@ public struct UpcomingShiftsView: View {
                                                     Text("\(viewModel.formatTime(shift.startTime)) - \(viewModel.formatTime(shift.endTime))")
                                                         .font(.caption)
                                                         .foregroundColor(.gray)
-                                                    
+
                                                     Text("•")
                                                         .font(.caption)
                                                         .foregroundColor(.gray)
-                                                    
+
                                                     Text(viewModel.calculateTotalHours(startTime: shift.startTime, endTime: shift.endTime))
                                                         .font(.caption)
                                                         .foregroundColor(.blue)
+                                                }
+
+                                                if !shift.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                                    HStack(spacing: 4) {
+                                                        Image(systemName: "note.text")
+                                                            .font(.caption2)
+                                                            .foregroundColor(.gray)
+                                                        Text(shift.notes)
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                            .lineLimit(2)
+                                                    }
+                                                    .padding(.top, 2)
                                                 }
                                             }
                                             
