@@ -467,6 +467,15 @@ public struct SettingsView: View {
                             .font(.system(size: 13))
                     }
                 }
+
+                NavigationLink(destination: StationsListView()) {
+                    HStack {
+                        Image(systemName: "briefcase.fill")
+                            .foregroundColor(.purple)
+                            .frame(width: 25)
+                        Text("Work Stations".localized)
+                    }
+                }
             } header: {
                 SectionHeaderView(title: "Wage Settings".localized, iconName: "dollarsign.square")
             }
