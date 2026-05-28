@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var migrationManager = StationMigrationManager.shared
     @State private var showingUpcomingShifts = false
     @State private var showingGuide = false
     @State private var showingAISupport = false
@@ -144,6 +145,22 @@ public struct HomeView: View {
         }
         .fullScreenCover(isPresented: $showingAISupport) {
             VoiceAISupportView()
+        }
+        .alert(
+            String(format: "We noticed %d shifts marked '%@'. Create a Work Station for them?".localized,
+                   migrationManager.pendingPromptCount,
+                   migrationManager.legacyKeyword),
+            isPresented: $migrationManager.shouldPrompt
+        ) {
+            Button("Create Station".localized) {
+                Task { await migrationManager.performMigration() }
+            }
+            Button("Not now".localized, role: .cancel) {
+                migrationManager.dismiss()
+            }
+        }
+        .task {
+            await migrationManager.checkIfPromptNeeded()
         }
         .refreshOnLanguageChange()
     }
